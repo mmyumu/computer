@@ -1,0 +1,13 @@
+import pytest
+from logic_gates.custom import NOTGate
+
+
+@pytest.fixture(name="custom_not_gate")
+def fixture_nmos_transistor():
+    return NOTGate()
+
+def test_not_gate_true(custom_not_gate: NOTGate):
+    assert custom_not_gate.operate(True) is False
+
+def test_not_gate_false(custom_not_gate: NOTGate):
+    assert custom_not_gate.operate(False) is True
