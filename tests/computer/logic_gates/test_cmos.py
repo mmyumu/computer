@@ -2,7 +2,7 @@
 Test for CMOS logic gates
 """
 import pytest
-from computer.logic_gates.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate, XORGate
+from computer.logic_gates.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate, XNORGate, XORGate
 
 # pylint: disable=C0116
 
@@ -29,6 +29,10 @@ def fixture_cmod_or_gate():
 @pytest.fixture(name="cmos_xor_gate")
 def fixture_cmod_xor_gate():
     return XORGate()
+
+@pytest.fixture(name="cmos_xnor_gate")
+def fixture_cmod_xnor_gate():
+    return XNORGate()
 
 
 def test_not_gate_true(cmos_not_gate: NOTGate):
@@ -96,3 +100,15 @@ def test_xor_gate_a_false_b_true(cmos_xor_gate: XORGate):
 
 def test_xor_gate_a_true_b_true(cmos_xor_gate: XORGate):
     assert cmos_xor_gate.operate(True, True) is False
+
+def test_xnor_gate_a_false_b_false(cmos_xnor_gate: XNORGate):
+    assert cmos_xnor_gate.operate(False, False) is True
+
+def test_xnor_gate_a_true_b_false(cmos_xnor_gate: XNORGate):
+    assert cmos_xnor_gate.operate(True, False) is False
+
+def test_xnor_gate_a_false_b_true(cmos_xnor_gate: XNORGate):
+    assert cmos_xnor_gate.operate(False, True) is False
+
+def test_xnor_gate_a_true_b_true(cmos_xnor_gate: XNORGate):
+    assert cmos_xnor_gate.operate(True, True) is True

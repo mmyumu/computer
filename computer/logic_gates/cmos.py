@@ -123,39 +123,84 @@ class ORGate:
 class XORGate:
     """
     XOR logic gate using CMOS technology
+    https://vlsi-iitg.vlabs.ac.in/images/4.3.png
     """
     def __init__(self):
-        self._nmos_a = NMOSTransistor()
-        self._nmos_a_bar = NMOSTransistor()
-        self._nmos_b = NMOSTransistor()
-        self._nmos_b_bar = NMOSTransistor()
         self._pmos_a = PMOSTransistor()
         self._pmos_a_bar = PMOSTransistor()
         self._pmos_b = PMOSTransistor()
         self._pmos_b_bar = PMOSTransistor()
+        self._nmos_a = NMOSTransistor()
+        self._nmos_a_bar = NMOSTransistor()
+        self._nmos_b = NMOSTransistor()
+        self._nmos_b_bar = NMOSTransistor()
+
 
     def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
-        self._pmos_a_bar.apply_control_signal(not input_signal_a)
         self._pmos_a.apply_control_signal(input_signal_a)
+        self._pmos_a_bar.apply_control_signal(not input_signal_a)
         self._pmos_b_bar.apply_control_signal(not input_signal_b)
         self._pmos_b.apply_control_signal(input_signal_b)
 
-        self._nmos_a_bar.apply_control_signal(not input_signal_a)
         self._nmos_a.apply_control_signal(input_signal_a)
+        self._nmos_a_bar.apply_control_signal(not input_signal_a)
+        self._nmos_b.apply_control_signal(input_signal_b)
+        self._nmos_b_bar.apply_control_signal(not input_signal_b)
+
+        self._pmos_a.connect_source(VDD)
+        self._pmos_a_bar.connect_source(VDD)
+        self._nmos_b.connect_source(GND)
+        self._nmos_b_bar.connect_source(GND)
+
+        self._pmos_b_bar.connect_source(self._pmos_a.drain)
+        self._pmos_b.connect_source(self._pmos_a_bar.drain)
+        self._nmos_a.connect_source(self._nmos_b.drain)
+        self._nmos_a_bar.connect_source(self._nmos_b_bar.drain)
+
+        return (self._pmos_b.drain or self._pmos_b_bar.drain) and (not self._nmos_a_bar.drain or not self._nmos_a.drain)
+
+
+class XNORGate:
+    """
+    XNOR logic gate using CMOS technology
+    https://vlsi-iitg.vlabs.ac.in/images/4.3.png
+    """
+    def __init__(self):
+        self._pmos_a = PMOSTransistor()
+        self._pmos_a_bar = PMOSTransistor()
+        self._pmos_b = PMOSTransistor()
+        self._pmos_b_bar = PMOSTransistor()
+        self._nmos_a = NMOSTransistor()
+        self._nmos_a_bar = NMOSTransistor()
+        self._nmos_b = NMOSTransistor()
+        self._nmos_b_bar = NMOSTransistor()
+
+
+    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+        """
+        Logic gate operates inputs and returns output
+        """
+        self._pmos_a.apply_control_signal(input_signal_a)
+        self._pmos_a_bar.apply_control_signal(not input_signal_a)
+        self._pmos_b.apply_control_signal(input_signal_b)
+        self._pmos_b_bar.apply_control_signal(not input_signal_b)
+
+        self._nmos_a.apply_control_signal(input_signal_a)
+        self._nmos_a_bar.apply_control_signal(not input_signal_a)
         self._nmos_b_bar.apply_control_signal(not input_signal_b)
         self._nmos_b.apply_control_signal(input_signal_b)
 
-        self._pmos_a_bar.connect_source(VDD)
         self._pmos_a.connect_source(VDD)
+        self._pmos_a_bar.connect_source(VDD)
         self._nmos_b_bar.connect_source(GND)
         self._nmos_b.connect_source(GND)
 
-        self._nmos_a_bar.connect_source(self._nmos_b_bar.drain)
-        self._nmos_a.connect_source(self._nmos_b.drain)
-        self._pmos_b_bar.connect_source(self._pmos_a.drain)
-        self._pmos_b.connect_source(self._pmos_a_bar.drain)
+        self._pmos_b.connect_source(self._pmos_a.drain)
+        self._pmos_b_bar.connect_source(self._pmos_a_bar.drain)
+        self._nmos_a.connect_source(self._nmos_b_bar.drain)
+        self._nmos_a_bar.connect_source(self._nmos_b.drain)
 
         return (self._pmos_b.drain or self._pmos_b_bar.drain) and (not self._nmos_a_bar.drain or not self._nmos_a.drain)
