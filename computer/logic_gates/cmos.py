@@ -15,7 +15,7 @@ class NOTGate:
         self.nmos = NMOSTransistor()
         self.pmos = PMOSTransistor()
 
-    def operate(self, input_signal: bool):
+    def operate(self, input_signal: bool) -> bool:
         """
         Logic gate operates input and returns output
         """
@@ -45,7 +45,7 @@ class NANDGate:
         self.pmos_a = PMOSTransistor()
         self.pmos_b = PMOSTransistor()
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool):
+    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
@@ -72,7 +72,7 @@ class NORGate:
         self.pmos_a = PMOSTransistor()
         self.pmos_b = PMOSTransistor()
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool):
+    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
@@ -88,3 +88,33 @@ class NORGate:
         self.pmos_b.connect_source(self.pmos_a.is_conducting())
 
         return self.pmos_b.is_conducting() and not (self.nmos_a.is_conducting() or self.nmos_b.is_conducting())
+
+
+class ANDGate:
+    """
+    AND logic gate using CMOS technology
+    """
+    def __init__(self):
+        self._nand_gate = NANDGate()
+        self._not_gate = NOTGate()
+
+    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+        """
+        Logic gate operates inputs and returns output
+        """
+        return self._not_gate.operate(self._nand_gate.operate(input_signal_a, input_signal_b))
+
+
+class ORGate:
+    """
+    OR logic gate using CMOS technology
+    """
+    def __init__(self):
+        self._nor_gate = NORGate()
+        self._not_gate = NOTGate()
+
+    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+        """
+        Logic gate operates inputs and returns output
+        """
+        return self._not_gate.operate(self._nor_gate.operate(input_signal_a, input_signal_b))
