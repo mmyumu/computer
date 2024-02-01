@@ -1,5 +1,5 @@
-from computer.electronic.nmos_transistor import NMOSTransistor
-from computer.electronic.pmos_transistor import PMOSTransistor
+from computer.electronic.transistor import NMOSTransistor
+from computer.electronic.transistor import PMOSTransistor
 
 
 def test_transistor_nmos_no_source(nmos_transistor: NMOSTransistor):

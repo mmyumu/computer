@@ -1,15 +1,24 @@
-from computer.electronic.nmos_transistor import NMOSTransistor
-from computer.electronic.pmos_transistor import PMOSTransistor
+"""
+CMOS Gates implementations
+"""
+from computer.electronic.transistor import NMOSTransistor
+from computer.electronic.transistor import PMOSTransistor
 from computer.logic_gates.voltage_levels import GND, VDD
 
 
 class NOTGate:
+    """
+    NOT logic gate using CMOS technology
+    """
     def __init__(self):
         # Initialize one NMOS and one PMOS transistor
         self.nmos = NMOSTransistor()
         self.pmos = PMOSTransistor()
 
     def operate(self, input_signal: bool):
+        """
+        Logic gate operates input and returns output
+        """
         # Apply the input signal to the control gates of both transistors
         self.nmos.apply_control_signal(input_signal)
         self.pmos.apply_control_signal(input_signal)
@@ -27,6 +36,9 @@ class NOTGate:
 
 
 class NANDGate:
+    """
+    NAND logic gate using CMOS technology
+    """
     def __init__(self):
         self.nmos_a = NMOSTransistor()
         self.nmos_b = NMOSTransistor()
@@ -34,6 +46,9 @@ class NANDGate:
         self.pmos_b = PMOSTransistor()
 
     def operate(self, input_signal_a: bool, input_signal_b: bool):
+        """
+        Logic gate operates inputs and returns output
+        """
         self.nmos_a.apply_control_signal(input_signal_a)
         self.pmos_a.apply_control_signal(input_signal_a)
         self.nmos_b.apply_control_signal(input_signal_b)
@@ -48,6 +63,9 @@ class NANDGate:
         return (self.pmos_a.is_conducting() or self.pmos_b.is_conducting()) and not self.nmos_a.is_conducting()
 
 class NORGate:
+    """
+    NOR logic gate using CMOS technology
+    """
     def __init__(self):
         self.nmos_a = NMOSTransistor()
         self.nmos_b = NMOSTransistor()
@@ -55,6 +73,9 @@ class NORGate:
         self.pmos_b = PMOSTransistor()
 
     def operate(self, input_signal_a: bool, input_signal_b: bool):
+        """
+        Logic gate operates inputs and returns output
+        """
         self.nmos_a.apply_control_signal(input_signal_a)
         self.pmos_a.apply_control_signal(input_signal_a)
         self.nmos_b.apply_control_signal(input_signal_b)

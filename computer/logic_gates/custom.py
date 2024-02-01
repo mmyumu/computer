@@ -1,4 +1,7 @@
-from computer.electronic.pmos_transistor import PMOSTransistor
+"""
+Custom implementation of Logic gate (for testing purpose)
+"""
+from computer.electronic.transistor import PMOSTransistor
 from computer.logic_gates.voltage_levels import VDD
 
 
@@ -12,6 +15,9 @@ class NOTGate:
         self.pmos = PMOSTransistor()
 
     def operate(self, input_signal):
+        """
+        Logic gate operates input and returns output
+        """
         self.pmos.connect_source(VDD)
 
         self.pmos.apply_control_signal(input_signal)
