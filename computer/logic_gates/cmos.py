@@ -32,7 +32,7 @@ class NOTGate:
         # The output is high if the PMOS is conducting and the NMOS is not
         # This occurs when the input is low (False)
         # Note that for a CMOS NOT gate, we must check the conduction state of both transistors
-        return self.pmos.is_conducting() and not self.nmos.is_conducting()
+        return self.pmos.drain and not self.nmos.drain
 
 
 class NANDGate:
@@ -58,9 +58,9 @@ class NANDGate:
         self.pmos_b.connect_source(VDD)
 
         self.nmos_b.connect_source(GND)
-        self.nmos_a.connect_source(self.nmos_b.is_conducting())
+        self.nmos_a.connect_source(self.nmos_b.drain)
 
-        return (self.pmos_a.is_conducting() or self.pmos_b.is_conducting()) and not self.nmos_a.is_conducting()
+        return (self.pmos_a.drain or self.pmos_b.drain) and not self.nmos_a.drain
 
 class NORGate:
     """
@@ -85,9 +85,9 @@ class NORGate:
         self.nmos_b.connect_source(GND)
 
         self.pmos_a.connect_source(VDD)
-        self.pmos_b.connect_source(self.pmos_a.is_conducting())
+        self.pmos_b.connect_source(self.pmos_a.drain)
 
-        return self.pmos_b.is_conducting() and not (self.nmos_a.is_conducting() or self.nmos_b.is_conducting())
+        return self.pmos_b.drain and not (self.nmos_a.drain or self.nmos_b.drain)
 
 
 class ANDGate:
@@ -118,3 +118,44 @@ class ORGate:
         Logic gate operates inputs and returns output
         """
         return self._not_gate.operate(self._nor_gate.operate(input_signal_a, input_signal_b))
+
+
+class XORGate:
+    """
+    XOR logic gate using CMOS technology
+    """
+    def __init__(self):
+        self._nmos_a = NMOSTransistor()
+        self._nmos_a_bar = NMOSTransistor()
+        self._nmos_b = NMOSTransistor()
+        self._nmos_b_bar = NMOSTransistor()
+        self._pmos_a = PMOSTransistor()
+        self._pmos_a_bar = PMOSTransistor()
+        self._pmos_b = PMOSTransistor()
+        self._pmos_b_bar = PMOSTransistor()
+
+    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+        """
+        Logic gate operates inputs and returns output
+        """
+        self._pmos_a_bar.apply_control_signal(not input_signal_a)
+        self._pmos_a.apply_control_signal(input_signal_a)
+        self._pmos_b_bar.apply_control_signal(not input_signal_b)
+        self._pmos_b.apply_control_signal(input_signal_b)
+
+        self._nmos_a_bar.apply_control_signal(not input_signal_a)
+        self._nmos_a.apply_control_signal(input_signal_a)
+        self._nmos_b_bar.apply_control_signal(not input_signal_b)
+        self._nmos_b.apply_control_signal(input_signal_b)
+
+        self._pmos_a_bar.connect_source(VDD)
+        self._pmos_a.connect_source(VDD)
+        self._nmos_b_bar.connect_source(GND)
+        self._nmos_b.connect_source(GND)
+
+        self._nmos_a_bar.connect_source(self._nmos_b_bar.drain)
+        self._nmos_a.connect_source(self._nmos_b.drain)
+        self._pmos_b_bar.connect_source(self._pmos_a.drain)
+        self._pmos_b.connect_source(self._pmos_a_bar.drain)
+
+        return (self._pmos_b.drain or self._pmos_b_bar.drain) and (not self._nmos_a_bar.drain or not self._nmos_a.drain)

@@ -8,18 +8,14 @@ class Transistor(ABC):
     Base class for transistors implementations
     """
     def __init__(self):
-        self.control_gate = self._get_default_control_gate()    # On/Off
-        self.source = False                                     # Input
+        self.control_gate = False    # On/Off
+        self.source = False          # Input
 
-    @abstractmethod
-    def _get_default_control_gate(self):
-        pass
-
-    @abstractmethod
     def apply_control_signal(self, signal):
         """
         Apply signal on control gate
         """
+        self.control_gate = signal
 
     def connect_source(self, source):
         """
@@ -27,6 +23,7 @@ class Transistor(ABC):
         """
         self.source = source
 
+    @abstractmethod
     def is_conducting(self):
         """
         Tells whether the transistor is conducting current or not (output).
@@ -45,19 +42,13 @@ class NMOSTransistor(Transistor):
     """
     A NMOS transistor conducts current when the control gate is supplied with voltage.
     """
-    def _get_default_control_gate(self):
-        return False
-
-    def apply_control_signal(self, signal):
-        self.control_gate = signal
+    def is_conducting(self):
+        return self.control_gate and self.source
 
 
 class PMOSTransistor(Transistor):
     """
     A PMOS transistor conducts current when the control gate is not supplied with voltage.
     """
-    def _get_default_control_gate(self):
-        return True
-
-    def apply_control_signal(self, signal):
-        self.control_gate = not signal
+    def is_conducting(self):
+        return not self.control_gate and self.source

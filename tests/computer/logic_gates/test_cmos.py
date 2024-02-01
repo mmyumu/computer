@@ -2,7 +2,7 @@
 Test for CMOS logic gates
 """
 import pytest
-from computer.logic_gates.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate
+from computer.logic_gates.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate, XORGate
 
 # pylint: disable=C0116
 
@@ -25,6 +25,10 @@ def fixture_cmod_and_gate():
 @pytest.fixture(name="cmos_or_gate")
 def fixture_cmod_or_gate():
     return ORGate()
+
+@pytest.fixture(name="cmos_xor_gate")
+def fixture_cmod_xor_gate():
+    return XORGate()
 
 
 def test_not_gate_true(cmos_not_gate: NOTGate):
@@ -80,3 +84,15 @@ def test_or_gate_a_false_b_true(cmos_or_gate: ORGate):
 
 def test_or_gate_a_true_b_true(cmos_or_gate: ORGate):
     assert cmos_or_gate.operate(True, True) is True
+
+def test_xor_gate_a_false_b_false(cmos_xor_gate: XORGate):
+    assert cmos_xor_gate.operate(False, False) is False
+
+def test_xor_gate_a_true_b_false(cmos_xor_gate: XORGate):
+    assert cmos_xor_gate.operate(True, False) is True
+
+def test_xor_gate_a_false_b_true(cmos_xor_gate: XORGate):
+    assert cmos_xor_gate.operate(False, True) is True
+
+def test_xor_gate_a_true_b_true(cmos_xor_gate: XORGate):
+    assert cmos_xor_gate.operate(True, True) is False
