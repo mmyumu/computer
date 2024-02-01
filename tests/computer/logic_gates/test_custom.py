@@ -1,5 +1,5 @@
 import pytest
-from logic_gates.custom import NOTGate
+from computer.logic_gates.custom import NOTGate
 
 
 @pytest.fixture(name="custom_not_gate")

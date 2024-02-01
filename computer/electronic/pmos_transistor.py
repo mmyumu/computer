@@ -1,4 +1,4 @@
-from electronic.transistor import Transistor
+from computer.electronic.transistor import Transistor
 
 
 class PMOSTransistor(Transistor):

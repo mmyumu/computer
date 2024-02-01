@@ -1,5 +1,5 @@
-from electronic.pmos_transistor import PMOSTransistor
-from logic_gates.voltage_levels import VDD
+from computer.electronic.pmos_transistor import PMOSTransistor
+from computer.logic_gates.voltage_levels import VDD
 
 
 class NOTGate:

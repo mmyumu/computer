@@ -1,13 +1,13 @@
-from accumulator import Accumulator
-from alu import ALU
-from alu_buffer import AluBuffer
-from clock import Clock
-from control_unit import ControlUnit
-from in_port import InPort
-from out_port import OutPort
-from program_counter import ProgramCounter
-from ram import RAM
-from rom import ROM
+from computer.accumulator import Accumulator
+from computer.alu import ALU
+from computer.alu_buffer import AluBuffer
+from computer.clock import Clock
+from computer.control_unit import ControlUnit
+from computer.in_port import InPort
+from computer.out_port import OutPort
+from computer.program_counter import ProgramCounter
+from computer.ram import RAM
+from computer.rom import ROM
 
 
 class CPU:

@@ -1,9 +1,6 @@
-
-
-
 import pytest
-from electronic.nmos_transistor import NMOSTransistor
-from electronic.pmos_transistor import PMOSTransistor
+from computer.electronic.nmos_transistor import NMOSTransistor
+from computer.electronic.pmos_transistor import PMOSTransistor
 
 
 @pytest.fixture(name="nmos_transistor")
