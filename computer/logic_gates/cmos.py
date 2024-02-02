@@ -15,7 +15,7 @@ class NOTGate:
         self._nmos = NMOSTransistor()
         self._pmos = PMOSTransistor()
 
-    def operate(self, input_signal: bool) -> bool:
+    def __call__(self, input_signal: bool) -> bool:
         """
         Logic gate operates input and returns output
         """
@@ -45,7 +45,7 @@ class NANDGate:
         self._pmos_a = PMOSTransistor()
         self._pmos_b = PMOSTransistor()
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+    def __call__(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
@@ -72,7 +72,7 @@ class NORGate:
         self._pmos_a = PMOSTransistor()
         self._pmos_b = PMOSTransistor()
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+    def __call__(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
@@ -98,11 +98,11 @@ class ANDGate:
         self._nand_gate = NANDGate()
         self._not_gate = NOTGate()
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+    def __call__(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
-        return self._not_gate.operate(self._nand_gate.operate(input_signal_a, input_signal_b))
+        return self._not_gate(self._nand_gate(input_signal_a, input_signal_b))
 
 
 class ORGate:
@@ -113,11 +113,11 @@ class ORGate:
         self._nor_gate = NORGate()
         self._not_gate = NOTGate()
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+    def __call__(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
-        return self._not_gate.operate(self._nor_gate.operate(input_signal_a, input_signal_b))
+        return self._not_gate(self._nor_gate(input_signal_a, input_signal_b))
 
 
 class XORGate:
@@ -136,7 +136,7 @@ class XORGate:
         self._nmos_b_bar = NMOSTransistor()
 
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+    def __call__(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
@@ -179,7 +179,7 @@ class XNORGate:
         self._nmos_b_bar = NMOSTransistor()
 
 
-    def operate(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+    def __call__(self, input_signal_a: bool, input_signal_b: bool) -> bool:
         """
         Logic gate operates inputs and returns output
         """
