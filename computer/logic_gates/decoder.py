@@ -29,7 +29,7 @@ class Decoder2To4:
 
         d0 = self._and0(not0, not1)
         d1 = self._and1(not1, input_signal_a0)
-        d2 = self._and2(not0 input_signal_a1)
+        d2 = self._and2(not0, input_signal_a1)
         d3 = self._and3(input_signal_a0, input_signal_a1)
 
 
