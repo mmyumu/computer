@@ -2,7 +2,7 @@
 Test for CMOS logic gates
 """
 import pytest
-from computer.logic_gates.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate, XNORGate, XORGate
+from computer.logic_gates.cmos import ANDGate, HalfAdder, NANDGate, NORGate, NOTGate, ORGate, XNORGate, XORGate
 
 # pylint: disable=C0116
 
@@ -11,28 +11,32 @@ def fixture_cmos_not_gate():
     return NOTGate()
 
 @pytest.fixture(name="cmos_nand_gate")
-def fixture_cmod_nand_gate():
+def fixture_cmos_nand_gate():
     return NANDGate()
 
 @pytest.fixture(name="cmos_nor_gate")
-def fixture_cmod_nor_gate():
+def fixture_cmos_nor_gate():
     return NORGate()
 
 @pytest.fixture(name="cmos_and_gate")
-def fixture_cmod_and_gate():
+def fixture_cmos_and_gate():
     return ANDGate()
 
 @pytest.fixture(name="cmos_or_gate")
-def fixture_cmod_or_gate():
+def fixture_cmos_or_gate():
     return ORGate()
 
 @pytest.fixture(name="cmos_xor_gate")
-def fixture_cmod_xor_gate():
+def fixture_cmos_xor_gate():
     return XORGate()
 
 @pytest.fixture(name="cmos_xnor_gate")
-def fixture_cmod_xnor_gate():
+def fixture_cmos_xnor_gate():
     return XNORGate()
+
+@pytest.fixture(name="half_adder")
+def fixture_half_adder():
+    return HalfAdder()
 
 
 def test_not_gate_true(cmos_not_gate: NOTGate):
@@ -112,3 +116,23 @@ def test_xnor_gate_a_false_b_true(cmos_xnor_gate: XNORGate):
 
 def test_xnor_gate_a_true_b_true(cmos_xnor_gate: XNORGate):
     assert cmos_xnor_gate(True, True) is True
+
+def test_halfadder_a_false_b_false(half_adder: HalfAdder):
+    sum_result, carry = half_adder(False, False)
+    assert sum_result is False
+    assert carry is False
+
+def test_halfadder_a_true_b_false(half_adder: HalfAdder):
+    sum_result, carry = half_adder(True, False)
+    assert sum_result is True
+    assert carry is False
+
+def test_halfadder_a_false_b_true(half_adder: HalfAdder):
+    sum_result, carry = half_adder(False, True)
+    assert sum_result is True
+    assert carry is False
+
+def test_halfadder_a_true_b_true(half_adder: HalfAdder):
+    sum_result, carry = half_adder(True, True)
+    assert sum_result is False
+    assert carry is True

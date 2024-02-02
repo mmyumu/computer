@@ -204,3 +204,22 @@ class XNORGate:
         self._nmos_a_bar.connect_source(self._nmos_b.drain)
 
         return (self._pmos_b.drain or self._pmos_b_bar.drain) and (not self._nmos_a_bar.drain or not self._nmos_a.drain)
+
+
+class HalfAdder:
+    """
+    Add 2 bits and returns the sum and the carry
+    """
+    def __init__(self):
+        self._xor = XORGate()
+        self._and = ANDGate()
+
+
+    def __call__(self, input_signal_a: bool, input_signal_b: bool) -> bool:
+        """
+        Logic gate operates inputs and returns outputs
+        """
+        sum_result = self._xor(input_signal_a, input_signal_b)
+        carry = self._and(input_signal_a, input_signal_b)
+
+        return sum_result, carry
