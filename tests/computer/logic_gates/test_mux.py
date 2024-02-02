@@ -19,7 +19,7 @@ def test_mux2to1(mux2to1: MUX2To1):
     for a0 in [False, True]:
         for a1 in [False, True]:
             assert mux2to1(a0, a1, False) == a0, f"Inputs: a0={a0}, a1={a1}"
-            assert mux2to1(a0, a1, True) == a1  
+            assert mux2to1(a0, a1, True) == a1, f"Inputs: a0={a0}, a1={a1}"
 
 def test_mux4to1(mux4to1: MUX4To1):
     for a0 in [False, True]:

@@ -1,4 +1,6 @@
-
+"""
+Adders
+"""
 from typing import Tuple
 from computer.logic_gates.cmos import ANDGate, ORGate, XORGate
 
