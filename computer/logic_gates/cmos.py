@@ -1,7 +1,6 @@
 """
 CMOS Gates implementations
 """
-from typing import Tuple
 from computer.electronic.transistor import NMOSTransistor
 from computer.electronic.transistor import PMOSTransistor
 from computer.logic_gates.voltage_levels import GND, VDD

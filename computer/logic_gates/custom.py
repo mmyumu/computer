@@ -3,6 +3,7 @@ Custom implementation of Logic gate (for testing purpose)
 """
 from computer.electronic.transistor import PMOSTransistor
 from computer.logic_gates.voltage_levels import VDD
+from utils.logger import logger
 
 
 class NOTGate:
@@ -14,12 +15,13 @@ class NOTGate:
     def __init__(self):
         self.pmos = PMOSTransistor()
 
-    def operate(self, input_signal):
+    def __call__(self, input_signal):
         """
         Logic gate operates input and returns output
         """
+        logger.warning("Do not use: only for test purpose. Use CMOS technology instead.")
         self.pmos.connect_source(VDD)
 
         self.pmos.apply_control_signal(input_signal)
 
-        return self.pmos.is_conducting()
+        return self.pmos.drain

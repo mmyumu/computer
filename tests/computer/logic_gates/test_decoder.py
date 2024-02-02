@@ -11,7 +11,6 @@ def fixture_decoder2to4():
     return Decoder2To4()
 
 
-
 def test_decoder2to4_a1_false_a0_false(decoder2to4: Decoder2To4):
     d3, d2, d1, d0 = decoder2to4(False, False)
     assert d3 is False
