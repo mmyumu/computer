@@ -1,6 +1,10 @@
+"""
+Test of custom gates
+"""
 import pytest
 from computer.logic_gates.custom import NOTGate
 
+# pylint: disable=C0116
 
 @pytest.fixture(name="custom_not_gate")
 def fixture_nmos_transistor():

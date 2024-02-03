@@ -1,6 +1,10 @@
+"""
+Test of transistors module
+"""
 from computer.electronic.transistor import NMOSTransistor
 from computer.electronic.transistor import PMOSTransistor
 
+# pylint: disable=C0116
 
 def test_transistor_nmos_no_source(nmos_transistor: NMOSTransistor):
     assert not nmos_transistor.is_conducting()
