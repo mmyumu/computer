@@ -30,7 +30,7 @@ class SRFlipFlop(FlipFlop):
     https://www.javatpoint.com/basics-of-flip-flop-in-digital-electronics
     """
     def __init__(self):
-        super(SRFlipFlop, self).__init__()
+        super().__init__()
         self._nand0 = NANDGate()
         self._nand1 = NANDGate()
 
@@ -60,7 +60,7 @@ class DFlipFlop(FlipFlop):
     https://www.paturage.be/electro/inforauto/portes/bascule.html
     """
     def __init__(self):
-        super(DFlipFlop, self).__init__()
+        super().__init__()
         self._not = NOTGate()
         self._nand0 = NANDGate()
         self._nand1 = NANDGate()
