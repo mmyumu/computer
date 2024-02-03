@@ -15,12 +15,14 @@ class Transistor(ABC):
         """
         Apply signal on control gate
         """
+        assert signal is not None
         self.control_gate = signal
 
     def connect_source(self, source):
         """
         Connect source (input) of the transistor
         """
+        assert source is not None
         self.source = source
 
     @abstractmethod
