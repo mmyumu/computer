@@ -21,4 +21,7 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         echo "PYTHONPATH=$PYTHONPATH" >> $GITHUB_ENV
+        pwd
+        echo $PYTHONPATH
+        PTTHONPATH=.
         pylint $(git ls-files '*.py')
