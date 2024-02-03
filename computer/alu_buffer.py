@@ -1,23 +1,37 @@
+"""
+ALU Buffer module
+"""
 from utils.logger import logger
 
 class AluBuffer:
+    """
+    ALU Buffer: memory for ALU
+    """
     def __init__(self):
         self.buffer = 0  # Initializes the buffer with a value of 0
 
     def load(self, value):
-        # Loads a value into the buffer
+        """
+        Loads a value into the buffer
+        """
         self.buffer = value
 
     def read(self):
-        # Returns the current value of the buffer
+        """
+        Returns the current value of the buffer
+        """
         return self.buffer
 
     def write(self, value):
-        # Updates the buffer with the given value
+        """
+        Updates the buffer with the given value
+        """
         self.load(value)  # Same as load for simplicity
 
     def clear(self):
-        # Resets the buffer to 0
+        """
+        Resets the buffer to 0
+        """
         self.buffer = 0
 
 if __name__ == "__main__":

@@ -1,3 +1,6 @@
+"""
+Program using legacy CPU
+"""
 from computer_legacy.cpu import CPU
 from computer_legacy.instructions.bitwise_and import BitwiseAnd
 from computer_legacy.instructions.load import Load

@@ -1,23 +1,37 @@
+"""
+Accumulator module
+"""
 from utils.logger import logger
 
 class Accumulator:
+    """
+    Accumulator class
+    """
     def __init__(self):
         self.value = 0  # The accumulator starts with a value of 0
 
     def load(self, value):
-        # Loads a new value into the accumulator
+        """
+        Loads a new value into the accumulator
+        """
         self.value = value
 
     def read(self):
-        # Returns the current value of the accumulator
+        """
+        Returns the current value of the accumulator
+        """
         return self.value
 
     def write(self, value):
-        # Updates the accumulator with the given value
+        """
+        Updates the accumulator with the given value
+        """
         self.load(value)  # Same as load in this case, can be different based on architecture
 
     def clear(self):
-        # Resets the accumulator to 0
+        """
+        Resets the accumulator to 0
+        """
         self.value = 0
 
 if __name__ == "__main__":

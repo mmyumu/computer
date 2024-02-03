@@ -1,3 +1,6 @@
+"""
+CPU module
+"""
 from computer.accumulator import Accumulator
 from computer.alu import ALU
 from computer.alu_buffer import AluBuffer
@@ -11,6 +14,9 @@ from computer.rom import ROM
 
 
 class CPU:
+    """
+    CPU class
+    """
     def __init__(self, memory_size, clock_frequency):
         self.program_counter = ProgramCounter()
         self.rom = ROM(memory_size)
@@ -24,9 +30,15 @@ class CPU:
         self.clock = Clock(clock_frequency)
 
     def load_program(self, program):
+        """
+        Load program in the ROM
+        """
         self.rom.load_program(program)
 
     def run(self):
+        """
+        Run the CPU
+        """
         try:
             while True:  # Continue until a HALT instruction is encountered or end of program is reached
                 self.clock.wait_cycle()
@@ -34,7 +46,7 @@ class CPU:
                 # Fetch instruction
                 self.control_unit.fetch_instruction(self.rom, self.program_counter)
                 opcode, operand = self.control_unit.decode_instruction()
-                
+
                 # Execute instruction
                 if opcode == 0b000:  # Example opcode for a HALT instruction
                     break  # Exit the loop, stopping the program
@@ -57,22 +69,25 @@ class CPU:
                     data = self.accumulator.read()
                     self.out_port.write_data(data)
                 # ... other opcodes and instructions
-                
+
                 # Increment the program counter
                 self.program_counter.increment()
-        
+
         except IndexError:
             # Handle the exception if trying to read instruction outside ROM bounds
             print("Attempted to execute instruction outside program memory.")
 
     def print_ram(self):
+        """
+        Print RAM status
+        """
         self.ram.print()
 
 if __name__ == "__main__":
     # Example usage
     cpu = CPU(memory_size=64, clock_frequency=10)  # Create a CPU with a ROM size of 64 and clock frequency of 1Hz
     # program = [0b00100000, 0b01000001, 0b01100000, 0b00000000]  # Programme avec LOAD, ADD, OutPort, HALT
-    program = [
+    program_instructions = [
         0b10000010, # Read 2 from InPort
         0b01101000, # Write to RAM in Address 8
         0b10000100, # Read 4 from InPort
@@ -83,6 +98,6 @@ if __name__ == "__main__":
         0b10100000, # Write to OutPort
 
     ]
-    cpu.load_program(program)
+    cpu.load_program(program_instructions)
     cpu.run()
     cpu.print_ram()
