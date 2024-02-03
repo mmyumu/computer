@@ -20,8 +20,4 @@ jobs:
         pip install pylint
     - name: Analysing the code with pylint
       run: |
-        echo "PYTHONPATH=$PYTHONPATH" >> $GITHUB_ENV
-        pwd
-        echo $PYTHONPATH
-        PTTHONPATH=.
-        pylint $(git ls-files '*.py')
+        PYTHONPATH=. pylint --max-line-length=120 $(git ls-files '*.py')
