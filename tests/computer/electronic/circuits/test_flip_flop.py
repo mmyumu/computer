@@ -2,7 +2,7 @@
 Test for Flip Flops
 """
 import pytest
-from computer.logic_gates.flip_flop import DFlipFlop, SRFlipFlop
+from computer.electronic.circuits.flip_flop import DFlipFlop, SRFlipFlop
 
 # pylint: disable=C0116,W0212
 

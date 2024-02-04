@@ -2,7 +2,7 @@
 Test for Adders
 """
 import pytest
-from computer.logic_gates.adder import FullAdder, HalfAdder
+from computer.electronic.circuits.adder import FullAdder, HalfAdder
 
 # pylint: disable=C0116
 

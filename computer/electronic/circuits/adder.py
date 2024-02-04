@@ -2,7 +2,7 @@
 Adders
 """
 from typing import Tuple
-from computer.logic_gates.cmos import ANDGate, ORGate, XORGate
+from computer.electronic.circuits.cmos import ANDGate, ORGate, XORGate
 
 
 class HalfAdder:

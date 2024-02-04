@@ -2,7 +2,7 @@
 Binary decoders
 """
 from typing import Tuple
-from computer.logic_gates.cmos import ANDGate, NOTGate
+from computer.electronic.circuits.cmos import ANDGate, NOTGate
 
 
 class Decoder2To4:

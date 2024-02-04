@@ -3,7 +3,7 @@ Test for multiplexers and demultiplexers
 """
 import pytest
 
-from computer.logic_gates.demux import DEMUX1To2, DEMUX1To4
+from computer.electronic.circuits.demux import DEMUX1To2, DEMUX1To4
 
 # pylint: disable=C0116
 

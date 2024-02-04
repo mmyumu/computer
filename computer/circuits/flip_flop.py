@@ -4,7 +4,7 @@ Flip flops circuits
 from abc import ABC
 import random
 from typing import Tuple
-from computer.logic_gates.cmos import NANDGate, NOTGate
+from computer.electronic.circuits.cmos import NANDGate, NOTGate
 
 
 class FlipFlop(ABC):

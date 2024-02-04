@@ -2,7 +2,7 @@
 Test for CMOS logic gates
 """
 import pytest
-from computer.logic_gates.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate, XNORGate, XORGate
+from computer.electronic.circuits.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate, XNORGate, XORGate
 
 
 # pylint: disable=C0116

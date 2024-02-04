@@ -2,7 +2,7 @@
 Test of custom gates
 """
 import pytest
-from computer.logic_gates.custom import NOTGate
+from computer.electronic.circuits.custom import NOTGate
 
 # pylint: disable=C0116
 

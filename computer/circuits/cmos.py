@@ -1,9 +1,9 @@
 """
 CMOS Gates implementations
 """
-from computer.electronic.transistor import NMOSTransistor
-from computer.electronic.transistor import PMOSTransistor
-from computer.logic_gates.voltage_levels import GND, VDD
+from computer.electronic.components.transistor import NMOSTransistor
+from computer.electronic.components.transistor import PMOSTransistor
+from computer.electronic.circuits.voltage_levels import GND, VDD
 
 
 class NOTGate:

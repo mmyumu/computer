@@ -3,7 +3,7 @@ Multiplexers
 https://fr.wikipedia.org/wiki/Multiplexeur
 """
 
-from computer.logic_gates.cmos import ANDGate, NOTGate, ORGate
+from computer.electronic.circuits.cmos import ANDGate, NOTGate, ORGate
 
 
 class MUX2To1():

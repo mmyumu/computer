@@ -3,7 +3,7 @@ Test for registers
 """
 import pytest
 
-from computer.logic_gates.register import SIPORegister, SISORegister
+from computer.electronic.circuits.register import SIPORegister, SISORegister
 
 
 # pylint: disable=C0116
@@ -33,8 +33,6 @@ def test_siso_set1011(siso_register: SISORegister):
     siso_register(True, True)
     siso_register(False, True)
     siso_register(True, True)
-
-    pass
 
 # def test_mux4to1(mux4to1: MUX4To1):
 #     for a0 in [False, True]:

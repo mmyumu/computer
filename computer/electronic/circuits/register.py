@@ -5,7 +5,7 @@ Registers module
 from abc import ABC, abstractmethod
 from typing import Tuple
 
-from computer.logic_gates.flip_flop import DFlipFlop
+from computer.electronic.circuits.flip_flop import DFlipFlop
 
 
 class Register(ABC):

@@ -1,9 +1,7 @@
 """
 Demultiplexers
 """
-
-
-from computer.logic_gates.cmos import ANDGate, NOTGate
+from computer.electronic.circuits.cmos import ANDGate, NOTGate
 
 
 class DEMUX1To2():

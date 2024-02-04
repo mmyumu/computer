@@ -2,9 +2,8 @@
 Test combination of mux/demux
 """
 import pytest
-from computer.logic_gates.demux import DEMUX1To2, DEMUX1To4
-
-from computer.logic_gates.mux import MUX2To1, MUX4To1
+from computer.electronic.circuits.demux import DEMUX1To2, DEMUX1To4
+from computer.electronic.circuits.mux import MUX2To1, MUX4To1
 
 # pylint: disable=C0116
 

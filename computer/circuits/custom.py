@@ -1,8 +1,8 @@
 """
 Custom implementation of Logic gate (for testing purpose)
 """
-from computer.electronic.transistor import PMOSTransistor
-from computer.logic_gates.voltage_levels import VDD
+from computer.electronic.components.transistor import PMOSTransistor
+from computer.electronic.circuits.voltage_levels import VDD
 from utils.logger import logger
 
 
