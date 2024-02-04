@@ -31,9 +31,16 @@ class SISORegister(Register):
         self._d_flip_flop3 = DFlipFlop()
 
     def __call__(self, input_signal: bool, enable: bool) -> bool:
+        self._d_flip_flop0(self._d_flip_flop1._q, enable)
         q0, _ = self._d_flip_flop0(self._d_flip_flop1._q, enable)
+
         self._d_flip_flop1(self._d_flip_flop2._q, enable)
+        self._d_flip_flop1(self._d_flip_flop2._q, enable)
+
         self._d_flip_flop2(self._d_flip_flop3._q, enable)
+        self._d_flip_flop2(self._d_flip_flop3._q, enable)
+
+        self._d_flip_flop3(input_signal, enable)
         self._d_flip_flop3(input_signal, enable)
         return q0
 
@@ -53,16 +60,11 @@ class SISORegister(Register):
 
         return out_str
 
-class SIPORegister(Register):
+class SIPORegister(SISORegister):
     """
     SISO (Serial-In Serial-Out) register
     https://www.elprocus.com/sipo-shift-register/
     """
-    def __init__(self) -> None:
-        pass
-
     def __call__(self, input_signal: bool, enable: bool) -> Tuple[bool, bool, bool, bool]:
-        return False, False, False, False
-
-    def reset_states(self):
-        pass
+        super().__call__(input_signal, enable)
+        return self._d_flip_flop3._q, self._d_flip_flop2._q, self._d_flip_flop1._q, self._d_flip_flop0._q

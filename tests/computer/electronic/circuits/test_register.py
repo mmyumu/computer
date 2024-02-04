@@ -6,7 +6,7 @@ import pytest
 from computer.electronic.circuits.register import SIPORegister, SISORegister
 
 
-# pylint: disable=C0116
+# pylint: disable=C0116,W0212
 
 @pytest.fixture(name="siso_register")
 def fixture_siso_register():
@@ -25,7 +25,6 @@ def test_siso_register_reset(siso_register: SISORegister):
     assert siso_register(False, False) is False
     assert siso_register(False, False) is False
 
-
 def test_siso_set1011(siso_register: SISORegister):
     siso_register.reset_states()
 
@@ -34,12 +33,94 @@ def test_siso_set1011(siso_register: SISORegister):
     siso_register(False, True)
     siso_register(True, True)
 
-# def test_mux4to1(mux4to1: MUX4To1):
-#     for a0 in [False, True]:
-#         for a1 in [False, True]:
-#             for a2 in [False, True]:
-#                 for a3 in [False, True]:
-#                     assert mux4to1(a0, a1, a2, a3, False, False) == a0, f"Inputs: a0={a0}, a1={a1}, a2={a2}, a3={a3}"
-#                     assert mux4to1(a0, a1, a2, a3, False, True) == a1, f"Inputs: a0={a0}, a1={a1}, a2={a2}, a3={a3}"
-#                     assert mux4to1(a0, a1, a2, a3, True, False) == a2, f"Inputs: a0={a0}, a1={a1}, a2={a2}, a3={a3}"
-#                     assert mux4to1(a0, a1, a2, a3, True, True) == a3, f"Inputs: a0={a0}, a1={a1}, a2={a2}, a3={a3}"
+    assert siso_register._d_flip_flop3._q is True
+    assert siso_register._d_flip_flop2._q is False
+    assert siso_register._d_flip_flop1._q is True
+    assert siso_register._d_flip_flop0._q is True
+
+def test_siso_set1111(siso_register: SISORegister):
+    siso_register.reset_states()
+
+    siso_register(True, True)
+    siso_register(True, True)
+    siso_register(True, True)
+    siso_register(True, True)
+
+    assert siso_register._d_flip_flop3._q is True
+    assert siso_register._d_flip_flop2._q is True
+    assert siso_register._d_flip_flop1._q is True
+    assert siso_register._d_flip_flop0._q is True
+
+def test_siso_set1110(siso_register: SISORegister):
+    siso_register.reset_states()
+
+    siso_register(False, True)
+    siso_register(True, True)
+    siso_register(True, True)
+    siso_register(True, True)
+
+    assert siso_register._d_flip_flop3._q is True
+    assert siso_register._d_flip_flop2._q is True
+    assert siso_register._d_flip_flop1._q is True
+    assert siso_register._d_flip_flop0._q is False
+
+def test_siso_set1110_memorize(siso_register: SISORegister):
+    siso_register.reset_states()
+
+    siso_register(False, True)
+    siso_register(True, True)
+    siso_register(True, True)
+    siso_register(True, True)
+
+    assert siso_register._d_flip_flop3._q is True
+    assert siso_register._d_flip_flop2._q is True
+    assert siso_register._d_flip_flop1._q is True
+    assert siso_register._d_flip_flop0._q is False
+
+    for _ in range(10):
+        siso_register(False, False)
+
+    assert siso_register._d_flip_flop3._q is True
+    assert siso_register._d_flip_flop2._q is True
+    assert siso_register._d_flip_flop1._q is True
+    assert siso_register._d_flip_flop0._q is False
+
+def test_sipo_register_reset(sipo_register: SIPORegister):
+    sipo_register.reset_states()
+    assert sipo_register(False, False) == (False, False, False, False)
+
+def test_sipo_set1011(sipo_register: SIPORegister):
+    sipo_register.reset_states()
+
+    assert sipo_register(True, True) == (True, False, False, False)
+    assert sipo_register(True, True) == (True, True, False, False)
+    assert sipo_register(False, True) == (False, True, True, False)
+    assert sipo_register(True, True) == (True, False, True, True)
+
+def test_sipo_set1111(sipo_register: SIPORegister):
+    sipo_register.reset_states()
+
+    assert sipo_register(True, True) == (True, False, False, False)
+    assert sipo_register(True, True) == (True, True, False, False)
+    assert sipo_register(True, True) == (True, True, True, False)
+    assert sipo_register(True, True) == (True, True, True, True)
+
+
+def test_sipo_set1110(sipo_register: SIPORegister):
+    sipo_register.reset_states()
+
+    assert sipo_register(True, True) == (True, False, False, False)
+    assert sipo_register(True, True) == (True, True, False, False)
+    assert sipo_register(True, True) == (True, True, True, False)
+    assert sipo_register(False, True) == (False, True, True, True)
+
+def test_sipo_set1110_memorize(sipo_register: SIPORegister):
+    sipo_register.reset_states()
+
+    assert sipo_register(True, True) == (True, False, False, False)
+    assert sipo_register(True, True) == (True, True, False, False)
+    assert sipo_register(True, True) == (True, True, True, False)
+    assert sipo_register(False, True) == (False, True, True, True)
+
+    for _ in range(10):
+        assert sipo_register(False, False) == (False, True, True, True)
