@@ -19,9 +19,14 @@ class FlipFlop(ABC):
         """
         Resets the state of the flip flop
         """
-        # TODO: check if this is a correct way to reset or a hack
-        self._q = True
+        self._q = False
         self._q_bar = True
+
+    def __str__(self):
+        """
+        Print states
+        """
+        return f"Q={self._q}, Q bar={self._q_bar}"
 
 
 class SRFlipFlop(FlipFlop):
@@ -33,8 +38,10 @@ class SRFlipFlop(FlipFlop):
         super().__init__()
         self._nand0 = NANDGate()
         self._nand1 = NANDGate()
+        self._nand2 = NANDGate()
+        self._nand3 = NANDGate()
 
-    def __call__(self, input_set: bool, input_reset: bool) -> Tuple[bool, bool]:
+    def __call__(self, input_set: bool, input_reset: bool, enable: bool) -> Tuple[bool, bool]:
         """
         Met à jour les états Q et notQ en fonction des entrées S (Set) et R (Reset).
         :param S: Entrée Set (active basse)
@@ -43,42 +50,35 @@ class SRFlipFlop(FlipFlop):
         if input_set and input_reset:
             raise ValueError("Invalid state: set and reset both high")
 
-        new_q = self._nand0(not input_set, self._q_bar)
+        nand0 = self._nand0(input_set, enable)
+        nand1 = self._nand1(enable, input_reset)
 
-        # TODO: computation uses current state of Q (using new_q), it is weird but it seems it works
-        new_q_bar = self._nand1(new_q, not input_reset)
+        next_q = self._nand2(nand0, self._q_bar)
+        next_q_bar = self._nand3(self._q, nand1)
 
-        self._q = new_q
-        self._q_bar = new_q_bar
+        self._q = next_q
+        self._q_bar = next_q_bar
 
         return self._q, self._q_bar
 
+    def __str__(self):
+        return f"SR Flip-Flop: {super().__str__()}"
 
-class DFlipFlop(FlipFlop):
+
+class DFlipFlop(SRFlipFlop):
     """
-    D flip flop
+    D flip-flop class.
+    Inherits SR flip-flop since it is a SR flip-flop with set/resete being 
+    complementary with a NOT gate.
     https://www.paturage.be/electro/inforauto/portes/bascule.html
     """
     def __init__(self):
         super().__init__()
         self._not = NOTGate()
-        self._nand0 = NANDGate()
-        self._nand1 = NANDGate()
-        self._nand2 = NANDGate()
-        self._nand3 = NANDGate()
 
     def __call__(self, input_signal: bool, enable: bool) -> bool:
         input_signal_bar = self._not(input_signal)
+        return super().__call__(input_signal, input_signal_bar, enable)
 
-        nand0 = self._nand0(input_signal, enable)
-        nand1 = self._nand1(input_signal_bar, enable)
-
-        new_q = self._nand2(nand0, self._q_bar)
-
-        # TODO: computation uses current state of Q (using new_q), it is weird but it seems it works
-        new_q_bar = self._nand1(new_q, nand1)
-
-        self._q = new_q
-        self._q_bar = new_q_bar
-
-        return self._q, self._q_bar
+    def __str__(self):
+        return f"D Flip-Flop: {super().__str__()}"
