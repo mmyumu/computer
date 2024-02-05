@@ -76,7 +76,7 @@ class DFlipFlop(SRFlipFlop):
         super().__init__()
         self._not = NOTGate()
 
-    def __call__(self, input_signal: bool, enable: bool) -> bool:
+    def __call__(self, input_signal: bool, enable: bool) -> Tuple[bool, bool]:
         input_signal_bar = self._not(input_signal)
         return super().__call__(input_signal, input_signal_bar, enable)
 
