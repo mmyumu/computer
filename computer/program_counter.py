@@ -3,7 +3,7 @@ Program Counter (PC) module.
 Program Counter increments its counter to point to the next instruction.
 """
 from computer.electronic.circuits.adder import FullAdder, HalfAdder
-from computer.electronic.circuits.register import SIPORegister4
+from computer.electronic.circuits.register import PIPORegister4
 
 
 class ProgramCounter:
@@ -13,7 +13,7 @@ class ProgramCounter:
     Use HalfAdder and Full adder to increment the register value.
     """
     def __init__(self):
-        self._register = SIPORegister4()
+        self._register = PIPORegister4()
         self._half_adder = HalfAdder()
         self._full_adder = FullAdder()
 
@@ -34,13 +34,7 @@ class ProgramCounter:
             raise ValueError("Program counter overflow.")
 
         # Update register
-        self._register.set_d(b0)
-        self._register.clock_tick(True)
-        self._register.set_d(b1)
-        self._register.clock_tick(True)
-        self._register.set_d(b2)
-        self._register.clock_tick(True)
-        self._register.set_d(b3)
+        self._register.set_d(b3, b2, b1, b0)
         self._register.clock_tick(True)
 
     @property
