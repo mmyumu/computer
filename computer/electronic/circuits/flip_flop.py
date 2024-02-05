@@ -12,21 +12,21 @@ class FlipFlop(ABC):
     Base class of flip flop
     """
     def __init__(self):
-        self._q = bool(random.getrandbits(1))
-        self._q_bar = bool(random.getrandbits(1))
+        self.q = bool(random.getrandbits(1))
+        self.q_bar = bool(random.getrandbits(1))
 
     def reset_states(self):
         """
         Resets the state of the flip flop
         """
-        self._q = False
-        self._q_bar = True
+        self.q = False
+        self.q_bar = True
 
     def __str__(self):
         """
         Print states
         """
-        return f"Q={self._q}, Q bar={self._q_bar}"
+        return f"Q={self.q}, Q bar={self.q_bar}"
 
 
 class SRFlipFlop(FlipFlop):
@@ -41,25 +41,49 @@ class SRFlipFlop(FlipFlop):
         self._nand2 = NANDGate()
         self._nand3 = NANDGate()
 
-    def __call__(self, input_set: bool, input_reset: bool, enable: bool) -> Tuple[bool, bool]:
+        self._set = bool(random.getrandbits(1))
+        self._reset = bool(random.getrandbits(1))
+
+    @property
+    def output(self):
         """
-        Met à jour les états Q et notQ en fonction des entrées S (Set) et R (Reset).
-        :param S: Entrée Set (active basse)
-        :param R: Entrée Reset (active basse)
+        Returns Q and Qbar outputs
         """
-        if input_set and input_reset:
+        return self.q, self.q_bar
+
+    def set_sr(self, input_set: bool, input_reset: bool):
+        """
+        Set the SET/RESET inputs of the SR flip-flop
+        """
+        self._set = input_set
+        self._reset = input_reset
+
+    def reset_states(self):
+        super().reset_states()
+        self._set = False
+        self._reset = True
+
+    def clock_tick(self, enable: bool) -> Tuple[bool, bool]:
+        """
+        Update flip-flop status on clock tick
+        """
+        if self._set and self._reset:
             raise ValueError("Invalid state: set and reset both high")
 
-        nand0 = self._nand0(input_set, enable)
-        nand1 = self._nand1(enable, input_reset)
+        nand0 = self._nand0(self._set, enable)
+        nand1 = self._nand1(enable, self._reset)
 
-        next_q = self._nand2(nand0, self._q_bar)
-        next_q_bar = self._nand3(self._q, nand1)
+        next_q = self._nand2(nand0, self.q_bar)
+        next_q_bar = self._nand3(self.q, nand1)
 
-        self._q = next_q
-        self._q_bar = next_q_bar
+        # 2nd propagation to get the correct result
+        next_q = self._nand2(nand0, next_q_bar)
+        next_q_bar = self._nand3(next_q, nand1)
 
-        return self._q, self._q_bar
+        self.q = next_q
+        self.q_bar = next_q_bar
+
+        return self.output
 
     def __str__(self):
         return f"SR Flip-Flop: {super().__str__()}"
@@ -76,9 +100,12 @@ class DFlipFlop(SRFlipFlop):
         super().__init__()
         self._not = NOTGate()
 
-    def __call__(self, input_signal: bool, enable: bool) -> Tuple[bool, bool]:
-        input_signal_bar = self._not(input_signal)
-        return super().__call__(input_signal, input_signal_bar, enable)
+    def set_d(self, input_d: bool):
+        """
+        Set the D input of the D flip-flop
+        """
+        input_d_bar = self._not(input_d)
+        return self.set_sr(input_d, input_d_bar)
 
     def __str__(self):
         return f"D Flip-Flop: {super().__str__()}"

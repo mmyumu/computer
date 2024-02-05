@@ -3,6 +3,7 @@ Registers module
 """
 
 from abc import ABC, abstractmethod
+import random
 from typing import Tuple
 
 from computer.electronic.circuits.flip_flop import DFlipFlop
@@ -30,19 +31,37 @@ class SISORegister(Register):
         self._d_flip_flop2 = DFlipFlop()
         self._d_flip_flop3 = DFlipFlop()
 
-    def __call__(self, input_signal: bool, enable: bool) -> bool:
-        self._d_flip_flop0(self._d_flip_flop1._q, enable)
-        q0, _ = self._d_flip_flop0(self._d_flip_flop1._q, enable)
+        self._d = bool(random.getrandbits(1))
 
-        self._d_flip_flop1(self._d_flip_flop2._q, enable)
-        self._d_flip_flop1(self._d_flip_flop2._q, enable)
+    @property
+    def output(self):
+        """
+        Return the output of the register
+        """
+        return self._d_flip_flop0.q
 
-        self._d_flip_flop2(self._d_flip_flop3._q, enable)
-        self._d_flip_flop2(self._d_flip_flop3._q, enable)
+    # def __call__(self, input_signal: bool, enable: bool) -> bool:
+    def set_d(self, input_d: bool):
+        """
+        Set the D input of the register
+        """
+        self._d = input_d
 
-        self._d_flip_flop3(input_signal, enable)
-        self._d_flip_flop3(input_signal, enable)
-        return q0
+    def clock_tick(self, enable: bool):
+        """
+        Update flip-flop status on clock tick
+        """
+        self._d_flip_flop0.set_d(self._d_flip_flop1.q)
+        self._d_flip_flop1.set_d(self._d_flip_flop2.q)
+        self._d_flip_flop2.set_d(self._d_flip_flop3.q)
+        self._d_flip_flop3.set_d(self._d)
+
+        self._d_flip_flop0.clock_tick(enable)
+        self._d_flip_flop1.clock_tick(enable)
+        self._d_flip_flop2.clock_tick(enable)
+        self._d_flip_flop3.clock_tick(enable)
+
+        return self.output
 
     def reset_states(self):
         # TODO: Is it a good implementation of the reset?
@@ -65,6 +84,13 @@ class SIPORegister(SISORegister):
     SISO (Serial-In Serial-Out) register
     https://www.elprocus.com/sipo-shift-register/
     """
-    def __call__(self, input_signal: bool, enable: bool) -> Tuple[bool, bool, bool, bool]:
-        super().__call__(input_signal, enable)
-        return self._d_flip_flop3._q, self._d_flip_flop2._q, self._d_flip_flop1._q, self._d_flip_flop0._q
+    @property
+    def output(self):
+        """
+        Return the output of the register
+        """
+        return self._d_flip_flop3.q, self._d_flip_flop2.q, self._d_flip_flop1.q, self._d_flip_flop0.q
+
+    # def clock_tick(self, enable: bool):
+    #     super().clock_tick(enable)
+    #     return self._d_flip_flop3.q, self._d_flip_flop2.q, self._d_flip_flop1.q, self._d_flip_flop0.q

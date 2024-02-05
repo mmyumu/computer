@@ -22,7 +22,7 @@ class ProgramCounter:
         Increments the counter.
         """
         # Get bits from register
-        b3, b2, b1, b0 = self._register(False, False)
+        b3, b2, b1, b0 = self._register.output
 
         # Perform increment
         b0, carry = self._half_adder(b0, True)
@@ -34,17 +34,21 @@ class ProgramCounter:
             raise ValueError("Program counter overflow.")
 
         # Update register
-        self._register(b0, True)
-        self._register(b1, True)
-        self._register(b2, True)
-        self._register(b3, True)
+        self._register.set_d(b0)
+        self._register.clock_tick(True)
+        self._register.set_d(b1)
+        self._register.clock_tick(True)
+        self._register.set_d(b2)
+        self._register.clock_tick(True)
+        self._register.set_d(b3)
+        self._register.clock_tick(True)
 
     @property
     def value(self):
         """
         Get the current counter value
         """
-        return self._register(False, False)
+        return self._register.output
 
         # bits[0] = sum_bit
         # # On propage le retenue à travers les autres bits
