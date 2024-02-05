@@ -3,7 +3,7 @@ Program Counter (PC) module.
 Program Counter increments its counter to point to the next instruction.
 """
 from computer.electronic.circuits.adder import FullAdder, HalfAdder
-from computer.electronic.circuits.register import SIPORegister
+from computer.electronic.circuits.register import SIPORegister4
 
 
 class ProgramCounter:
@@ -13,7 +13,7 @@ class ProgramCounter:
     Use HalfAdder and Full adder to increment the register value.
     """
     def __init__(self):
-        self._register = SIPORegister()
+        self._register = SIPORegister4()
         self._half_adder = HalfAdder()
         self._full_adder = FullAdder()
 
@@ -49,25 +49,6 @@ class ProgramCounter:
         Get the current counter value
         """
         return self._register.output
-
-        # bits[0] = sum_bit
-        # # On propage le retenue à travers les autres bits
-        # for i in range(1, 4):
-        #     sum_bit, new_carry = self.incrementer(bits[i], carry)
-        #     bits[i] = sum_bit
-        #     carry = new_carry
-        # Mise à jour du registre avec la nouvelle valeur
-        # for i, bit in enumerate(reversed(bits)):
-        #     self.value(bit, self.clock.get_clock_state())
-
-    # def get_value(self):
-    #     return [self.value._d_flip_flop3._q, self.value._d_flip_flop2._q,
-    #             self.value._d_flip_flop1._q, self.value._d_flip_flop0._q]
-
-    # def set_value(self, new_value):
-    #     # Cette fonction permet de définir manuellement la valeur du PC (pour les branchements par exemple)
-    #     for bit in new_value:
-    #         self.value(bit, self.clock.get_clock_state())
 
     def reset(self):
         """

@@ -3,21 +3,25 @@ Test for registers
 """
 import pytest
 
-from computer.electronic.circuits.register import SIPORegister, SISORegister
+from computer.electronic.circuits.register import PIPORegister4, SIPORegister4, SISORegister4
 
 
 # pylint: disable=C0116,W0212
 
 @pytest.fixture(name="siso_register")
 def fixture_siso_register():
-    return SISORegister()
+    return SISORegister4()
 
 @pytest.fixture(name="sipo_register")
 def fixture_sipo_register():
-    return SIPORegister()
+    return SIPORegister4()
+
+@pytest.fixture(name="pipo_register")
+def fixture_pipo_register():
+    return PIPORegister4()
 
 
-def test_siso_register_reset(siso_register: SISORegister):
+def test_siso_register_reset(siso_register: SISORegister4):
     siso_register.reset_states()
 
     siso_register.set_d(False)
@@ -26,7 +30,8 @@ def test_siso_register_reset(siso_register: SISORegister):
     assert siso_register.clock_tick(False) is False
     assert siso_register.clock_tick(False) is False
 
-def test_siso_set1011(siso_register: SISORegister):
+
+def test_siso_set1011(siso_register: SISORegister4):
     siso_register.reset_states()
 
     siso_register.set_d(True)
@@ -46,7 +51,8 @@ def test_siso_set1011(siso_register: SISORegister):
     assert siso_register._d_flip_flop1.q is True
     assert siso_register._d_flip_flop0.q is True
 
-def test_siso_set1111(siso_register: SISORegister):
+
+def test_siso_set1111(siso_register: SISORegister4):
     siso_register.reset_states()
 
     siso_register.set_d(True)
@@ -66,7 +72,8 @@ def test_siso_set1111(siso_register: SISORegister):
     assert siso_register._d_flip_flop1.q is True
     assert siso_register._d_flip_flop0.q is True
 
-def test_siso_set1110(siso_register: SISORegister):
+
+def test_siso_set1110(siso_register: SISORegister4):
     siso_register.reset_states()
 
     siso_register.set_d(False)
@@ -86,7 +93,8 @@ def test_siso_set1110(siso_register: SISORegister):
     assert siso_register._d_flip_flop1.q is True
     assert siso_register._d_flip_flop0.q is False
 
-def test_siso_set1110_memorize(siso_register: SISORegister):
+
+def test_siso_set1110_memorize(siso_register: SISORegister4):
     siso_register.reset_states()
 
     siso_register.set_d(False)
@@ -114,11 +122,13 @@ def test_siso_set1110_memorize(siso_register: SISORegister):
     assert siso_register._d_flip_flop1.q is True
     assert siso_register._d_flip_flop0.q is False
 
-def test_sipo_register_reset(sipo_register: SIPORegister):
+
+def test_sipo_register_reset(sipo_register: SIPORegister4):
     sipo_register.reset_states()
     assert sipo_register.clock_tick(False) == (False, False, False, False)
 
-def test_sipo_set1011(sipo_register: SIPORegister):
+
+def test_sipo_set1011(sipo_register: SIPORegister4):
     sipo_register.reset_states()
 
     sipo_register.set_d(True)
@@ -133,7 +143,8 @@ def test_sipo_set1011(sipo_register: SIPORegister):
     sipo_register.set_d(True)
     assert sipo_register.clock_tick(True) == (True, False, True, True)
 
-def test_sipo_set1111(sipo_register: SIPORegister):
+
+def test_sipo_set1111(sipo_register: SIPORegister4):
     sipo_register.reset_states()
 
     sipo_register.set_d(True)
@@ -149,7 +160,7 @@ def test_sipo_set1111(sipo_register: SIPORegister):
     assert sipo_register.clock_tick(True) == (True, True, True, True)
 
 
-def test_sipo_set1110(sipo_register: SIPORegister):
+def test_sipo_set1110(sipo_register: SIPORegister4):
     sipo_register.reset_states()
 
     sipo_register.set_d(True)
@@ -164,7 +175,8 @@ def test_sipo_set1110(sipo_register: SIPORegister):
     sipo_register.set_d(False)
     assert sipo_register.clock_tick(True) == (False, True, True, True)
 
-def test_sipo_set1110_memorize(sipo_register: SIPORegister):
+
+def test_sipo_set1110_memorize(sipo_register: SIPORegister4):
     sipo_register.reset_states()
 
     sipo_register.set_d(True)
@@ -181,3 +193,34 @@ def test_sipo_set1110_memorize(sipo_register: SIPORegister):
 
     for _ in range(10):
         assert sipo_register.clock_tick(False) == (False, True, True, True)
+
+
+def test_pipo_set1011(pipo_register: PIPORegister4):
+    pipo_register.reset_states()
+
+    pipo_register.set_d(True, False, True, True)
+    assert pipo_register.clock_tick(True) == (True, False, True, True)
+
+
+def test_pipo_set1111(pipo_register: PIPORegister4):
+    pipo_register.reset_states()
+
+    pipo_register.set_d(True, True, True, True)
+    assert pipo_register.clock_tick(True) == (True, True, True, True)
+
+
+def test_pipo_set1110(pipo_register: PIPORegister4):
+    pipo_register.reset_states()
+
+    pipo_register.set_d(True, True, True, False)
+    assert pipo_register.clock_tick(True) == (True, True, True, False)
+
+
+def test_pipo_set1110_memorize(pipo_register: PIPORegister4):
+    pipo_register.reset_states()
+
+    pipo_register.set_d(True, True, True, False)
+    assert pipo_register.clock_tick(True) == (True, True, True, False)
+
+    for _ in range(10):
+        assert pipo_register.clock_tick(False) == (True, True, True, False)
