@@ -35,7 +35,12 @@ class ProgramCounter:
 
         # Update register
         self._register.set_d(b3, b2, b1, b0)
-        self._register.clock_tick(True)
+
+    def clock_tick(self, enable: bool):
+        """
+        Update the program counter on clock tick
+        """
+        self._register.clock_tick(enable)
 
     @property
     def value(self):
