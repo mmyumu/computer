@@ -2,8 +2,9 @@
 Test for Memory
 """
 import pytest
+from computer.data_types import Address2, Data4
 
-from computer.memory import Address2, Data4, Memory
+from computer.memory import Memory
 
 
 # pylint: disable=C0116,W0212

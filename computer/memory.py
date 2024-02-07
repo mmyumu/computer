@@ -1,28 +1,9 @@
 """
 Memory module
 """
+from computer.data_types import Address2, Data4
 from computer.electronic.circuits.decoder import Decoder2To4
 from computer.electronic.circuits.register import PIPORegister4
-
-
-class Address2:
-    """
-    Class to store an address of 2 bits
-    """
-    def __init__(self, a1: bool, a0: bool) -> None:
-        self.a1 = a1
-        self.a0 = a0
-
-
-class Data4:
-    """
-    Class to store a data of 4 bits
-    """
-    def __init__(self, d3: bool, d2: bool, d1: bool, d0: bool) -> None:
-        self.d3 = d3
-        self.d2 = d2
-        self.d1 = d1
-        self.d0 = d0
 
 
 class Memory:
@@ -37,17 +18,17 @@ class Memory:
         """
         Write the given value at the given address of the memory
         """
-        select_lines = self._decoder(a.a1, a.a0, True)
+        select_lines = self._decoder(a[1], a[0], True)
         for i, select in enumerate(select_lines):
             if select:
-                self._registers[i].set_d(d.d3, d.d2, d.d1, d.d0)
+                self._registers[i].set_d(d[3], d[2], d[1], d[0])
                 break
 
     def read(self, a: Address2):
         """
         Read data from memory at the given address
         """
-        select_lines = self._decoder(a.a1, a.a0, True)
+        select_lines = self._decoder(a[1], a[0], True)
         for i, select in enumerate(select_lines):
             if select:
                 return self._registers[i].output
