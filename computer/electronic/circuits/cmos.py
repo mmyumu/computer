@@ -105,6 +105,23 @@ class ANDGate:
         return self._not_gate(self._nand_gate(input_signal_a, input_signal_b))
 
 
+class ANDGate3:
+    """
+    AND logic gate using CMOS technology with 3 inputs
+    https://www.electronics-tutorials.ws/logic/logic_2.html
+    """
+    def __init__(self):
+        self._and0 = ANDGate()
+        self._and1 = ANDGate()
+
+    def __call__(self, input_signal_a: bool, input_signal_b: bool, input_signal_c: bool) -> bool:
+        """
+        Logic gate operates inputs and returns output
+        """
+        and0 = self._and0(input_signal_a, input_signal_b)
+        return self._and1(and0, input_signal_c)
+
+
 class ORGate:
     """
     OR logic gate using CMOS technology

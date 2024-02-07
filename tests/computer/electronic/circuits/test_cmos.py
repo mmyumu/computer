@@ -2,7 +2,7 @@
 Test for CMOS logic gates
 """
 import pytest
-from computer.electronic.circuits.cmos import ANDGate, NANDGate, NORGate, NOTGate, ORGate, XNORGate, XORGate
+from computer.electronic.circuits.cmos import ANDGate, ANDGate3, NANDGate, NORGate, NOTGate, ORGate, XNORGate, XORGate
 
 
 # pylint: disable=C0116
@@ -22,6 +22,10 @@ def fixture_cmos_nor_gate():
 @pytest.fixture(name="cmos_and_gate")
 def fixture_cmos_and_gate():
     return ANDGate()
+
+@pytest.fixture(name="cmos_and_gate3")
+def fixture_cmos_and_gate3():
+    return ANDGate3()
 
 @pytest.fixture(name="cmos_or_gate")
 def fixture_cmos_or_gate():
@@ -77,6 +81,30 @@ def test_and_gate_a_false_b_true(cmos_and_gate: ANDGate):
 
 def test_and_gate_a_true_b_true(cmos_and_gate: ANDGate):
     assert cmos_and_gate(True, True) is True
+
+def test_and_gate3_a_false_b_false_c_false(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(False, False, False) is False
+
+def test_and_gate3_a_false_b_false_c_true(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(False, False, True) is False
+
+def test_and_gate3_a_true_b_false_c_false(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(True, False, False) is False
+
+def test_and_gate3_a_true_b_false_c_true(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(True, False, True) is False
+
+def test_and_gate3_a_false_b_true_c_false(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(False, True, False) is False
+
+def test_and_gate3_a_false_b_true_c_true(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(False, True, True) is False
+
+def test_and_gate3_a_true_b_true_c_false(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(True, True, False) is False
+
+def test_and_gate3_a_true_b_true_c_true(cmos_and_gate3: ANDGate3):
+    assert cmos_and_gate3(True, True, True) is True
 
 def test_or_gate_a_false_b_false(cmos_or_gate: ORGate):
     assert cmos_or_gate(False, False) is False
