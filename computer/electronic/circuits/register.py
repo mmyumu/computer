@@ -65,6 +65,12 @@ class SISORegister4(Register4):
         """
         self._d = input_d
 
+    def reset_states(self):
+        super().reset_states()
+
+        # TODO: Is it magical to force input value on reset?
+        self._d = False
+
     def clock_tick(self, enable: bool):
         """
         Update flip-flop status on clock tick
@@ -113,6 +119,15 @@ class PIPORegister4(Register4):
         Return the output of the register
         """
         return self._d_flip_flop3.q, self._d_flip_flop2.q, self._d_flip_flop1.q, self._d_flip_flop0.q
+
+    def reset_states(self):
+        super().reset_states()
+
+        # TODO: Is it magical to force input values on reset?
+        self._d3 = False
+        self._d2 = False
+        self._d1 = False
+        self._d0 = False
 
     def set_d(self, input_d3: bool, input_d2: bool, input_d1: bool, input_d0: bool):
         """
