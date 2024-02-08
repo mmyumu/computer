@@ -6,7 +6,8 @@ from computer.electronic.circuits.decoder import Decoder2To4
 from computer.electronic.circuits.register import PIPORegister4
 
 
-class Memory:
+# TODO: Could be improved to a matrix of cells instead of an array
+class SRAM:
     """
     Memory class.
     """
@@ -32,6 +33,7 @@ class Memory:
         for i, select in enumerate(select_lines):
             if select:
                 return self._registers[i].output
+        raise ValueError(f"Address {a} cannot be read")
 
     def reset(self):
         """

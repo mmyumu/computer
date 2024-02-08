@@ -4,6 +4,7 @@ Binary decoders
 from typing import Tuple
 from computer.electronic.circuits.cmos import ANDGate, ANDGate3, NOTGate
 
+# pylint: disable=R0913,R0914
 
 class Decoder2To4:
     """
@@ -47,33 +48,21 @@ class Decoder3To8:
         self._decoder2to4_0 = Decoder2To4()
         self._decoder2to4_1 = Decoder2To4()
 
-        self._and0 = ANDGate()
-        self._and1 = ANDGate()
-        self._and2 = ANDGate()
-        self._and3 = ANDGate()
-        self._and4 = ANDGate()
-        self._and5 = ANDGate()
-        self._and6 = ANDGate()
-        self._and7 = ANDGate()
+        self._and_gates = [ANDGate()] * 8
 
     def __call__(self, input_signal_a2: bool, input_signal_a1: bool, input_signal_a0: bool, enable: bool) -> Tuple[bool, bool, bool, bool]:
         """
         Logic gate operates inputs and returns outputs
         """
         not2 = self._not(input_signal_a2)
-        d3, d2, d1, d0 = self._decoder2to4_0(input_signal_a1, input_signal_a0, not2)
-        d7, d6, d5, d4 = self._decoder2to4_1(input_signal_a1, input_signal_a0, input_signal_a2)
+        low = self._decoder2to4_0(input_signal_a1, input_signal_a0, not2)
+        high = self._decoder2to4_1(input_signal_a1, input_signal_a0, input_signal_a2)
 
-        d0 = self._and0(d0, enable)
-        d1 = self._and0(d1, enable)
-        d2 = self._and0(d2, enable)
-        d3 = self._and0(d3, enable)
-        d4 = self._and0(d4, enable)
-        d5 = self._and0(d5, enable)
-        d6 = self._and0(d6, enable)
-        d7 = self._and0(d7, enable)
+        ds = []
+        for d, and_gate in zip(high + low, self._and_gates):
+            ds.append(and_gate(d, enable))
 
-        return d7, d6, d5, d4, d3, d2, d1, d0
+        return ds
 
 
 class Decoder4To16:
@@ -86,48 +75,137 @@ class Decoder4To16:
         self._decoder3to8_0 = Decoder3To8()
         self._decoder3to8_1 = Decoder3To8()
 
-        self._and0 = ANDGate()
-        self._and1 = ANDGate()
-        self._and2 = ANDGate()
-        self._and3 = ANDGate()
-        self._and4 = ANDGate()
-        self._and5 = ANDGate()
-        self._and6 = ANDGate()
-        self._and7 = ANDGate()
-        self._and8 = ANDGate()
-        self._and9 = ANDGate()
-        self._and10 = ANDGate()
-        self._and11 = ANDGate()
-        self._and12 = ANDGate()
-        self._and13 = ANDGate()
-        self._and14 = ANDGate()
-        self._and15 = ANDGate()
+        self._and_gates = [ANDGate()] * 16
 
-    def __call__(self, input_signal_a3: bool, input_signal_a2: bool, input_signal_a1: bool, input_signal_a0:
-                 bool, enable: bool) -> Tuple[bool, bool, bool, bool]:
+    def __call__(self, input_signal_a3: bool, input_signal_a2: bool, input_signal_a1: bool, input_signal_a0: bool,
+                 enable: bool) -> Tuple[bool, bool, bool, bool]:
         """
         Logic gate operates inputs and returns outputs
         """
         not3 = self._not(input_signal_a3)
 
-        d7, d6, d5, d4, d3, d2, d1, d0 = self._decoder3to8_0(input_signal_a2, input_signal_a1, input_signal_a0, not3)
-        d15, d14, d13, d12, d11, d10, d9, d8 = self._decoder3to8_0(input_signal_a2, input_signal_a1, input_signal_a0, input_signal_a3)
+        low = self._decoder3to8_0(input_signal_a2, input_signal_a1, input_signal_a0, not3)
+        high = self._decoder3to8_0(input_signal_a2, input_signal_a1, input_signal_a0, input_signal_a3)
 
-        d0 = self._and0(d0, enable)
-        d1 = self._and0(d1, enable)
-        d2 = self._and0(d2, enable)
-        d3 = self._and0(d3, enable)
-        d4 = self._and0(d4, enable)
-        d5 = self._and0(d5, enable)
-        d6 = self._and0(d6, enable)
-        d7 = self._and0(d7, enable)
-        d8 = self._and0(d8, enable)
-        d9 = self._and0(d9, enable)
-        d10 = self._and0(d10, enable)
-        d11 = self._and0(d11, enable)
-        d12 = self._and0(d12, enable)
-        d13 = self._and0(d13, enable)
-        d14 = self._and0(d14, enable)
-        d15 = self._and0(d15, enable)
+        ds = []
+        for d, and_gate in zip(high + low, self._and_gates):
+            ds.append(and_gate(d, enable))
 
-        return d15, d14, d13, d12, d11, d10, d9, d8, d7, d6, d5, d4, d3, d2, d1, d0
+        return ds
+
+
+class Decoder5To32:
+    """
+    5-to-32 binary decoder
+    """
+    def __init__(self):
+        self._not = NOTGate()
+        self._decoder4to16_0 = Decoder4To16()
+        self._decoder4to16_1 = Decoder4To16()
+
+        self._and_gates = [ANDGate()] * 32
+
+    def __call__(self, input_signal_a4: bool, input_signal_a3: bool, input_signal_a2: bool, input_signal_a1: bool,
+                 input_signal_a0: bool, enable: bool) -> Tuple[bool, bool, bool, bool]:
+        """
+        Logic gate operates inputs and returns outputs
+        """
+        not4 = self._not(input_signal_a4)
+
+        low = self._decoder4to16_0(input_signal_a3, input_signal_a2, input_signal_a1, input_signal_a0, not4)
+        high = self._decoder4to16_1(input_signal_a3, input_signal_a2, input_signal_a1, input_signal_a0, input_signal_a4)
+
+        ds = []
+        for d, and_gate in zip(high + low, self._and_gates):
+            ds.append(and_gate(d, enable))
+
+        return ds
+
+
+class Decoder6To64:
+    """
+    6-to-64 binary decoder
+    """
+    def __init__(self):
+        self._not = NOTGate()
+        self._decoder5to32_0 = Decoder5To32()
+        self._decoder5to32_1 = Decoder5To32()
+
+        self._and_gates = [ANDGate()] * 64
+
+    def __call__(self, input_signal_a5: bool, input_signal_a4: bool, input_signal_a3: bool, input_signal_a2: bool,
+                 input_signal_a1: bool, input_signal_a0: bool, enable: bool) -> Tuple[bool, bool, bool, bool]:
+        """
+        Logic gate operates inputs and returns outputs
+        """
+        not5 = self._not(input_signal_a5)
+
+        low = self._decoder5to32_0(input_signal_a4, input_signal_a3, input_signal_a2, input_signal_a1, input_signal_a0, not5)
+        high = self._decoder5to32_0(input_signal_a4, input_signal_a3, input_signal_a2, input_signal_a1, input_signal_a0, input_signal_a5)
+
+        ds = []
+        for d, and_gate in zip(high + low, self._and_gates):
+            ds.append(and_gate(d, enable))
+
+        return ds
+
+
+class Decoder7To128:
+    """
+    7-to-128 binary decoder
+    """
+    def __init__(self):
+        self._not = NOTGate()
+        self._decoder6to64_0 = Decoder6To64()
+        self._decoder6to64_1 = Decoder6To64()
+
+        self._and_gates = [ANDGate()] * 128
+
+    def __call__(self, input_signal_a6: bool, input_signal_a5: bool, input_signal_a4: bool, input_signal_a3: bool,
+                 input_signal_a2: bool, input_signal_a1: bool, input_signal_a0: bool, enable: bool) -> Tuple[bool, bool, bool, bool]:
+        """
+        Logic gate operates inputs and returns outputs
+        """
+        not6 = self._not(input_signal_a6)
+
+        low = self._decoder6to64_0(input_signal_a5, input_signal_a4, input_signal_a3,
+                                   input_signal_a2, input_signal_a1, input_signal_a0, not6)
+        high = self._decoder6to64_0(input_signal_a5, input_signal_a4, input_signal_a3,
+                                    input_signal_a2, input_signal_a1, input_signal_a0, input_signal_a6)
+
+        ds = []
+        for d, and_gate in zip(high + low, self._and_gates):
+            ds.append(and_gate(d, enable))
+
+        return ds
+
+
+class Decoder8To256:
+    """
+    7-to-128 binary decoder
+    """
+    def __init__(self):
+        self._not = NOTGate()
+        self._decoder7to128_0 = Decoder7To128()
+        self._decoder7to128_1 = Decoder7To128()
+
+        self._and_gates = [ANDGate()] * 256
+
+    def __call__(self, input_signal_a7: bool, input_signal_a6: bool, input_signal_a5: bool, input_signal_a4: bool,
+                 input_signal_a3: bool, input_signal_a2: bool, input_signal_a1: bool, input_signal_a0: bool,
+                 enable: bool) -> Tuple[bool, bool, bool, bool]:
+        """
+        Logic gate operates inputs and returns outputs
+        """
+        not7 = self._not(input_signal_a7)
+
+        low = self._decoder7to128_0(input_signal_a6, input_signal_a5, input_signal_a4, input_signal_a3,
+                                   input_signal_a2, input_signal_a1, input_signal_a0, not7)
+        high = self._decoder7to128_1(input_signal_a6, input_signal_a5, input_signal_a4, input_signal_a3,
+                                    input_signal_a2, input_signal_a1, input_signal_a0, input_signal_a7)
+
+        ds = []
+        for d, and_gate in zip(high + low, self._and_gates):
+            ds.append(and_gate(d, enable))
+
+        return ds

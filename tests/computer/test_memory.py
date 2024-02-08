@@ -4,27 +4,27 @@ Test for Memory
 import pytest
 from computer.data_types import Address2, Data4
 
-from computer.memory import Memory
+from computer.memory import SRAM
 
 
 # pylint: disable=C0116,W0212
 
-@pytest.fixture(name="memory")
+@pytest.fixture(name="sram")
 def fixture_memory():
-    return Memory()
+    return SRAM()
 
 
-def test_write_read(memory: Memory):
-    memory.reset()
-    memory.clock_tick(True)
+def test_write_read(sram: SRAM):
+    sram.reset()
+    sram.clock_tick(True)
 
     a = Address2(0, 0)
     d = Data4(1, 1, 1, 1)
 
-    bits = memory.read(a)
+    bits = sram.read(a)
     assert bits == (0, 0, 0, 0)
 
-    memory.write(a, d)
-    memory.clock_tick(True)
-    bits = memory.read(a)
+    sram.write(a, d)
+    sram.clock_tick(True)
+    bits = sram.read(a)
     assert bits == (1, 1, 1, 1)

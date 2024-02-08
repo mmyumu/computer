@@ -6,6 +6,8 @@ from computer.electronic.components.transistor import PMOSTransistor
 from computer.electronic.circuits.voltage_levels import GND, VDD
 
 
+# pylint: disable=R0902
+
 class NOTGate:
     """
     NOT logic gate using CMOS technology

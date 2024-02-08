@@ -6,6 +6,8 @@ https://fr.wikipedia.org/wiki/Multiplexeur
 from computer.electronic.circuits.cmos import ANDGate, NOTGate, ORGate
 
 
+# pylint: disable=R0913
+
 class MUX2To1():
     """
     Multiplexer 2 to 1

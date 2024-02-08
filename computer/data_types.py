@@ -52,8 +52,15 @@ class Data4(Bits):
     BITS_NUMBER = 4
 
 
-class Opcode4(Bits):
+class Opcode8(Bits):
     """
-    Class to store opcode on 4 bits
+    Class to store opcode on 8 bits
     """
-    BITS_NUMBER = 4
+    BITS_NUMBER = 8
+
+
+class Operand24(Bits):
+    """
+    Class to store operand on 24 bits
+    """
+    BITS_NUMBER = 24

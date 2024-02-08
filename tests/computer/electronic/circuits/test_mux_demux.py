@@ -5,7 +5,7 @@ import pytest
 from computer.electronic.circuits.demux import DEMUX1To2, DEMUX1To4
 from computer.electronic.circuits.mux import MUX2To1, MUX4To1
 
-# pylint: disable=C0116
+# pylint: disable=C0116,R1702
 
 @pytest.fixture(name="mux2to1")
 def fixture_mux2to1():

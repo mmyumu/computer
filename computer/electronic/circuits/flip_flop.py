@@ -7,6 +7,8 @@ from typing import Tuple
 from computer.electronic.circuits.cmos import NANDGate, NOTGate
 
 
+# pylint: disable=R0902
+
 class FlipFlop(ABC):
     """
     Base class of flip flop
