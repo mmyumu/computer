@@ -3,7 +3,7 @@ Program Counter (PC) module.
 Program Counter increments its counter to point to the next instruction.
 """
 from computer.electronic.circuits.adder import FullAdder, HalfAdder
-from computer.electronic.circuits.register import PIPORegister4
+from computer.electronic.circuits.register import PIPORegister
 
 
 class ProgramCounter:
@@ -13,7 +13,7 @@ class ProgramCounter:
     Use HalfAdder and Full adder to increment the register value.
     """
     def __init__(self):
-        self._register = PIPORegister4()
+        self._register = PIPORegister()
         self._half_adder = HalfAdder()
         self._full_adder = FullAdder()
 

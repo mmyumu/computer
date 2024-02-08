@@ -3,7 +3,7 @@ Memory module
 """
 from computer.data_types import Address2, Data4
 from computer.electronic.circuits.decoder import Decoder2To4
-from computer.electronic.circuits.register import PIPORegister4
+from computer.electronic.circuits.register import PIPORegister
 
 
 # TODO: Could be improved to a matrix of cells instead of an array
@@ -12,7 +12,7 @@ class SRAM:
     Memory class.
     """
     def __init__(self):
-        self._registers = [PIPORegister4() for _ in range(4)]
+        self._registers = [PIPORegister() for _ in range(4)]
         self._decoder = Decoder2To4()
 
     def write(self, a: Address2, d: Data4):

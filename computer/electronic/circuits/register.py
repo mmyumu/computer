@@ -1,55 +1,46 @@
 """
 Registers module
 """
-
-from abc import ABC, abstractmethod
 import random
 
 from computer.electronic.circuits.flip_flop import DFlipFlop
 
 
-class Register(ABC):
+class Register:
     """
-    Base class for register
+    Register 4bits
     """
-    @abstractmethod
+    def __init__(self, size=4) -> None:
+        self._size = size
+        self._d_flip_flops = tuple(DFlipFlop() for _ in range(size))
+
     def reset_states(self):
         """
         Reset state of the register
         """
-
-class Register4(Register):
-    """
-    Register 4bits
-    """
-    def __init__(self) -> None:
-        self._d_flip_flop0 = DFlipFlop()
-        self._d_flip_flop1 = DFlipFlop()
-        self._d_flip_flop2 = DFlipFlop()
-        self._d_flip_flop3 = DFlipFlop()
-
-    def reset_states(self):
         # TODO: Is it a good implementation of the reset?
         # It does not use the clock...
-        self._d_flip_flop3.reset_states()
-        self._d_flip_flop2.reset_states()
-        self._d_flip_flop1.reset_states()
-        self._d_flip_flop0.reset_states()
+        for d_flip_flop in self._d_flip_flops:
+            d_flip_flop.reset_states()
 
     def __str__(self):
-        out_str = f"3: {self._d_flip_flop3} \n"
-        out_str += f"2: {self._d_flip_flop2} \n"
-        out_str += f"1: {self._d_flip_flop1} \n"
-        out_str += f"0: {self._d_flip_flop0}"
+        out_str = ""
+        for i, d_flip_flop in enumerate(self._d_flip_flops[::-1]):
+            out_str += f"{i}: {d_flip_flop}"
+
+            if i != 0:
+                out_str += " \n"
+
         return out_str
 
-class SISORegister4(Register4):
+
+class SISORegister(Register):
     """
     SISO (Serial-In Serial-Out) register
     https://www.elprocus.com/siso-shift-register/
     """
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self, size=4) -> None:
+        super().__init__(size=size)
         self._d = bool(random.getrandbits(1))
 
     @property
@@ -57,7 +48,7 @@ class SISORegister4(Register4):
         """
         Return the output of the register
         """
-        return self._d_flip_flop0.q
+        return self._d_flip_flops[0].q
 
     def set_d(self, input_d: bool):
         """
@@ -67,7 +58,6 @@ class SISORegister4(Register4):
 
     def reset_states(self):
         super().reset_states()
-
         # TODO: Is it magical to force input value on reset?
         self._d = False
 
@@ -75,20 +65,20 @@ class SISORegister4(Register4):
         """
         Update flip-flop status on clock tick
         """
-        self._d_flip_flop0.set_d(self._d_flip_flop1.q)
-        self._d_flip_flop1.set_d(self._d_flip_flop2.q)
-        self._d_flip_flop2.set_d(self._d_flip_flop3.q)
-        self._d_flip_flop3.set_d(self._d)
+        for i, d_flip_flop in enumerate(self._d_flip_flops):
+            if i < len(self._d_flip_flops) - 1:
+                previous_d_flip_flop = self._d_flip_flops[i + 1]
+                d_flip_flop.set_d(previous_d_flip_flop.q)
+            else:
+                d_flip_flop.set_d(self._d)
 
-        self._d_flip_flop0.clock_tick(enable)
-        self._d_flip_flop1.clock_tick(enable)
-        self._d_flip_flop2.clock_tick(enable)
-        self._d_flip_flop3.clock_tick(enable)
+        for d_flip_flop in self._d_flip_flops:
+            d_flip_flop.clock_tick(enable)
 
         return self.output
 
 
-class SIPORegister4(SISORegister4):
+class SIPORegister(SISORegister):
     """
     SISO (Serial-In Serial-Out) register
     https://www.elprocus.com/sipo-shift-register/
@@ -98,58 +88,52 @@ class SIPORegister4(SISORegister4):
         """
         Return the output of the register
         """
-        return self._d_flip_flop3.q, self._d_flip_flop2.q, self._d_flip_flop1.q, self._d_flip_flop0.q
+        return tuple(d_flip_flop.q for d_flip_flop in self._d_flip_flops[::-1])
 
 
-class PIPORegister4(Register4):
+class PIPORegister(Register):
     """
     SISO (Serial-In Serial-Out) register
     https://www.elprocus.com/sipo-shift-register/
     """
-    def __init__(self) -> None:
-        super().__init__()
-        self._d3 = bool(random.getrandbits(1))
-        self._d2 = bool(random.getrandbits(1))
-        self._d1 = bool(random.getrandbits(1))
-        self._d0 = bool(random.getrandbits(1))
+    def __init__(self, size=4) -> None:
+        super().__init__(size=size)
+
+        self._ds = []
+        for _ in range(size):
+            self._ds.append(bool(random.getrandbits(1)))
 
     @property
     def output(self):
         """
         Return the output of the register
         """
-        return self._d_flip_flop3.q, self._d_flip_flop2.q, self._d_flip_flop1.q, self._d_flip_flop0.q
+        return tuple(d_flip_flop.q for d_flip_flop in self._d_flip_flops[::-1])
 
     def reset_states(self):
         super().reset_states()
 
         # TODO: Is it magical to force input values on reset?
-        self._d3 = False
-        self._d2 = False
-        self._d1 = False
-        self._d0 = False
+        self._ds = [False] * self._size
 
-    def set_d(self, input_d3: bool, input_d2: bool, input_d1: bool, input_d0: bool):
+    def set_d(self, *args):
         """
         Set inputs d3, d2, d1, d0 of the register
         """
-        self._d3 = input_d3
-        self._d2 = input_d2
-        self._d1 = input_d1
-        self._d0 = input_d0
+
+        if not isinstance(args, (list, tuple)) or len(args) != self._size:
+            raise ValueError(f"Inputs should be {self._size} bits but are: {args}")
+
+        self._ds = args[::-1]
 
     def clock_tick(self, enable: bool):
         """
         Update flip-flop status on clock tick
         """
-        self._d_flip_flop0.set_d(self._d0)
-        self._d_flip_flop1.set_d(self._d1)
-        self._d_flip_flop2.set_d(self._d2)
-        self._d_flip_flop3.set_d(self._d3)
+        for d_flip_flop, d_input in zip(self._d_flip_flops, self._ds):
+            d_flip_flop.set_d(d_input)
 
-        self._d_flip_flop0.clock_tick(enable)
-        self._d_flip_flop1.clock_tick(enable)
-        self._d_flip_flop2.clock_tick(enable)
-        self._d_flip_flop3.clock_tick(enable)
+        for d_flip_flop in self._d_flip_flops:
+            d_flip_flop.clock_tick(enable)
 
         return self.output
