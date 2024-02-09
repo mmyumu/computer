@@ -1,8 +1,10 @@
 """
 Arithmetic logic unit (ALU) module
 """
-from computer.data_types import Opcode8, Operand24
+from computer.data_types import Opcode8, Operand18
 from computer.electronic.circuits.decoder import Decoder8To256
+from computer.memory import SRAM
+from computer.registers import Registers
 
 
 class ALU:
@@ -10,6 +12,8 @@ class ALU:
     Arithmetic logic unit class
     """
     def __init__(self):
+        self._registers = Registers()
+        self._memory = SRAM()
         self._decoder = Decoder8To256()
         self._operations = [
             self._load_mem,
@@ -31,7 +35,7 @@ class ALU:
             self._dec
         ]
 
-    def execute(self, opcode: Opcode8, operand: Operand24):
+    def execute(self, opcode: Opcode8, operand: Operand18):
         """
         Execute the operation defined with the opcode and with operand as parameter
         """
@@ -43,69 +47,69 @@ class ALU:
                 break
 
     @staticmethod
-    def _load_mem(operand: Operand24):
+    def _load_mem(operand: Operand18):
         pass
 
     @staticmethod
-    def _load_imd(operand: Operand24):
+    def _load_imd(operand: Operand18):
         pass
 
     @staticmethod
-    def _load_reg(operand: Operand24):
+    def _load_reg(operand: Operand18):
         pass
 
     @staticmethod
-    def _store_mem(operand: Operand24):
+    def _store_mem(operand: Operand18):
         pass
 
     @staticmethod
-    def _store_reg(operand: Operand24):
+    def _store_reg(operand: Operand18):
         pass
 
     @staticmethod
-    def _jump(operand: Operand24):
+    def _jump(operand: Operand18):
         pass
 
     @staticmethod
-    def _tran(operand: Operand24):
+    def _tran(operand: Operand18):
         pass
 
     @staticmethod
-    def _and(operand: Operand24):
+    def _and(operand: Operand18):
         pass
 
     @staticmethod
-    def _or(operand: Operand24):
+    def _or(operand: Operand18):
         pass
 
     @staticmethod
-    def _xor(operand: Operand24):
+    def _xor(operand: Operand18):
         pass
 
     @staticmethod
-    def _not(operand: Operand24):
+    def _not(operand: Operand18):
         pass
 
     @staticmethod
-    def _add(operand: Operand24):
+    def _add(operand: Operand18):
         pass
 
     @staticmethod
-    def _sub(operand: Operand24):
+    def _sub(operand: Operand18):
         pass
 
     @staticmethod
-    def _mult(operand: Operand24):
+    def _mult(operand: Operand18):
         pass
 
     @staticmethod
-    def _div(operand: Operand24):
+    def _div(operand: Operand18):
         pass
 
     @staticmethod
-    def _inc(operand: Operand24):
+    def _inc(operand: Operand18):
         pass
 
     @staticmethod
-    def _dec(operand: Operand24):
+    def _dec(operand: Operand18):
         pass

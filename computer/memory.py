@@ -1,8 +1,8 @@
 """
 Memory module
 """
-from computer.data_types import Address2, Data4
-from computer.electronic.circuits.decoder import Decoder2To4
+from computer.data_types import Address10, Data4
+from computer.electronic.circuits.decoder import Decoder
 from computer.electronic.circuits.register import PIPORegister
 
 
@@ -11,25 +11,25 @@ class SRAM:
     """
     Memory class.
     """
-    def __init__(self):
-        self._registers = [PIPORegister() for _ in range(4)]
-        self._decoder = Decoder2To4()
+    def __init__(self, size=10):
+        self._registers = [PIPORegister() for _ in range(2**size)]
+        self._decoder = Decoder(10)
 
-    def write(self, a: Address2, d: Data4):
+    def write(self, a: Address10, d: Data4):
         """
         Write the given value at the given address of the memory
         """
-        select_lines = self._decoder(a[1], a[0], True)
+        select_lines = self._decoder(*a[::-1], enable=True)
         for i, select in enumerate(select_lines):
             if select:
                 self._registers[i].set_d(d[3], d[2], d[1], d[0])
                 break
 
-    def read(self, a: Address2):
+    def read(self, a: Address10):
         """
         Read data from memory at the given address
         """
-        select_lines = self._decoder(a[1], a[0], True)
+        select_lines = self._decoder(*a[::-1], enable=True)
         for i, select in enumerate(select_lines):
             if select:
                 return self._registers[i].output

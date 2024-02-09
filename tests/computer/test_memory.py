@@ -2,7 +2,7 @@
 Test for Memory
 """
 import pytest
-from computer.data_types import Address2, Data4
+from computer.data_types import Address10, Data4
 
 from computer.memory import SRAM
 
@@ -18,7 +18,7 @@ def test_write_read(sram: SRAM):
     sram.reset()
     sram.clock_tick(True)
 
-    a = Address2(0, 0)
+    a = Address10(*[0] * 10)
     d = Data4(1, 1, 1, 1)
 
     bits = sram.read(a)
