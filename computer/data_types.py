@@ -45,6 +45,13 @@ class Address2(Bits):
     BITS_NUMBER = 2
 
 
+class Address8(Bits):
+    """
+    Class to store an address of 8 bits
+    """
+    BITS_NUMBER = 8
+
+
 class Address10(Bits):
     """
     Class to store an address of 10 bits
@@ -64,6 +71,21 @@ class Data4(Bits):
     Class to store a data of 4 bits
     """
     BITS_NUMBER = 4
+
+
+class Data8(Bits):
+    """
+    Class to store a data of 8 bits
+    """
+    BITS_NUMBER = 8
+
+
+class Data16(Bits):
+    """
+    Class to store a data of 16 bits
+    """
+    BITS_NUMBER = 16
+
 
 
 class Opcode8(Bits):

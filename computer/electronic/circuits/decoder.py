@@ -228,7 +228,7 @@ class Decoder:
             self.lower_half = Decoder(depth - 1)
             self.upper_half = Decoder(depth - 1)
 
-    def __call__(self, *inputs: bool, enable: bool) -> Tuple[bool, ...]:
+    def __call__(self, *inputs: bool, enable: bool = True) -> Tuple[bool, ...]:
         if len(inputs) != self.depth:
             raise ValueError(f"Expected {self.depth} input signals, got {len(inputs)}.")
 

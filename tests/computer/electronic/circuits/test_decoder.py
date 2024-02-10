@@ -2,7 +2,7 @@
 Test for Decoders
 """
 import pytest
-from computer.electronic.circuits.decoder import Decoder, Decoder, Decoder, Decoder, Decoder, Decoder, Decoder, Decoder
+from computer.electronic.circuits.decoder import Decoder
 
 # pylint: disable=C0116,R1702
 
