@@ -13,7 +13,7 @@ class ALU:
     """
     def __init__(self):
         self._registers = Registers()
-        self._memory = SRAM(size=8, blocks_size=4)
+        self._memory = SRAM(size=8)
         self._decoder = Decoder8To256()
         self._operations = [
             self._load_mem,

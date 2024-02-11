@@ -11,19 +11,16 @@ from computer.memory import SRAM
 
 @pytest.fixture(name="sram8_8")
 def fixture_memory8_8():
-    return SRAM(size=8, blocks_size=8)
+    return SRAM(size=8)
 
 @pytest.fixture(name="sram8_4")
 def fixture_memory8_4():
-    return SRAM(size=8, blocks_size=4)
+    return SRAM(size=8)
 
 @pytest.fixture(name="sram16_8", scope="module")
 def fixture_memory16_8():
-    return SRAM(size=16, blocks_size=8)
+    return SRAM(size=16)
 
-def test_invalid_memory():
-    with pytest.raises(ValueError):
-        SRAM(size=8, blocks_size=16)
 
 def test_read_performance_8_8bits(sram8_8: SRAM):
     a = Address8(*[0] * 8)
@@ -75,7 +72,10 @@ def test_write_read_8_4bits(sram8_4: SRAM):
 
 def test_read_performance16_8bits(sram16_8: SRAM):
     a = Address16(*[0] * 16)
-    sram16_8.read(a)
+
+    for i in range(16):
+        a[i] = 1
+        sram16_8.read(a)
 
 def test_write_performance16_8bits(sram16_8: SRAM):
     a = Address16(*[0] * 16)

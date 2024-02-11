@@ -1,7 +1,7 @@
 """
 Memory module
 """
-from computer.data_types import Address16, Bits, Data16
+from computer.data_types import Bits, Data16
 from computer.electronic.circuits.decoder import Decoder
 from computer.registers import Registers
 from utils.logger import logger
@@ -57,24 +57,16 @@ class SRAMBlock:
             out_str += f"{register} \n"
         return out_str
 
-# class SRAMContainer():
-#     def __init__(self, size=16):
-
 
 class SRAM:
     """
     Memory class.
     SRAM is a list of blocks of RAM for optimization.
     """
-    def __init__(self, size=16, blocks_size=None, level=0):
-        # if size < blocks_size:
-        #     raise ValueError(f"Size ({size}) must be greater or equal than block size ({blocks_size})")
+    def __init__(self, size=16, level=0):
         self._size = size
         self._level = level
-        # self._sram_block_size = blocks_size
-        # self._blocks_number = 2 ** (size - blocks_size)
 
-        # logger.info(f"Initializing RAM (size: {2**size}, blocks size: {2**blocks_size}, number of blocks: {self._blocks_number})...")
         if level == 0:
             logger.info(f"Initializing RAM (size: {2**size})...")
 
@@ -88,12 +80,6 @@ class SRAM:
             raise ValueError(f"Invalid RAM size: {size}")
 
         self._decoder = Decoder(2)
-        # self._sram_blocks = [SRAMBlock(size=self._sram_block_size) for _ in range(self._blocks_number)]
-
-        # if self._blocks_number > 1:
-        #     self._decoder = Decoder(self._sram_block_size)
-        # else:
-        #     self._decoder = None
 
         if level == 0:
             logger.info(f"RAM (size: {2**size}) initialized")
