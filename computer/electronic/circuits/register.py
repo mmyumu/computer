@@ -26,10 +26,10 @@ class Register:
     def __str__(self):
         out_str = ""
         for i, d_flip_flop in enumerate(self._d_flip_flops[::-1]):
-            out_str += f"{i}: {d_flip_flop}"
+            out_str += f"{i}: {d_flip_flop} \n"
 
-            if i != 0:
-                out_str += " \n"
+            # if i != 0:
+            #     out_str += " \n"
 
         return out_str
 
