@@ -58,24 +58,30 @@ class SRAMBlock:
         return out_str
 
 
+# pylint: disable=R0902
 class SRAM:
     """
     Memory class.
     SRAM is a list of blocks of RAM for optimization.
+    Python cheating optimizations on clock tick can be enabled/disabled.
     """
-    def __init__(self, size=16, level=0):
+    def __init__(self, size=16, level=0, cheating_optim=True):
         self._size = size
         self._level = level
+        self._cheating_optim = cheating_optim
 
         if level == 0:
             logger.info(f"Initializing RAM (size: {2**size})...")
+
+        self._written_subrams = []
+        self._written_blocks = []
 
         self._sram_blocks = []
         self._sub_sram = []
         if size == 4:
             self._sram_blocks = [SRAMBlock(size=2) for _ in range(4)]
         elif size > 4:
-            self._sub_sram = [SRAM(size=size - 2, level=level+1) for _ in range(4)]
+            self._sub_sram = [SRAM(size=size - 2, level=level+1, cheating_optim=cheating_optim) for _ in range(4)]
         else:
             raise ValueError(f"Invalid RAM size: {size}")
 
@@ -94,12 +100,16 @@ class SRAM:
             select_lines = self._decoder(*upper_address)
             for i, select in enumerate(select_lines[::-1]):
                 if select:
+                    if self._cheating_optim:
+                        self._written_subrams.append(i)
                     return self._sub_sram[i].write(lower_address, d)
             raise ValueError(f"Sub RAM not found at address {upper_address}")
 
         select_lines = self._decoder(*upper_address)
         for i, select in enumerate(select_lines[::-1]):
             if select:
+                if self._cheating_optim:
+                    self._written_blocks.append(i)
                 return self._sram_blocks[i].write(lower_address, d)
         raise ValueError(f"RAM block not found at address {address}")
 
@@ -137,10 +147,16 @@ class SRAM:
         """
         Update memory status on clock tick
         """
-        for ram_block in self._sub_sram:
-            ram_block.clock_tick(enable)
-        for ram_block in self._sram_blocks:
-            ram_block.clock_tick(enable)
+        if self._cheating_optim:
+            for subram_idx in self._written_subrams:
+                self._sub_sram[subram_idx].clock_tick(enable)
+            for block_idx in self._written_blocks:
+                self._sram_blocks[block_idx].clock_tick(enable)
+        else:
+            for ram_block in self._sub_sram:
+                ram_block.clock_tick(enable)
+            for ram_block in self._sram_blocks:
+                ram_block.clock_tick(enable)
 
     def __str__(self):
         out_str = ""
