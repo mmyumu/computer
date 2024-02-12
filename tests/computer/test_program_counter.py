@@ -10,7 +10,7 @@ from computer.program_counter import ProgramCounter
 
 @pytest.fixture(name="program_counter")
 def fixture_program_counter():
-    return ProgramCounter()
+    return ProgramCounter(size=2)
 
 
 def test_reset(program_counter: ProgramCounter):

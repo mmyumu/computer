@@ -12,29 +12,35 @@ class ProgramCounter:
     The counter is stored in a register.
     Use HalfAdder and Full adder to increment the register value.
     """
-    def __init__(self):
-        self._register = PIPORegister()
-        self._half_adder = HalfAdder()
-        self._full_adder = FullAdder()
+    def __init__(self, size=4):
+        self._register = PIPORegister(size=size)
+        # self._half_adder = HalfAdder()
+
+        self._half_adders = []
+        for _ in range(2 ** size):
+            self._half_adders.append(HalfAdder())
 
     def increment(self):
         """
         Increments the counter.
         """
         # Get bits from register
-        b3, b2, b1, b0 = self._register.output
+        bits = self._register.output
 
         # Perform increment
-        b0, carry = self._half_adder(b0, True)
-        b1, carry = self._half_adder(b1, carry)
-        b2, carry = self._half_adder(b2, carry)
-        b3, carry = self._half_adder(b3, carry)
+        new_bits = []
+        for i, bit in enumerate(bits[::-1]):
+            if i == 0:
+                new_bit, carry = self._half_adders[i](bit, True)
+            else:
+                new_bit, carry = self._half_adders[i](bit, carry)
+            new_bits.append(new_bit)
 
         if carry:
             raise ValueError("Program counter overflow.")
 
         # Update register
-        self._register.set_d(b3, b2, b1, b0)
+        self._register.set_d(*new_bits[::-1])
 
     def clock_tick(self, enable: bool):
         """
