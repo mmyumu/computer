@@ -10,9 +10,9 @@ class Register:
     """
     Register 4bits
     """
-    def __init__(self, size=4) -> None:
+    def __init__(self, size=2) -> None:
         self._size = size
-        self._d_flip_flops = tuple(DFlipFlop() for _ in range(size))
+        self._d_flip_flops = tuple(DFlipFlop() for _ in range(2**size))
 
     def reset_states(self):
         """
@@ -39,7 +39,7 @@ class SISORegister(Register):
     SISO (Serial-In Serial-Out) register
     https://www.elprocus.com/siso-shift-register/
     """
-    def __init__(self, size=4) -> None:
+    def __init__(self, size=2) -> None:
         super().__init__(size=size)
         self._d = bool(random.getrandbits(1))
 
@@ -96,11 +96,11 @@ class PIPORegister(Register):
     SISO (Serial-In Serial-Out) register
     https://www.elprocus.com/sipo-shift-register/
     """
-    def __init__(self, size=4) -> None:
+    def __init__(self, size=2) -> None:
         super().__init__(size=size)
 
         self._ds = []
-        for _ in range(size):
+        for _ in range(2 ** size):
             self._ds.append(bool(random.getrandbits(1)))
 
     @property
@@ -114,15 +114,15 @@ class PIPORegister(Register):
         super().reset_states()
 
         # TODO: Is it magical to force input values on reset?
-        self._ds = [False] * self._size
+        self._ds = [False] * (2 ** self._size)
 
     def set_d(self, *args):
         """
         Set inputs d3, d2, d1, d0 of the register
         """
 
-        if not isinstance(args, (list, tuple)) or len(args) != self._size:
-            raise ValueError(f"Inputs should be {self._size} bits but are: {args}")
+        if not isinstance(args, (list, tuple)) or len(args) != 2 ** self._size:
+            raise ValueError(f"Inputs should be {2** self._size} bits but are: {args}")
 
         self._ds = args[::-1]
 

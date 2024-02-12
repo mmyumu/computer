@@ -7,57 +7,6 @@ from computer.registers import Registers
 from utils.logger import logger
 
 
-class SRAMBlock:
-    """
-    Block of SRAM containing a given number of registers (each registers is a list of register)
-    """
-    def __init__(self, size=16) -> None:
-        self._registers = Registers(2 ** size)
-        self._decoder = Decoder(size)
-
-    def write(self, a: Bits, d: Data16):
-        """
-        Write the given value at the given address of the memory block
-        """
-        select_lines = self._decoder(*a, enable=True)
-        for i, select in enumerate(select_lines[::-1]):
-            if select:
-                self._registers[i].set_d(*d)
-                break
-
-    def read(self, a: Bits):
-        """
-        Read data from memory block at the given address
-        """
-        select_lines = self._decoder(*a, enable=True)
-        for i, select in enumerate(select_lines[::-1]):
-            if select:
-                return self._registers[i].output
-        raise ValueError(f"Address {a} cannot be read")
-
-    def reset(self):
-        """
-        Set memory block to 0
-        """
-        # TODO: Is it useful? Probably not, but for unit test it helps
-        for register in self._registers:
-            register.reset_states()
-
-    def clock_tick(self, enable: bool):
-        """
-        Update memory block status on clock tick
-        """
-        for register in self._registers:
-            register.clock_tick(enable)
-
-    def __str__(self):
-        out_str = ""
-        for i, register in enumerate(self._registers):
-            out_str += f"Register {i}: \n"
-            out_str += f"{register} \n"
-        return out_str
-
-
 # pylint: disable=R0902
 class SRAM:
     """
@@ -65,8 +14,8 @@ class SRAM:
     SRAM is a list of blocks of RAM for optimization.
     Python cheating optimizations on clock tick can be enabled/disabled.
     """
-    def __init__(self, size=16, level=0, cheating_optim=True):
-        self._size = size
+    def __init__(self, size=16, register_size=4, level=0, cheating_optim=True):
+        self.size = size
         self._level = level
         self._cheating_optim = cheating_optim
 
@@ -79,9 +28,9 @@ class SRAM:
         self._sram_blocks = []
         self._sub_sram = []
         if size == 4:
-            self._sram_blocks = [SRAMBlock(size=2) for _ in range(4)]
+            self._sram_blocks = [Registers(size=2, register_size=register_size) for _ in range(4)]
         elif size > 4:
-            self._sub_sram = [SRAM(size=size - 2, level=level+1, cheating_optim=cheating_optim) for _ in range(4)]
+            self._sub_sram = [SRAM(size=size - 2, register_size=register_size, level=level+1, cheating_optim=cheating_optim) for _ in range(4)]
         else:
             raise ValueError(f"Invalid RAM size: {size}")
 
@@ -96,7 +45,7 @@ class SRAM:
         """
         upper_address = address[:2]
         lower_address = address[2:]
-        if self._size > 4:
+        if self.size > 4:
             select_lines = self._decoder(*upper_address)
             for i, select in enumerate(select_lines[::-1]):
                 if select:
@@ -119,7 +68,7 @@ class SRAM:
         """
         upper_address = address[:2]
         lower_address = address[2:]
-        if self._size > 4:
+        if self.size > 4:
             select_lines = self._decoder(*upper_address)
             for i, select in enumerate(select_lines[::-1]):
                 if select:

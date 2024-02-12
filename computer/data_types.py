@@ -12,7 +12,18 @@ class Bits(list):
         if len(bits) == 1 and isinstance(bits[0], int):
             bool_list = self._int_to_bool(bits[0])
         elif isinstance(bits, (list, tuple)):
-            bool_list = bits
+            if len(bits) == 1:
+                are_bits = [isinstance(bit, int) for bit in bits[0]]
+                if all(are_bits):
+                    bool_list = bits[0]
+                else:
+                    raise ValueError(f"Input should be bool/int or list of bool/int but is: {bits}")
+            else:
+                are_bits = [isinstance(bit, int) for bit in bits]
+                if all(are_bits):
+                    bool_list = bits
+                else:
+                    raise ValueError(f"Input should be bool/int or list of bool/int but is: {bits}")
         super().__init__(bool_list)
 
     @classmethod
