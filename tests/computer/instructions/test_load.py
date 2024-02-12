@@ -3,7 +3,7 @@ Test for Load instructions
 """
 import pytest
 from computer.data_types import Bits, Data16
-from computer.instructions.load import LoadImd, LoadMem
+from computer.instructions.load import LoadImd, LoadMem, LoadReg
 from computer.memory import SRAM
 from computer.registers import Registers
 
@@ -86,3 +86,27 @@ def test_load_imd_invalid_value(registers: Registers, sram: SRAM):
     operand = Bits(register_address + [0] * 3 + value)
     with pytest.raises(ValueError):
         load_imd(operand)
+
+def test_load_reg(registers: Registers, sram: SRAM):
+    sram.reset()
+    registers.reset()
+
+    memory_address = Bits(1, 1, 1, 1, 0, 0, 0, 0)
+    value = Bits(0, 0, 0, 0, 1, 1, 1, 1)
+    sram.write(memory_address, value)
+    sram.clock_tick(True)
+
+    register_address1 = Bits(0, 0, 1)
+    register_address2 = Bits(0, 1, 0)
+
+    registers.write(register_address2, memory_address)
+    registers.clock_tick(True)
+
+    load_reg = LoadReg(registers, sram)
+    operand = Bits(register_address1 + register_address2 + [0] * 8)
+    load_reg(operand)
+    sram.clock_tick(True)
+    registers.clock_tick(True)
+
+    assert registers.read(register_address1) == tuple(value)
+    assert registers.read(register_address2) == tuple(memory_address)

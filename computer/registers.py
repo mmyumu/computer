@@ -1,7 +1,7 @@
 """
 CPU Registers module
 """
-from computer.data_types import Bits, Data16
+from computer.data_types import Bits
 from computer.electronic.circuits.decoder import Decoder
 from computer.electronic.circuits.register import PIPORegister
 
@@ -24,7 +24,7 @@ class Registers(list):
         for _ in range(2 ** size):
             self.append(PIPORegister(size=register_size))
 
-    def write(self, a: Bits, d: Data16):
+    def write(self, a: Bits, d: Bits):
         """
         Write the given value at the given address of the memory block
         """
