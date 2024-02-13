@@ -2,7 +2,7 @@
 Test for Memory
 """
 import pytest
-from computer.data_types import Address16, Address8, Data16
+from computer.data_types import Address8, Data16
 
 from computer.memory import SRAM
 

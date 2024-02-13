@@ -19,7 +19,9 @@ from computer.registers import Registers
 # STORE REG, MEM : Stocke la valeur d'un registre en mémoire.
 # STORE REG, REG : Stocke la valeur d'un registre dans l'unité mémoire pointée par un autre registre.
 # JMP IMD : Saute à une adresse immédiate dans le programme, modifiant le Program Counter.
-# TRAN REG, REG : Transfère la valeur d'un registre à un autre. Bien que cela puisse sembler une opération simple, c'est généralement l'unité de contrôle qui gère les transferts de données internes.
+# TRAN REG, REG : Transfère la valeur d'un registre à un autre.
+#                 Bien que cela puisse sembler une opération simple,
+#                 c'est généralement l'unité de contrôle qui gère les transferts de données internes.
 
 class ControlUnit:
     """
@@ -33,11 +35,11 @@ class ControlUnit:
         self._decoder = Decoder8To256()
         self._operations = [
             Nop(),
-            LoadMem(registers=self._registers, memory=self._memory),
-            LoadImd(registers=self._registers, memory=self._memory),
-            LoadReg(registers=self._registers, memory=self._memory),
-            StoreMem(registers=self._registers, memory=self._memory),
-            StoreReg(registers=self._registers, memory=self._memory),
+            LoadMem(registers=self._registers, memory=self._memory, program_counter=program_counter),
+            LoadImd(registers=self._registers, memory=self._memory, program_counter=program_counter),
+            LoadReg(registers=self._registers, memory=self._memory, program_counter=program_counter),
+            StoreMem(registers=self._registers, memory=self._memory, program_counter=program_counter),
+            StoreReg(registers=self._registers, memory=self._memory, program_counter=program_counter),
             Jump(registers=self._registers, memory=self._memory, program_counter=program_counter),
             # Tran(self._registers, self._memory),
         ]

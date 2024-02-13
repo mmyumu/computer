@@ -8,6 +8,7 @@ The tests are done with a light memory configuration:
 import pytest
 
 from computer.alu import ALU
+from computer.data_types import Bits, Opcode8
 from computer.registers import Registers
 
 
@@ -15,4 +16,10 @@ from computer.registers import Registers
 
 @pytest.fixture(name="alu")
 def fixture_alu(registers: Registers):
-    return ALU(registers)
+    return ALU(registers, memory_size=8)
+
+
+def test_and(alu):
+    opcode = Opcode8(0b1000)
+    operand = Bits([1, 0, 0, 1, 0, 1] + [0] * 8)
+    alu.execute(opcode, operand)

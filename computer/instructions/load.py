@@ -2,10 +2,11 @@
 Load instructions module
 """
 from computer.data_types import Bits
-from computer.instructions.instruction import Instruction
+from computer.instructions.instruction import ControlInstruction
 
 # pylint: disable=R0903
-class LoadMem(Instruction):
+
+class LoadMem(ControlInstruction):
     """
     Load from memory address to register class.
     LOAD REG MEM	; loads the specified memory unit into REG
@@ -15,7 +16,7 @@ class LoadMem(Instruction):
         self._registers.write(reg1, data)
 
 
-class LoadImd(Instruction):
+class LoadImd(ControlInstruction):
     """
     Load immediate value to register.
     LOAD REG IMD	; load specified 16-bit immediate value into REG
@@ -24,7 +25,7 @@ class LoadImd(Instruction):
         self._registers.write(reg1, value)
 
 
-class LoadReg(Instruction):
+class LoadReg(ControlInstruction):
     """
     Load from memory address in register to register.
     LOAD REG REG	; loads memory unit at the address stored in REGB into REGA

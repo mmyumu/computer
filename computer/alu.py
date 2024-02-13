@@ -3,6 +3,7 @@ Arithmetic logic unit (ALU) module
 """
 from computer.data_types import Bits, Opcode8
 from computer.electronic.circuits.decoder import Decoder8To256
+from computer.instructions.logic import AndReg
 from computer.registers import Registers
 
 # AND : Opération logique ET entre deux registres.
@@ -20,11 +21,11 @@ class ALU:
     """
     Arithmetic logic unit class
     """
-    def __init__(self, registers: Registers):
+    def __init__(self, registers: Registers, memory_size: int):
         self._decoder = Decoder8To256()
-        self._operations = [
-            # AndReg(registers)
-        ]
+        self._operations = {
+            8: AndReg(registers, memory_size)
+        }
 
     def execute(self, opcode: Opcode8, operand: Bits):
         """

@@ -13,19 +13,18 @@ class Instruction(ABC):
     """
     Instruction base class
     """
-    def __init__(self, registers: Registers = None, memory: SRAM = None, program_counter: ProgramCounter = None) -> None:
-        self._registers = registers
-        self._memory = memory
-        self._program_counter = program_counter
+    def __init__(self, registers_size: int, memory_size: int) -> None:
+        self._registers_size = registers_size
+        self._memory_size = memory_size
 
     def __call__(self, operand: Bits) -> Any:
-        operand_check_size = self._memory.size + (self._registers.size * 2)
+        operand_check_size = self._memory_size + (self._registers_size * 2)
         if len(operand) != operand_check_size:
             raise ValueError(f"Length of operand should be {operand_check_size} but is {len(operand)}")
 
-        reg1 = operand[:self._registers.size]
-        reg2 = operand[self._registers.size:2*self._registers.size]
-        value = operand[2*self._registers.size:2*self._registers.size + self._memory.size]
+        reg1 = operand[:self._registers_size]
+        reg2 = operand[self._registers_size:2*self._registers_size]
+        value = operand[2*self._registers_size:2*self._registers_size + self._memory_size]
         self.compute(reg1, reg2, value)
 
     @abstractmethod
@@ -33,3 +32,23 @@ class Instruction(ABC):
         """
         Compute the instruction
         """
+
+
+class LogicInstruction(Instruction):
+    """
+    Logic instruction base class
+    """
+    def __init__(self, registers: Registers, memory_size: int) -> None:
+        super().__init__(registers_size=registers.size, memory_size=memory_size)
+        self._registers = registers
+
+
+class ControlInstruction(Instruction):
+    """
+    Control instruction base class
+    """
+    def __init__(self, registers: Registers, memory: SRAM, program_counter: ProgramCounter) -> None:
+        super().__init__(registers_size=registers.size, memory_size=memory.size)
+        self._registers = registers
+        self._memory = memory
+        self._program_counter = program_counter

@@ -15,7 +15,7 @@ class Memory(ABC):
     """
     def __init__(self, size=16, register_size=4, level=0):
         self.size = size
-        self._register_size = register_size
+        self.register_size = register_size
         self._level = level
 
     @abstractmethod
