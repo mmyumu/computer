@@ -1,6 +1,7 @@
 """
 Memory module
 """
+from abc import ABC, abstractmethod
 from computer.data_types import Bits, Data16
 from computer.electronic.circuits.decoder import Decoder
 from computer.registers import Registers
@@ -8,15 +9,35 @@ from utils.logger import logger
 
 
 # pylint: disable=R0902
-class SRAM:
+class Memory(ABC):
+    """
+    Base class for memory
+    """
+    def __init__(self, size=16, register_size=4, level=0):
+        self.size = size
+        self._register_size = register_size
+        self._level = level
+
+    @abstractmethod
+    def write(self, address: Bits, d: Data16):
+        """
+        Write the given value at the given address of the memory
+        """
+
+    @abstractmethod
+    def read(self, address: Bits):
+        """
+        Read data from memory at the given address
+        """
+
+class SRAM(Memory):
     """
     Memory class.
     SRAM is a list of blocks of RAM for optimization.
     Python cheating optimizations on clock tick can be enabled/disabled.
     """
     def __init__(self, size=16, register_size=4, level=0, cheating_optim=True):
-        self.size = size
-        self._level = level
+        super().__init__(size=size, register_size=register_size, level=level)
         self._cheating_optim = cheating_optim
 
         if level == 0:
@@ -40,9 +61,6 @@ class SRAM:
             logger.info(f"RAM (size: {2**size}) initialized")
 
     def write(self, address: Bits, d: Data16):
-        """
-        Write the given value at the given address of the memory
-        """
         upper_address = address[:2]
         lower_address = address[2:]
         if self.size > 4:
@@ -63,9 +81,6 @@ class SRAM:
         raise ValueError(f"RAM block not found at address {address}")
 
     def read(self, address: Bits):
-        """
-        Read data from memory at the given address
-        """
         upper_address = address[:2]
         lower_address = address[2:]
         if self.size > 4:

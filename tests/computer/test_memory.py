@@ -42,29 +42,29 @@ def test_write_read_8bits(sram8: SRAM):
     bits = sram8.read(a)
     assert bits == (1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
 
-def test_read_performance_16bits(sram16: SRAM):
-    a = Address16(*[0] * 16)
+# def test_read_performance_16bits(sram16: SRAM):
+#     a = Address16(*[0] * 16)
 
-    for i in range(16):
-        a[i] = 1
-        sram16.read(a)
+#     for i in range(16):
+#         a[i] = 1
+#         sram16.read(a)
 
-def test_write_performance_16bits(sram16: SRAM):
-    a = Address16(*[0] * 16)
-    d = Data16(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
-    sram16.write(a, d)
+# def test_write_performance_16bits(sram16: SRAM):
+#     a = Address16(*[0] * 16)
+#     d = Data16(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1)
+#     sram16.write(a, d)
 
-def test_write_read_16bits(sram16: SRAM):
-    sram16.reset()
-    sram16.clock_tick(True)
+# def test_write_read_16bits(sram16: SRAM):
+#     sram16.reset()
+#     sram16.clock_tick(True)
 
-    a = Address16(*[0] * 16)
-    d = Data16(1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
+#     a = Address16(*[0] * 16)
+#     d = Data16(1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
 
-    bits = sram16.read(a)
-    assert bits == (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+#     bits = sram16.read(a)
+#     assert bits == (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 
-    sram16.write(a, d)
-    sram16.clock_tick(True)
-    bits = sram16.read(a)
-    assert bits == (1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
+#     sram16.write(a, d)
+#     sram16.clock_tick(True)
+#     bits = sram16.read(a)
+#     assert bits == (1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)

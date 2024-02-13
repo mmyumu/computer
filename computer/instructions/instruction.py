@@ -5,6 +5,7 @@ from abc import ABC, abstractmethod
 from typing import Any
 from computer.data_types import Bits
 from computer.memory import SRAM
+from computer.program_counter import ProgramCounter
 from computer.registers import Registers
 
 
@@ -12,9 +13,10 @@ class Instruction(ABC):
     """
     Instruction base class
     """
-    def __init__(self, registers: Registers, memory: SRAM) -> None:
+    def __init__(self, registers: Registers = None, memory: SRAM = None, program_counter: ProgramCounter = None) -> None:
         self._registers = registers
         self._memory = memory
+        self._program_counter = program_counter
 
     def __call__(self, operand: Bits) -> Any:
         operand_check_size = self._memory.size + (self._registers.size * 2)
