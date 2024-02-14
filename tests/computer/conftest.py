@@ -12,7 +12,7 @@ from computer.registers import Registers
 
 @pytest.fixture(name="program_counter")
 def fixture_program_counter():
-    return ProgramCounter(size=4)
+    return ProgramCounter(size=3)
 
 @pytest.fixture(name="registers")
 def fixture_registers():

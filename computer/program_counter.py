@@ -2,6 +2,7 @@
 Program Counter (PC) module.
 Program Counter increments its counter to point to the next instruction.
 """
+from computer.data_types import Bits
 from computer.electronic.circuits.adder import HalfAdder
 from computer.electronic.circuits.register import PIPORegister
 
@@ -40,6 +41,15 @@ class ProgramCounter:
 
         # Update register
         self._register.set_d(*new_bits[::-1])
+
+    def set(self, value: Bits):
+        """
+        Set the program counter to the given value
+
+        Args:
+            value (Bits): the value to set
+        """
+        self._register.set_d(*value)
 
     def clock_tick(self, enable: bool):
         """

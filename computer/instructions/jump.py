@@ -11,5 +11,4 @@ class Jump(ControlInstruction):
     LOAD REG MEM	; loads the specified memory unit into REG
     """
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
-        data = self._memory.read(value)
-        self._registers.write(reg1, data)
+        self._program_counter.set(value)
