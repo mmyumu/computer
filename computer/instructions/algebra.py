@@ -48,10 +48,6 @@ class Sub(ALUInstruction):
         self._adders3 = [HalfAdder() for _ in range(2 ** self._registers.register_size)]
         self._adders4 = [FullAdder() for _ in range(2 ** self._registers.register_size)]
 
-
-        # self._not_gate = NOTGate()
-        # self._adder = HalfAdder()
-
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
         data2 = self._registers.read(reg2)
@@ -90,9 +86,6 @@ class Sub(ALUInstruction):
             carry_in = carry_out
         complement_cf = complement_cf[::-1]
 
-        # not_cf = self._not_gate(self._registers.cf)
-        # complement_cf, carry_out = self._adder(not_cf, True)
-
         sub_data_cf = []
         carry_in = False
         for bit1, bit2, adder in zip(sub_data[::-1], complement_cf[::-1], self._adders4):
@@ -103,45 +96,3 @@ class Sub(ALUInstruction):
 
         self._registers.cf = False
         self._registers.write(reg1, sub_data_cf)
-# class ORReg(BitwiseALUInstruction):
-#     """
-#     OR between 2 registers
-#     OR REG REG		; REGA OR REGB, result stored in REGA
-#     """
-#     def _build_gates(self):
-#         or_gates = []
-#         for _ in range(2 ** self._registers.register_size):
-#             or_gates.append(ORGate())
-#         return or_gates
-
-
-# class XORReg(BitwiseALUInstruction):
-#     """
-#     XOR between 2 registers
-#     XOR REG REG	; REGA XOR REGB, result stored in REGA
-#     """
-#     def _build_gates(self):
-#         xor_gates = []
-#         for _ in range(2 ** self._registers.register_size):
-#             xor_gates.append(XORGate())
-#         return xor_gates
-
-# class NOTReg(ALUInstruction):
-#     """
-#     NOT on register and store it
-#     NOT REG 		; NOT REGA, result stored in REGA
-#     """
-#     def __init__(self, registers: Registers, memory_size: int) -> None:
-#         super().__init__(registers, memory_size)
-#         self._gates = []
-#         for _ in range(2 ** self._registers.register_size):
-#             self._gates.append(NOTGate())
-
-#     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
-#         data1 = self._registers.read(reg1)
-
-#         data = []
-#         for bit1, gate in zip(data1, self._gates):
-#             data.append(gate(bit1))
-
-#         self._registers.write(reg1, data)
