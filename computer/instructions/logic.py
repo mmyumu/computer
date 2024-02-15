@@ -4,12 +4,12 @@ Load instructions module
 from abc import abstractmethod
 from computer.data_types import Bits
 from computer.electronic.circuits.cmos import ANDGate, NOTGate, ORGate, XORGate
-from computer.instructions.instruction import LogicInstruction
+from computer.instructions.instruction import ALUInstruction
 from computer.registers import Registers
 
 # pylint: disable=R0903
 
-class BitwiseLogicInstruction(LogicInstruction):
+class BitwiseALUInstruction(ALUInstruction):
     """
     Perform bitwise logic operation
     """
@@ -32,7 +32,7 @@ class BitwiseLogicInstruction(LogicInstruction):
         pass
 
 
-class ANDReg(BitwiseLogicInstruction):
+class ANDReg(BitwiseALUInstruction):
     """
     AND between 2 registers
     AND REG REG	; REGA AND REGB, result stored in REGA
@@ -44,7 +44,7 @@ class ANDReg(BitwiseLogicInstruction):
         return and_gates
 
 
-class ORReg(BitwiseLogicInstruction):
+class ORReg(BitwiseALUInstruction):
     """
     OR between 2 registers
     OR REG REG		; REGA OR REGB, result stored in REGA
@@ -56,7 +56,7 @@ class ORReg(BitwiseLogicInstruction):
         return or_gates
 
 
-class XORReg(BitwiseLogicInstruction):
+class XORReg(BitwiseALUInstruction):
     """
     XOR between 2 registers
     XOR REG REG	; REGA XOR REGB, result stored in REGA
@@ -67,7 +67,7 @@ class XORReg(BitwiseLogicInstruction):
             xor_gates.append(XORGate())
         return xor_gates
 
-class NOTReg(LogicInstruction):
+class NOTReg(ALUInstruction):
     """
     NOT on register and store it
     NOT REG 		; NOT REGA, result stored in REGA

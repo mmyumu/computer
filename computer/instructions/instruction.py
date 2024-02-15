@@ -34,7 +34,7 @@ class Instruction(ABC):
         """
 
 
-class LogicInstruction(Instruction):
+class ALUInstruction(Instruction):
     """
     Logic instruction base class
     """
