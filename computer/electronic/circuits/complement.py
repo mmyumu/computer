@@ -1,9 +1,11 @@
-
-
+"""
+Complement operations module
+"""
 from computer.data_types import Bits
 from computer.electronic.circuits.adder import HalfAdder
 from computer.electronic.circuits.cmos import NOTGate
 
+# pylint: disable=R0903
 
 class TwoComplement:
     """
