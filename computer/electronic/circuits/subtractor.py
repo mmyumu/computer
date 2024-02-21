@@ -2,7 +2,6 @@
 Subtractors
 """
 from typing import Tuple
-from computer.electronic.circuits.adder import FullAdder
 from computer.electronic.circuits.cmos import ANDGate, NOTGate, ORGate, XORGate
 from computer.electronic.circuits.mux import MUX2To1
 
