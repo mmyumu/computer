@@ -4,7 +4,7 @@ Test for Adders
 import pytest
 from computer.electronic.circuits.subtractor import FullSubtractor, FullSubtractorRestore, HalfSubtractor
 
-# pylint: disable=C0116
+# pylint: disable=C0116,R1702
 
 @pytest.fixture(name="half_subtractor")
 def fixture_half_subtractor():
