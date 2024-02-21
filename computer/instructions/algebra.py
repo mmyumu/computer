@@ -15,7 +15,7 @@ class Add(ALUInstruction):
     """
     def __init__(self, registers: Registers, memory_size: int) -> None:
         super().__init__(registers, memory_size)
-        self._adder = BitwiseAdd(self._registers.register_size)
+        self._adder = BitwiseAdd(2 ** self._registers.register_size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
@@ -34,17 +34,17 @@ class Sub(ALUInstruction):
     """
     def __init__(self, registers: Registers, memory_size: int) -> None:
         super().__init__(registers, memory_size)
-        self._sub1 = BitwiseSub(self._registers.size)
-        self._sub2 = BitwiseSub(self._registers.size)
+        self._sub1 = BitwiseSub(2 ** self._registers.size)
+        self._sub2 = BitwiseSub(2 ** self._registers.size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
         data2 = self._registers.read(reg2)
 
-        sub1 = self._sub1(data1, data2)
+        sub1, _ = self._sub1(data1, data2)
 
         cf = [0] * 7 + [self._registers.cf]
-        sub2 = self._sub2(sub1, cf)
+        sub2, _ = self._sub2(sub1, cf)
 
         self._registers.cf = False
         self._registers.write(reg1, sub2)
@@ -57,7 +57,7 @@ class Mult(ALUInstruction):
     """
     def __init__(self, registers: Registers, memory_size: int) -> None:
         super().__init__(registers, memory_size)
-        self._mult = BitwiseMult(self._registers.size)
+        self._mult = BitwiseMult(2 ** self._registers.size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
