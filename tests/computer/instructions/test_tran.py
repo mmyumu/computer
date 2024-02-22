@@ -1,8 +1,7 @@
 """
 Test for Tran instructions
 """
-from computer.data_types import Bits, Data16
-from computer.instructions.jump import Jump
+from computer.data_types import Bits
 from computer.instructions.tran import Tran
 from computer.memory import SRAM
 from computer.program_counter import ProgramCounter
