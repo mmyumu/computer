@@ -2,7 +2,7 @@
 Test for Logic instructions
 """
 from computer.data_types import Bits, Data16
-from computer.instructions.algebra import Add, Div, Mult, Sub
+from computer.instructions.algebra import Add, Div, Inc, Mult, Sub
 from computer.memory import SRAM
 from computer.registers import Registers
 
@@ -222,4 +222,23 @@ def test_div(registers: Registers, sram: SRAM):
 
     assert registers.read(register_address1) == [0, 0, 0, 0, 1, 0, 1, 0]
     assert registers.read(register_address2) == [0, 0, 0, 0, 0, 0, 1, 1]
+    assert registers.cf is False
+
+
+def test_inc(registers: Registers, sram: SRAM):
+    sram.reset()
+    registers.reset()
+
+    d1 = Bits(0, 0, 1, 1, 1, 1, 1, 1)
+    register_address1 = Bits(0, 0, 1)
+    registers.write(register_address1, d1)
+
+    registers.clock_tick(True)
+
+    inc = Inc(registers, sram.size)
+    operand = Bits(register_address1 + [0] * 3 + [0] * 8)
+    inc(operand)
+    registers.clock_tick(True)
+
+    assert registers.read(register_address1) == [0, 1, 0, 0, 0, 0, 0, 0]
     assert registers.cf is False

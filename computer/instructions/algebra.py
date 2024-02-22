@@ -88,3 +88,39 @@ class Div(ALUInstruction):
         self._registers.cf = False
         self._registers.write(reg1, quotient)
         self._registers.write(reg2, remainder)
+
+
+class Inc(ALUInstruction):
+    """
+    Increment register
+    INC REG	; REGA++, CF not affected
+    """
+    def __init__(self, registers: Registers, memory_size: int) -> None:
+        super().__init__(registers, memory_size)
+        self._adder = BitwiseAdd(2 ** self._registers.size)
+
+    def compute(self, reg1: Bits, reg2: Bits, value: Bits):
+        data1 = self._registers.read(reg1)
+
+        inc_data, _ = self._adder(data1, [0] * len(data1), True)
+
+        self._registers.cf = False
+        self._registers.write(reg1, inc_data)
+
+
+class Dec(ALUInstruction):
+    """
+    Decrement register
+    DEC REG	; REGA--, CF not affected
+    """
+    def __init__(self, registers: Registers, memory_size: int) -> None:
+        super().__init__(registers, memory_size)
+        self._adder = BitwiseAdd(2 ** self._registers.size)
+
+    def compute(self, reg1: Bits, reg2: Bits, value: Bits):
+        data1 = self._registers.read(reg1)
+
+        inc_data = self._adder(data1, [0] * len(data1), True)
+
+        self._registers.cf = False
+        self._registers.write(reg1, inc_data)
