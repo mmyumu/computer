@@ -2,7 +2,7 @@
 Algebra instructions module
 """
 from computer.data_types import Bits
-from computer.electronic.circuits.bitwise import BitwiseAdd, BitwiseMult, BitwiseSub
+from computer.electronic.circuits.bitwise import BitwiseAdd, BitwiseDiv, BitwiseMult, BitwiseSub
 from computer.instructions.instruction import ALUInstruction
 from computer.registers import Registers
 
@@ -68,3 +68,23 @@ class Mult(ALUInstruction):
         self._registers.cf = False
         self._registers.write(reg1, mult[2 ** self._registers.size:])
         self._registers.write(reg2, mult[:2 ** self._registers.size])
+
+
+class Div(ALUInstruction):
+    """
+    Divide 2 registers
+    DIV REG REG	; REGA / REGB result stored in REGA, REGA MOD REGB stored in REGB
+    """
+    def __init__(self, registers: Registers, memory_size: int) -> None:
+        super().__init__(registers, memory_size)
+        self._div = BitwiseDiv(2 ** self._registers.size)
+
+    def compute(self, reg1: Bits, reg2: Bits, value: Bits):
+        data1 = self._registers.read(reg1)
+        data2 = self._registers.read(reg2)
+
+        quotient, remainder = self._div(data1, data2)
+
+        self._registers.cf = False
+        self._registers.write(reg1, quotient)
+        self._registers.write(reg2, remainder)

@@ -7,6 +7,7 @@ from computer.instructions.jump import Jump
 from computer.instructions.load import LoadImd, LoadMem, LoadReg
 from computer.instructions.nop import Nop
 from computer.instructions.store import StoreMem, StoreReg
+from computer.instructions.tran import Tran
 from computer.memory import Memory
 from computer.program_counter import ProgramCounter
 from computer.registers import Registers
@@ -28,8 +29,6 @@ class ControlUnit:
     Control unit class
     """
     def __init__(self, registers: Registers, memory: Memory, program_counter: ProgramCounter):
-        # self._registers = Registers(size=registers_size, register_size=register_size)
-        # self._memory = SRAM(size=memory_size, register_size=register_size)
         self._registers = registers
         self._memory = memory
         self._decoder = Decoder8To256()
@@ -41,9 +40,8 @@ class ControlUnit:
             StoreMem(registers=self._registers, memory=self._memory, program_counter=program_counter),
             StoreReg(registers=self._registers, memory=self._memory, program_counter=program_counter),
             Jump(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            # Tran(self._registers, self._memory),
+            Tran(registers=self._registers, memory=self._memory, program_counter=program_counter),
         ]
-        # self._instructions = Instructions(self._registers, self._memory)
 
     def execute(self, opcode: Opcode8, operand: Bits):
         """

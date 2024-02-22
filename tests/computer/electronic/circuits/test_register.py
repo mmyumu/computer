@@ -199,28 +199,28 @@ def test_pipo_set1011(pipo_register: PIPORegister):
     pipo_register.reset_states()
 
     pipo_register.set_d(True, False, True, True)
-    assert pipo_register.clock_tick(True) == (True, False, True, True)
+    assert pipo_register.clock_tick(True) == [True, False, True, True]
 
 
 def test_pipo_set1111(pipo_register: PIPORegister):
     pipo_register.reset_states()
 
     pipo_register.set_d(True, True, True, True)
-    assert pipo_register.clock_tick(True) == (True, True, True, True)
+    assert pipo_register.clock_tick(True) == [True, True, True, True]
 
 
 def test_pipo_set1110(pipo_register: PIPORegister):
     pipo_register.reset_states()
 
     pipo_register.set_d(True, True, True, False)
-    assert pipo_register.clock_tick(True) == (True, True, True, False)
+    assert pipo_register.clock_tick(True) == [True, True, True, False]
 
 
 def test_pipo_set1110_memorize(pipo_register: PIPORegister):
     pipo_register.reset_states()
 
     pipo_register.set_d(True, True, True, False)
-    assert pipo_register.clock_tick(True) == (True, True, True, False)
+    assert pipo_register.clock_tick(True) == [True, True, True, False]
 
     for _ in range(10):
-        assert pipo_register.clock_tick(False) == (True, True, True, False)
+        assert pipo_register.clock_tick(False) == [True, True, True, False]

@@ -27,7 +27,7 @@ def test_store_mem(registers: Registers, sram: SRAM, program_counter: ProgramCou
 
     sram.clock_tick(True)
 
-    assert sram.read(memory_address) == tuple(d)
+    assert sram.read(memory_address) == d
 
 def test_store_reg(registers: Registers, sram: SRAM, program_counter: ProgramCounter):
     sram.reset()
@@ -48,4 +48,4 @@ def test_store_reg(registers: Registers, sram: SRAM, program_counter: ProgramCou
 
     sram.clock_tick(True)
 
-    assert sram.read(memory_address) == tuple(d)
+    assert sram.read(memory_address) == d

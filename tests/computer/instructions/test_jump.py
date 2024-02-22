@@ -20,4 +20,4 @@ def test_jump(registers: Registers, sram: SRAM, program_counter: ProgramCounter)
     jump(operand)
     program_counter.clock_tick(True)
 
-    assert program_counter.value == tuple(d)
+    assert program_counter.value == d

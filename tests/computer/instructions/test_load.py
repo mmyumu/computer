@@ -27,7 +27,7 @@ def test_load_mem(registers: Registers, sram: SRAM, program_counter: ProgramCoun
     sram.clock_tick(True)
     registers.clock_tick(True)
 
-    assert registers.read(register_address) == tuple(d)
+    assert registers.read(register_address) == d
 
 def test_load_mem_invalid_memory_address(registers: Registers, sram: SRAM, program_counter: ProgramCounter):
     register_address = Bits(0, 0, 1)
@@ -62,7 +62,7 @@ def test_load_imd(registers: Registers, sram: SRAM, program_counter: ProgramCoun
     sram.clock_tick(True)
     registers.clock_tick(True)
 
-    assert registers.read(register_address) == tuple(value)
+    assert registers.read(register_address) == value
 
 def test_load_imd_invalid_reg1_address(registers: Registers, sram: SRAM, program_counter: ProgramCounter):
     sram.reset()
@@ -109,5 +109,5 @@ def test_load_reg(registers: Registers, sram: SRAM, program_counter: ProgramCoun
     sram.clock_tick(True)
     registers.clock_tick(True)
 
-    assert registers.read(register_address1) == tuple(value)
-    assert registers.read(register_address2) == tuple(memory_address)
+    assert registers.read(register_address1) == value
+    assert registers.read(register_address2) == memory_address

@@ -28,7 +28,7 @@ def test_and(registers: Registers, sram: SRAM):
     and_reg(operand)
     registers.clock_tick(True)
 
-    assert registers.read(register_address1) == tuple((1, 0, 1, 0, 0, 0, 0, 0))
+    assert registers.read(register_address1) == [1, 0, 1, 0, 0, 0, 0, 0]
 
 def test_or(registers: Registers, sram: SRAM):
     sram.reset()
@@ -49,7 +49,7 @@ def test_or(registers: Registers, sram: SRAM):
     and_reg(operand)
     registers.clock_tick(True)
 
-    assert registers.read(register_address1) == tuple((1, 1, 1, 1, 1, 0, 1, 0))
+    assert registers.read(register_address1) == [1, 1, 1, 1, 1, 0, 1, 0]
 
 def test_xor(registers: Registers, sram: SRAM):
     sram.reset()
@@ -70,7 +70,7 @@ def test_xor(registers: Registers, sram: SRAM):
     and_reg(operand)
     registers.clock_tick(True)
 
-    assert registers.read(register_address1) == tuple((0, 1, 0, 1, 1, 0, 1, 0))
+    assert registers.read(register_address1) == [0, 1, 0, 1, 1, 0, 1, 0]
 
 def test_not(registers: Registers, sram: SRAM):
     sram.reset()
@@ -86,4 +86,4 @@ def test_not(registers: Registers, sram: SRAM):
     and_reg(operand)
     registers.clock_tick(True)
 
-    assert registers.read(register_address1) == tuple((0, 1, 0, 1, 0, 1, 0, 1))
+    assert registers.read(register_address1) == [0, 1, 0, 1, 0, 1, 0, 1]

@@ -2,6 +2,7 @@
 Registers module
 """
 import random
+from computer.data_types import Bits
 
 from computer.electronic.circuits.flip_flop import DFlipFlop
 
@@ -108,7 +109,7 @@ class PIPORegister(Register):
         """
         Return the output of the register
         """
-        return tuple(d_flip_flop.q for d_flip_flop in self._d_flip_flops[::-1])
+        return Bits([d_flip_flop.q for d_flip_flop in self._d_flip_flops[::-1]])
 
     def reset_states(self):
         super().reset_states()

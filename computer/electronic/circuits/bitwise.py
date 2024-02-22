@@ -180,8 +180,6 @@ class BitwiseDiv:
         self._not_gates = []
         self._subrestores: List[List[FullSubtractorRestore]] = []
         for _ in range(self._size):
-            # cols = self._size // 2
-
             self._not_gates.append(NOTGate())
             self._or_gates.append(ORGate())
 
@@ -198,14 +196,12 @@ class BitwiseDiv:
         if len(d) != self._size:
             raise ValueError(f"Length of d should be {self._size} but is {len(d)}")
 
-        if d.to_int() == 0:
+        if not any(d):
             raise ValueError("Divider cannot be 0")
-
-        quotient = []
-
 
         filled_a = Bits([0] * len(a) + a)
 
+        quotient = []
         for i in range(self._size):
             if i == 0:
                 bit_or = filled_a[0]
@@ -226,7 +222,6 @@ class BitwiseDiv:
         borrow_in = False
         carry_in = True
         for subrestore, bit_a, bit_d in zip(self._subrestores[row], a[::-1], d[::-1]):
-        # for j in range(self._size):
             subrestore_result, borrow_out = subrestore(bit_a, bit_d, borrow_in, carry_in)
             borrow_in = borrow_out
 
@@ -236,7 +231,6 @@ class BitwiseDiv:
         remainder = []
         carry_in = quotient
         for subrestore, bit_a, bit_d in zip(self._subrestores[row], a[::-1], d[::-1]):
-        # for j in range(self._size):
             subrestore_result, borrow_out = subrestore(bit_a, bit_d, borrow_in, carry_in)
             remainder.append(subrestore_result)
             borrow_in = borrow_out

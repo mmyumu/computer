@@ -35,12 +35,12 @@ def test_write_read_8bits(sram8: SRAM):
     d = Data16(1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
 
     bits = sram8.read(a)
-    assert bits == (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+    assert bits == [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
     sram8.write(a, d)
     sram8.clock_tick(True)
     bits = sram8.read(a)
-    assert bits == (1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1)
+    assert bits == [1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1]
 
 # def test_read_performance_16bits(sram16: SRAM):
 #     a = Address16(*[0] * 16)
