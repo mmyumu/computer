@@ -49,14 +49,13 @@ class BitwiseSub:
         self._subtractors = [FullSubtractor() for _ in range(self._size)]
 
 
-    def __call__(self, d1: Bits, d2: Bits) -> Tuple[Bits, bool]:
+    def __call__(self, d1: Bits, d2: Bits, borrow_in: bool) -> Tuple[Bits, bool]:
         if len(d1) != self._size:
             raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
 
         if len(d2) != self._size:
             raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
 
-        borrow_in = False
         sub_data = []
         for bit1, bit2, subtractor in zip(d1[::-1], d2[::-1], self._subtractors):
             difference, borrow_out = subtractor(bit1, bit2, borrow_in)

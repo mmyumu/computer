@@ -41,10 +41,10 @@ class Sub(ALUInstruction):
         data1 = self._registers.read(reg1)
         data2 = self._registers.read(reg2)
 
-        sub1, _ = self._sub1(data1, data2)
+        sub1, _ = self._sub1(data1, data2, False)
 
         cf = [0] * 7 + [self._registers.cf]
-        sub2, _ = self._sub2(sub1, cf)
+        sub2, _ = self._sub2(sub1, cf, False)
 
         self._registers.cf = False
         self._registers.write(reg1, sub2)
@@ -115,12 +115,12 @@ class Dec(ALUInstruction):
     """
     def __init__(self, registers: Registers, memory_size: int) -> None:
         super().__init__(registers, memory_size)
-        self._adder = BitwiseAdd(2 ** self._registers.size)
+        self._subtractor = BitwiseSub(2 ** self._registers.size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
 
-        inc_data = self._adder(data1, [0] * len(data1), True)
+        inc_data, _ = self._subtractor(data1, [0] * len(data1), True)
 
         self._registers.cf = False
         self._registers.write(reg1, inc_data)
