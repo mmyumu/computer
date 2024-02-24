@@ -153,6 +153,29 @@ def test_sub_cf(registers: Registers, sram: SRAM):
     assert registers.cf is False
 
 
+def test_sub_borrow_out(registers: Registers, sram: SRAM):
+    sram.reset()
+    registers.reset()
+
+    d1 = Data16(0, 0, 0, 0, 1, 0, 1, 0)
+    register_address1 = Bits(0, 0, 1)
+    registers.write(register_address1, d1)
+
+    d2 = Data16(0, 0, 0, 1, 0, 0, 0, 0)
+    register_address2 = Bits(0, 1, 0)
+    registers.write(register_address2, d2)
+
+    registers.clock_tick(True)
+
+    sub = Sub(registers, sram.size)
+    operand = Bits(register_address1 + register_address2 + [0] * 8)
+    sub(operand)
+    registers.clock_tick(True)
+
+    assert registers.read(register_address1) == [1, 1, 1, 1, 1, 0, 1, 0]
+    assert registers.cf is True
+
+
 def test_mult_easy(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()

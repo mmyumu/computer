@@ -41,12 +41,12 @@ class Sub(ALUInstruction):
         data1 = self._registers.read(reg1)
         data2 = self._registers.read(reg2)
 
-        sub1, _ = self._sub1(data1, data2, False)
+        sub1, borrow_out = self._sub1(data1, data2, False)
 
         cf = [0] * 7 + [self._registers.cf]
         sub2, _ = self._sub2(sub1, cf, False)
 
-        self._registers.cf = False
+        self._registers.cf = borrow_out
         self._registers.write(reg1, sub2)
 
 
