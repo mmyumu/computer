@@ -30,7 +30,7 @@ def test_bitwise_add(bitwise_add: BitwiseAdd):
             for carry in [False, True]:
                 data1 = Bits(d1, size=2 ** 2)
                 data2 = Bits(d2, size=2 ** 2)
-                add_result, carry_out = bitwise_add(data1, data2, carry)
+                add_result, carry_out = bitwise_add(data1, data2, carry=carry)
 
                 assert add_result.to_int() == d1 + d2 + carry
                 assert carry_out is False

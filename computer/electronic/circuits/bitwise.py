@@ -1,6 +1,7 @@
 """
 Bitwise circuits module
 """
+from abc import ABC, abstractmethod
 from typing import List, Tuple
 from computer.data_types import Bits
 from computer.electronic.circuits.adder import FullAdder
@@ -12,21 +13,40 @@ from computer.electronic.circuits.subtractor import FullSubtractor, FullSubtract
 
 # pylint: disable=R0903
 
-class BitwiseAdd:
+class Bitwise(ABC):
+    """
+    Base class for bitwise operations
+    """
+    def __init__(self, size: int):
+        self._size = size
+
+    def _check_input(self, i: Bits, input_name: str):
+        """
+        Check if the given input is correct
+
+        Args:
+            i (Bits): the input to check
+            input_name (str): the name of the input for logging purpose
+
+        Raises:
+            ValueError: raised if the input is not correct
+        """
+        if len(i) != self._size:
+            raise ValueError(f"Length of {input_name} should be {self._size} but is {len(i)}")
+
+
+class BitwiseAdd(Bitwise):
     """
     Bitwise adder of 2 N-bits numbers.
     Adder/subtractor could be merged in a adder-subtractor circuit.
     """
     def __init__(self, size: int):
-        self._size = size
+        super().__init__(size)
         self._adders = [FullAdder() for _ in range(self._size)]
 
     def __call__(self, d1: Bits, d2: Bits, carry: bool) -> Tuple[Bits, bool]:
-        if len(d1) != self._size:
-            raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
-
-        if len(d2) != self._size:
-            raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
+        self._check_input(d1, "d1")
+        self._check_input(d2, "d2")
 
         carry_in = carry
         data = []
@@ -38,24 +58,21 @@ class BitwiseAdd:
 
         return Bits(data), carry_out
 
-class BitwiseSub:
+class BitwiseSub(Bitwise):
     """
     Bitwise subtract of 2 N-bits numbers.
     Adder/subtractor could be merged in a adder-subtractor circuit.
     https://www.geeksforgeeks.org/parallel-adder-and-parallel-subtractor/
     """
     def __init__(self, size: int):
-        self._size = size
+        super().__init__(size)
         self._subtractors = [FullSubtractor() for _ in range(self._size)]
 
+    def __call__(self, d1: Bits, d2: Bits, borrow: bool) -> Tuple[Bits, bool]:
+        self._check_input(d1, "d1")
+        self._check_input(d2, "d2")
 
-    def __call__(self, d1: Bits, d2: Bits, borrow_in: bool) -> Tuple[Bits, bool]:
-        if len(d1) != self._size:
-            raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
-
-        if len(d2) != self._size:
-            raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
-
+        borrow_in = borrow
         sub_data = []
         for bit1, bit2, subtractor in zip(d1[::-1], d2[::-1], self._subtractors):
             difference, borrow_out = subtractor(bit1, bit2, borrow_in)
@@ -65,60 +82,60 @@ class BitwiseSub:
         return Bits(sub_data[::-1]), borrow_out
 
 
-class BitwiseSubLegacy:
-    """
-    Bitwise subtract of 2 N-bits numbers
-    """
-    def __init__(self, size: int):
-        self._size = size
-        self._adder = BitwiseAdd(self._size)
-        self._complement = TwoComplement(self._size)
+# class BitwiseSubLegacy:
+#     """
+#     Bitwise subtract of 2 N-bits numbers
+#     """
+#     def __init__(self, size: int):
+#         self._size = size
+#         self._adder = BitwiseAdd(self._size)
+#         self._complement = TwoComplement(self._size)
 
 
-    def __call__(self, d1: Bits, d2: Bits) -> Tuple[Bits, bool]:
-        if len(d1) != self._size:
-            raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
+#     def __call__(self, d1: Bits, d2: Bits) -> Tuple[Bits, bool]:
+#         if len(d1) != self._size:
+#             raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
 
-        if len(d2) != self._size:
-            raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
+#         if len(d2) != self._size:
+#             raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
 
-        complement_data2 = self._complement(d2)
-        sub_data, _ = self._adder(d1, complement_data2, False)
+#         complement_data2 = self._complement(d2)
+#         sub_data, _ = self._adder(d1, complement_data2, False)
 
-        return sub_data
-
-
-class BitwiseSubLegacy2:
-    """
-    Bitwise subtract of 2 N-bits numbers.
-    Adder/subtractor could be merged in a adder-subtractor circuit.
-    https://www.geeksforgeeks.org/parallel-adder-and-parallel-subtractor/
-    """
-    def __init__(self, size: int):
-        self._size = size
-        self._nots = [NOTGate() for _ in range(self._size)]
-        self._adders = [FullAdder() for _ in range(self._size)]
+#         return sub_data
 
 
-    def __call__(self, d1: Bits, d2: Bits) -> Tuple[Bits, bool]:
-        if len(d1) != self._size:
-            raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
-
-        if len(d2) != self._size:
-            raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
-
-        carry_in = True
-        sub_data = []
-        for bit1, bit2, not_gate, adder in zip(d1[::-1], d2[::-1], self._nots, self._adders):
-            not_bit2 = not_gate(bit2)
-            difference, carry_out = adder(bit1, not_bit2, carry_in)
-            carry_in = carry_out
-            sub_data.append(difference)
-
-        return Bits(sub_data[::-1]), carry_out
+# class BitwiseSubLegacy2:
+#     """
+#     Bitwise subtract of 2 N-bits numbers.
+#     Adder/subtractor could be merged in a adder-subtractor circuit.
+#     https://www.geeksforgeeks.org/parallel-adder-and-parallel-subtractor/
+#     """
+#     def __init__(self, size: int):
+#         self._size = size
+#         self._nots = [NOTGate() for _ in range(self._size)]
+#         self._adders = [FullAdder() for _ in range(self._size)]
 
 
-class BitwiseMult:
+#     def __call__(self, d1: Bits, d2: Bits) -> Tuple[Bits, bool]:
+#         if len(d1) != self._size:
+#             raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
+
+#         if len(d2) != self._size:
+#             raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
+
+#         carry_in = True
+#         sub_data = []
+#         for bit1, bit2, not_gate, adder in zip(d1[::-1], d2[::-1], self._nots, self._adders):
+#             not_bit2 = not_gate(bit2)
+#             difference, carry_out = adder(bit1, not_bit2, carry_in)
+#             carry_in = carry_out
+#             sub_data.append(difference)
+
+#         return Bits(sub_data[::-1]), carry_out
+
+
+class BitwiseMult(Bitwise):
     """
     Bitwise multiply 2 N-bits numbers
         1011   (this is binary for decimal 11)
@@ -132,7 +149,7 @@ class BitwiseMult:
     10011010   (this is binary for decimal 154)
     """
     def __init__(self, size: int):
-        self._size = size
+        super().__init__(size)
 
         self._and_gates: List[List[ANDGate]] = []
         for _ in range(self._size):
@@ -145,11 +162,8 @@ class BitwiseMult:
 
 
     def __call__(self, d1: Bits, d2: Bits) -> Tuple[Bits, bool]:
-        if len(d1) != self._size:
-            raise ValueError(f"Length of d1 should be {self._size} but is {len(d1)}")
-
-        if len(d2) != self._size:
-            raise ValueError(f"Length of d2 should be {self._size} but is {len(d2)}")
+        self._check_input(d1, "d1")
+        self._check_input(d2, "d2")
 
         aggregated_and_result = None
         for i, (bit2, and_gates) in enumerate(zip(d2[::-1], self._and_gates)):
@@ -167,13 +181,13 @@ class BitwiseMult:
         return aggregated_and_result
 
 
-class BitwiseDiv:
+class BitwiseDiv(Bitwise):
     """
     Bitwise divide 2 N-bits numbers
     https://www.researchgate.net/profile/Shaahin-Angizi/publication/273886222/figure/fig2/AS:478206512898049@1491024725549/Schematic-logic-diagram-of-a-4-by-4-restoring-array-divider-33.png
     """
     def __init__(self, size: int):
-        self._size = size
+        super().__init__(size)
 
         self._or_gates = []
         self._not_gates = []
@@ -189,11 +203,8 @@ class BitwiseDiv:
             self._subrestores.append(subrestores)
 
     def __call__(self, a: Bits, d: Bits) -> Tuple[Bits, bool]:
-        if len(a) != self._size:
-            raise ValueError(f"Length of a should be {self._size} but is {len(a)}")
-
-        if len(d) != self._size:
-            raise ValueError(f"Length of d should be {self._size} but is {len(d)}")
+        self._check_input(a, "a")
+        self._check_input(d, "d")
 
         if not any(d):
             raise ValueError("Divider cannot be 0")

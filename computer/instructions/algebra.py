@@ -21,7 +21,7 @@ class Add(ALUInstruction):
         data1 = self._registers.read(reg1)
         data2 = self._registers.read(reg2)
 
-        data, carry_out = self._adder(data1, data2, self._registers.cf)
+        data, carry_out = self._adder(data1, data2, carry=self._registers.cf)
 
         self._registers.cf = carry_out
         self._registers.write(reg1, data)
@@ -102,7 +102,7 @@ class Inc(ALUInstruction):
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
 
-        inc_data, _ = self._adder(data1, [0] * len(data1), True)
+        inc_data, _ = self._adder(data1, [0] * len(data1), carry=True)
 
         self._registers.cf = False
         self._registers.write(reg1, inc_data)
