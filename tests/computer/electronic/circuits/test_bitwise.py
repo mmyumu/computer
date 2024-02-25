@@ -3,7 +3,7 @@ Test for Bitwise operations
 """
 import pytest
 from computer.data_types import Bits
-from computer.electronic.circuits.bitwise import BitwiseAdd, BitwiseDiv, BitwiseMult, BitwiseSub
+from computer.electronic.circuits.bitwise import BitwiseAdd, BitwiseDiv, BitwiseMult, BitwiseMux, BitwiseSub
 
 # pylint: disable=C0116
 
@@ -22,6 +22,10 @@ def fixture_bitwise_mult():
 @pytest.fixture(name="bitwise_div")
 def fixture_bitwise_div():
     return BitwiseDiv(4)
+
+@pytest.fixture(name="bitwise_mux")
+def fixture_bitwise_mux():
+    return BitwiseMux(4)
 
 
 def test_bitwise_add(bitwise_add: BitwiseAdd):
@@ -72,3 +76,17 @@ def test_bitwise_div(bitwise_div: BitwiseDiv):
 
                 assert quotient.to_int() == (d1 // d2)
                 assert remainder.to_int() == d1 % d2
+
+
+def test_bitwise_mux(bitwise_mux: BitwiseMux):
+    for d1 in range(2 ** 2):
+        for d2 in range(2 ** 2):
+            for s in [False, True]:
+                data1 = Bits(d1, size=2 ** 2)
+                data2 = Bits(d2, size=2 ** 2)
+                d = bitwise_mux(data1, data2, s)
+
+                if s is False:
+                    assert d == data1
+                else:
+                    assert d == data2

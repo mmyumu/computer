@@ -7,6 +7,7 @@ from computer.data_types import Bits
 from computer.electronic.circuits.adder import FullAdder
 from computer.electronic.circuits.cmos import ANDGate, NOTGate, ORGate
 from computer.electronic.circuits.complement import TwoComplement
+from computer.electronic.circuits.mux import MUX2To1
 from computer.electronic.circuits.subtractor import FullSubtractor, FullSubtractorRestore
 
 # TODO: write unit tests for all operations
@@ -202,7 +203,7 @@ class BitwiseDiv(Bitwise):
 
             self._subrestores.append(subrestores)
 
-    def __call__(self, a: Bits, d: Bits) -> Tuple[Bits, bool]:
+    def __call__(self, a: Bits, d: Bits) -> Tuple[Bits, Bits]:
         self._check_input(a, "a")
         self._check_input(d, "d")
 
@@ -246,3 +247,24 @@ class BitwiseDiv(Bitwise):
             borrow_in = borrow_out
 
         return quotient, remainder[::-1]
+
+
+class BitwiseMux(Bitwise):
+    """
+    Bitwise Mux between 2 N-bits numbers
+    """
+    def __init__(self, size: int):
+        super().__init__(size)
+        self._muxes = [MUX2To1() for _ in range(self._size)]
+
+    def __call__(self, d1: Bits, d2: Bits, s: bool) -> Bits:
+        self._check_input(d1, "d1")
+        self._check_input(d2, "d2")
+
+        data = []
+        for bit1, bit2, mux in zip(d1[::-1], d2[::-1], self._muxes):
+            result_bit = mux(bit1, bit2, s)
+            data.append(result_bit)
+        data = data[::-1]
+
+        return Bits(data)
