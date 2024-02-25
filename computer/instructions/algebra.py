@@ -3,6 +3,7 @@ Algebra instructions module
 """
 from computer.data_types import Bits
 from computer.electronic.circuits.bitwise import BitwiseAdd, BitwiseDiv, BitwiseMult, BitwiseSub
+from computer.electronic.circuits.cmos import ORGate
 from computer.instructions.instruction import ALUInstruction
 from computer.registers import Registers
 
@@ -25,6 +26,8 @@ class Add(ALUInstruction):
 
         self._registers.cf = carry_out
         self._registers.write(reg1, data)
+
+        self.update_zf(data)
 
 
 class Sub(ALUInstruction):
@@ -49,6 +52,8 @@ class Sub(ALUInstruction):
         self._registers.cf = borrow_out
         self._registers.write(reg1, sub2)
 
+        self.update_zf(sub2)
+
 
 class Mult(ALUInstruction):
     """
@@ -58,6 +63,7 @@ class Mult(ALUInstruction):
     def __init__(self, registers: Registers, memory_size: int) -> None:
         super().__init__(registers, memory_size)
         self._mult = BitwiseMult(2 ** self._registers.size)
+        self._zf_or_gates = [ORGate() for _ in range(2 ** (self._registers.size + 1))]
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
@@ -67,6 +73,8 @@ class Mult(ALUInstruction):
 
         self._registers.write(reg1, mult[2 ** self._registers.size:])
         self._registers.write(reg2, mult[:2 ** self._registers.size])
+
+        self.update_zf(mult)
 
 
 class Div(ALUInstruction):
@@ -87,6 +95,8 @@ class Div(ALUInstruction):
         self._registers.write(reg1, quotient)
         self._registers.write(reg2, remainder)
 
+        self.update_zf(quotient + remainder)
+
 
 class Inc(ALUInstruction):
     """
@@ -104,6 +114,8 @@ class Inc(ALUInstruction):
 
         self._registers.write(reg1, inc_data)
 
+        self.update_zf(inc_data)
+
 
 class Dec(ALUInstruction):
     """
@@ -117,6 +129,8 @@ class Dec(ALUInstruction):
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)
 
-        inc_data, _ = self._subtractor(data1, [0] * len(data1), True)
+        dec_data, _ = self._subtractor(data1, [0] * len(data1), True)
 
-        self._registers.write(reg1, inc_data)
+        self._registers.write(reg1, dec_data)
+
+        self.update_zf(dec_data)

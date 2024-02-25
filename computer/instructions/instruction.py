@@ -4,6 +4,7 @@ Instruction module.
 from abc import ABC, abstractmethod
 from typing import Any
 from computer.data_types import Bits
+from computer.electronic.circuits.cmos import NOTGate, ORGate
 from computer.memory import SRAM
 from computer.program_counter import ProgramCounter
 from computer.registers import Registers
@@ -41,6 +42,22 @@ class ALUInstruction(Instruction):
     def __init__(self, registers: Registers, memory_size: int) -> None:
         super().__init__(registers_size=registers.size, memory_size=memory_size)
         self._registers = registers
+
+        self._zf_or_gates = [ORGate() for _ in range(2 ** self._registers.size)]
+        self._zf_not_gate = NOTGate()
+
+    def update_zf(self, result: Bits):
+        """
+        Update ZF with the given result.
+        ZF is updated if result is 0.
+
+        Args:
+            result (Bits): result to be checked to update ZF
+        """
+        or_result = 0
+        for bit, or_gate in zip(result, self._zf_or_gates):
+            or_result = or_gate(or_result, bit)
+        self._registers.zf = self._zf_not_gate(or_result)
 
 
 class ControlInstruction(Instruction):
