@@ -65,7 +65,6 @@ class Mult(ALUInstruction):
 
         mult = self._mult(data1, data2)
 
-        self._registers.cf = False
         self._registers.write(reg1, mult[2 ** self._registers.size:])
         self._registers.write(reg2, mult[:2 ** self._registers.size])
 
@@ -85,7 +84,6 @@ class Div(ALUInstruction):
 
         quotient, remainder = self._div(data1, data2)
 
-        self._registers.cf = False
         self._registers.write(reg1, quotient)
         self._registers.write(reg2, remainder)
 
@@ -104,7 +102,6 @@ class Inc(ALUInstruction):
 
         inc_data, _ = self._adder(data1, [0] * len(data1), carry=True)
 
-        self._registers.cf = False
         self._registers.write(reg1, inc_data)
 
 
@@ -122,5 +119,4 @@ class Dec(ALUInstruction):
 
         inc_data, _ = self._subtractor(data1, [0] * len(data1), True)
 
-        self._registers.cf = False
         self._registers.write(reg1, inc_data)

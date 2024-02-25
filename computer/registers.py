@@ -23,8 +23,8 @@ class Registers(list):
 
         self.cf: bool = False
         self.zf: bool = False
-        self.sf: bool = False
-        self.of: bool = False
+        # self.sf: bool = False
+        # self.of: bool = False
 
         self._decoder = Decoder(size)
         for _ in range(2 ** size):
