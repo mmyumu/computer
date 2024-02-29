@@ -2,12 +2,7 @@
 Jump instructions module
 """
 from computer.data_types import Bits
-from computer.electronic.circuits.bitwise import BitwiseMux
-from computer.electronic.circuits.cmos import ORGate
 from computer.instructions.instruction import ControlInstruction
-from computer.memory import SRAM
-from computer.program_counter import ProgramCounter
-from computer.registers import Registers
 
 # pylint: disable=R0903
 class CLC(ControlInstruction):
