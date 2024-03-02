@@ -25,8 +25,8 @@ def test_barrel_shifter(barrel_shifter_right: BarrelShifter, barrel_shifter_left
         for s in range(8):
             s = Bits(s, size=3)
 
-            result_right = barrel_shifter_right(i, s)
+            result_right, _ = barrel_shifter_right(i, s)
             assert ((i.to_int() >> s.to_int())|(i.to_int() << (8 - s.to_int())) & 0xFF) % (2 ** 8) == result_right.to_int(), f"Inputs: i={i}, s={s}"
 
-            result_left = barrel_shifter_left(i, s)
+            result_left, _ = barrel_shifter_left(i, s)
             assert ((i.to_int() << s.to_int())|(i.to_int() >> (8 - s.to_int())) & 0xFF) % (2 ** 8) == result_left.to_int(), f"Inputs: i={i}, s={s}"

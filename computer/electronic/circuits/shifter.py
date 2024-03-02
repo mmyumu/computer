@@ -53,6 +53,8 @@ class BarrelShifter:
 
         if self._right:
             result = Bits(output)
+            carry_out = result[0]
         else:
             result = Bits(output[::-1])
-        return result
+            carry_out = result[-1]
+        return result, carry_out
