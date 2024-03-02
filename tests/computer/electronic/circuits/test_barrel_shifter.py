@@ -9,15 +9,6 @@ from computer.electronic.circuits.shifter import BarrelShifter
 
 # pylint: disable=C0116,W0212
 
-def rotr(num, bits):
-    num &= (2**bits-1)
-    bit = num & 1
-    num >>= 1
-    if bit:
-        num |= (1 << (bits-1))
-
-    return num
-
 @pytest.fixture(name="barrel_shifter_right")
 def fixture_barrel_shifter_right():
     return BarrelShifter(3, right=True)
@@ -28,7 +19,6 @@ def fixture_barrel_shifter_left():
 
 
 def test_barrel_shifter(barrel_shifter_right: BarrelShifter, barrel_shifter_left: BarrelShifter):
-
     for i in range(256):
         i = Bits(i, size=8)
 
