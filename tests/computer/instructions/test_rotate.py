@@ -8,7 +8,7 @@ from computer.registers import Registers
 
 
 
-# pylint: disable=C0116
+# pylint: disable=C0116,R0801
 def test_ror(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
