@@ -134,3 +134,23 @@ class Dec(ALUInstruction):
         self._registers.write(reg1, dec_data)
 
         self.update_zf(dec_data)
+
+
+class Cmp(ALUInstruction):
+    """
+    Comparison between 2 registers
+    CMP REG REG	; (REGA - REGB), only flags are changed
+    """
+    def __init__(self, registers: Registers, memory_size: int) -> None:
+        super().__init__(registers, memory_size)
+        self._sub1 = BitwiseSub(2 ** self._registers.size)
+        self._sub2 = BitwiseSub(2 ** self._registers.size)
+
+    def compute(self, reg1: Bits, reg2: Bits, value: Bits):
+        data1 = self._registers.read(reg1)
+        data2 = self._registers.read(reg2)
+
+        sub1, borrow_out = self._sub1(data1, data2, False)
+
+        self._registers.cf = borrow_out
+        self.update_zf(sub1)

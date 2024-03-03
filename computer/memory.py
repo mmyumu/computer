@@ -30,6 +30,15 @@ class Memory(ABC):
         Read data from memory at the given address
         """
 
+    def clock_tick(self, enable: bool):
+        """
+        Clock tick input
+
+        Args:
+            enable (bool): the state of the clock
+        """
+
+
 class SRAM(Memory):
     """
     Memory class.
