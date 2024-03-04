@@ -21,6 +21,9 @@ jobs:
     - name: Running tests
       run: |
         PYTHONPATH=. coverage run -m pytest tests/
+    - name: Code coverage report
+      run: |
+        PYTHONPATH=. coverage report
     - name: Generate HTML report for code coverage
       run: |
         PYTHONPATH=. coverage html -d output/htmlcov
