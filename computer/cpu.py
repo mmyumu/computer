@@ -3,7 +3,7 @@ CPU module
 """
 from computer.clock import Clock
 from computer.control_unit import ControlUnit
-from computer.data_types import Bits, Opcode8
+from computer.data_types import Bits
 from computer.memory import Memory
 from computer.program_counter import ProgramCounter
 from computer.registers import Registers
@@ -36,7 +36,7 @@ class CPU:
             self._control_unit.execute(instruction[:8], instruction[8:])
 
 
-    def execute(self, opcode: Opcode8, operand: Bits):
+    def execute(self, opcode: Bits, operand: Bits):
         """
         Execute the operation defined with the opcode and with operand as parameter
         """

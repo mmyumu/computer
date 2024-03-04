@@ -1,7 +1,6 @@
 """
 Test for Registers
 """
-import pytest
 from computer.data_types import Bits
 from computer.registers import Registers
 

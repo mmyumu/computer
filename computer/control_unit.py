@@ -28,7 +28,7 @@ class ControlUnit:
         self._alu = ALU(self._registers, memory.size)
         self._demux = DEMUX1To2()
         self._decoder = Decoder(8)
-        
+
         self._operations = [
             Nop(),
             Jump(registers=self._registers, memory=self._memory, program_counter=program_counter),
@@ -51,7 +51,7 @@ class ControlUnit:
         """
         if len(opcode) != 8:
             raise ValueError(f"Length of operand should be {8} but is {len(opcode)}")
-        
+
         operand_check_size = self._memory.size + (self._registers.size * 2)
         if len(operand) != operand_check_size:
             raise ValueError(f"Length of operand should be {operand_check_size} but is {len(operand)}")
@@ -64,6 +64,13 @@ class ControlUnit:
             self._alu.execute_instruction(opcode[1:], operand)
 
     def execute_instruction(self, opcode: Bits, operand: Bits):
+        """
+        Execute the instruction matching the opcode with the operand as parameter
+
+        Args:
+            opcode (Bits): the opcode of the instruction to execute
+            operand (Bits): the operand to pass to the instruction
+        """
         bits = self._decoder(*opcode, True)
         for i, bit in enumerate(bits[::-1]):
             if bit:

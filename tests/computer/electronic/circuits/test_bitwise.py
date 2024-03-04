@@ -5,7 +5,7 @@ import pytest
 from computer.data_types import Bits
 from computer.electronic.circuits.bitwise import BitwiseAdd, BitwiseDiv, BitwiseMult, BitwiseMux, BitwiseSub
 
-# pylint: disable=C0116
+# pylint: disable=C0116,w0212
 
 @pytest.fixture(name="bitwise_add")
 def fixture_bitwise_add():
