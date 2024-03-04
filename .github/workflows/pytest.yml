@@ -20,4 +20,7 @@ jobs:
         pip install -r requirements_dev.txt
     - name: Running tests
       run: |
-        PYTHONPATH=. pytest
+        PYTHONPATH=. coverage run -m pytest tests/
+    - name: Running tests
+      run: |
+        PYTHONPATH=. coverage html
