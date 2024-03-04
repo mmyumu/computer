@@ -35,6 +35,19 @@ def fixture_decoder8to256():
     return Decoder(8)
 
 
+def test_decoder1():
+    with pytest.raises(ValueError):
+        Decoder(1)
+
+def test_decoder_correct_size():
+    decoder = Decoder(2)
+    decoder(1, 1, enable=True)
+
+def test_decoder_wrong_size():
+    decoder = Decoder(2)
+    with pytest.raises(ValueError):
+        decoder(1, 1, 1, enable=True)
+
 def test_decoder2to4_a1_false_a0_false_enabled(decoder2to4: Decoder):
     d3, d2, d1, d0 = decoder2to4(False, False, enable=True)
     assert d3 is False

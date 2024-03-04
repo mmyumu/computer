@@ -1,7 +1,7 @@
 """
 Test for Rotation instructions
 """
-from computer.data_types import Bits, Data16
+from computer.data_types import Bits
 from computer.instructions.rotate import ROL, ROR
 from computer.memory import SRAM
 from computer.registers import Registers
@@ -13,11 +13,11 @@ def test_ror(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 0, 0, 0, 0, 1)
+    d1 = Bits(1, 0, 0, 0, 0, 0, 0, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    imd = Data16(0, 0, 0, 0, 0, 0, 1, 0)
+    imd = Bits(0, 0, 0, 0, 0, 0, 1, 0)
 
     registers.clock_tick(True)
 
@@ -34,11 +34,11 @@ def test_ror_cf(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 1, 0, 0, 0, 0, 0, 1)
+    d1 = Bits(1, 1, 0, 0, 0, 0, 0, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    imd = Data16(0, 0, 0, 0, 0, 0, 0, 1)
+    imd = Bits(0, 0, 0, 0, 0, 0, 0, 1)
 
     registers.clock_tick(True)
 
@@ -55,11 +55,11 @@ def test_rol(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 0, 0, 0, 0, 1)
+    d1 = Bits(1, 0, 0, 0, 0, 0, 0, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    imd = Data16(0, 0, 0, 0, 0, 0, 1, 0)
+    imd = Bits(0, 0, 0, 0, 0, 0, 1, 0)
 
     registers.clock_tick(True)
 
@@ -76,11 +76,11 @@ def test_rol_cf(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 1, 0, 0, 0, 0, 0, 1)
+    d1 = Bits(1, 1, 0, 0, 0, 0, 0, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    imd = Data16(0, 0, 0, 0, 0, 0, 0, 1)
+    imd = Bits(0, 0, 0, 0, 0, 0, 0, 1)
 
     registers.clock_tick(True)
 

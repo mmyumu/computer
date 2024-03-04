@@ -3,7 +3,6 @@ Test configuration for computer package
 """
 import pytest
 
-from computer.memory import SRAM
 from computer.program_counter import ProgramCounter
 from computer.registers import Registers
 
@@ -17,7 +16,3 @@ def fixture_program_counter():
 @pytest.fixture(name="registers")
 def fixture_registers():
     return Registers(size=3, register_size=3)
-
-@pytest.fixture(name="memory")
-def fixture_memory8():
-    return SRAM(size=8, register_size=3)

@@ -6,7 +6,7 @@ import pytest
 from computer.electronic.circuits.register import PIPORegister, SIPORegister, SISORegister
 
 
-# pylint: disable=C0116,W0212
+# pylint: disable=C0116,W0212,C2801
 
 @pytest.fixture(name="siso_register")
 def fixture_siso_register():
@@ -224,3 +224,17 @@ def test_pipo_set1110_memorize(pipo_register: PIPORegister):
 
     for _ in range(10):
         assert pipo_register.clock_tick(False) == [True, True, True, False]
+
+
+def test_pipo_wrong_input_size(pipo_register: PIPORegister):
+    with pytest.raises(ValueError):
+        pipo_register.set_d(True, True, True, False, False)
+
+
+def test_pipo_wrong_input_type(pipo_register: PIPORegister):
+    with pytest.raises(ValueError):
+        pipo_register.set_d("aze")
+
+
+def test_pipo_str(pipo_register: PIPORegister):
+    pipo_register.__str__()

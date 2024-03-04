@@ -1,7 +1,7 @@
 """
 Test for Logic instructions
 """
-from computer.data_types import Bits, Data16
+from computer.data_types import Bits
 from computer.instructions.algebra import Add, Cmp, Dec, Div, Inc, Mult, Sub
 from computer.memory import SRAM
 from computer.registers import Registers
@@ -13,11 +13,11 @@ def test_add(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 0, 0, 0, 0, 1)
+    d1 = Bits(1, 0, 0, 0, 0, 0, 0, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 0, 0, 1, 1, 1)
+    d2 = Bits(0, 0, 0, 0, 0, 1, 1, 1)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -37,11 +37,11 @@ def test_add_carry_in(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 0, 0, 0, 0, 1)
+    d1 = Bits(1, 0, 0, 0, 0, 0, 0, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 0, 0, 1, 1, 1)
+    d2 = Bits(0, 0, 0, 0, 0, 1, 1, 1)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -63,11 +63,11 @@ def test_add_overflow(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 0, 0, 0, 0, 1)
+    d1 = Bits(1, 0, 0, 0, 0, 0, 0, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 0, 0, 0, 0, 0, 1, 1)
+    d2 = Bits(1, 0, 0, 0, 0, 0, 1, 1)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -87,11 +87,11 @@ def test_add_zf(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 1, 1, 1, 1, 1, 1, 1)
+    d1 = Bits(1, 1, 1, 1, 1, 1, 1, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 0, 0, 0, 0, 1)
+    d2 = Bits(0, 0, 0, 0, 0, 0, 0, 1)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -116,11 +116,11 @@ def test_sub_easy(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(0, 0, 0, 0, 0, 0, 1, 1)
+    d1 = Bits(0, 0, 0, 0, 0, 0, 1, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 0, 0, 0, 0, 1)
+    d2 = Bits(0, 0, 0, 0, 0, 0, 0, 1)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -140,11 +140,11 @@ def test_sub(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 1, 1, 0, 0, 0)
+    d1 = Bits(1, 0, 0, 1, 1, 0, 0, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 0, 0, 1, 0, 0, 1, 0)
+    d2 = Bits(1, 0, 0, 1, 0, 0, 1, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -164,11 +164,11 @@ def test_sub_cf(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 1, 1, 0, 0, 0)
+    d1 = Bits(1, 0, 0, 1, 1, 0, 0, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 0, 0, 1, 0, 0, 1, 0)
+    d2 = Bits(1, 0, 0, 1, 0, 0, 1, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -190,11 +190,11 @@ def test_sub_borrow_out(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(0, 0, 0, 0, 1, 0, 1, 0)
+    d1 = Bits(0, 0, 0, 0, 1, 0, 1, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 1, 0, 0, 0, 0)
+    d2 = Bits(0, 0, 0, 1, 0, 0, 0, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -214,11 +214,11 @@ def test_sub_zf(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(0, 0, 0, 0, 1, 0, 1, 0)
+    d1 = Bits(0, 0, 0, 0, 1, 0, 1, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 0, 1, 0, 1, 0)
+    d2 = Bits(0, 0, 0, 0, 1, 0, 1, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -238,11 +238,11 @@ def test_mult_easy(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(0, 0, 0, 0, 1, 1, 1, 1)
+    d1 = Bits(0, 0, 0, 0, 1, 1, 1, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 0, 0, 0, 1, 0)
+    d2 = Bits(0, 0, 0, 0, 0, 0, 1, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -263,11 +263,11 @@ def test_mult(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 0, 1, 1, 1, 1)
+    d1 = Bits(1, 0, 0, 0, 1, 1, 1, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 0, 0, 1, 0, 0, 1, 0)
+    d2 = Bits(1, 0, 0, 1, 0, 0, 1, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -288,11 +288,11 @@ def test_mult_zf(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(0, 0, 0, 0, 1, 1, 1, 1)
+    d1 = Bits(0, 0, 0, 0, 1, 1, 1, 1)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(0, 0, 0, 0, 0, 0, 0, 0)
+    d2 = Bits(0, 0, 0, 0, 0, 0, 0, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -443,11 +443,11 @@ def test_cmp_false(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 1, 1, 0, 0, 0)
+    d1 = Bits(1, 0, 0, 1, 1, 0, 0, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 0, 0, 1, 0, 0, 1, 0)
+    d2 = Bits(1, 0, 0, 1, 0, 0, 1, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -467,11 +467,11 @@ def test_cmp_true(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 0, 1, 1, 0, 0, 0)
+    d1 = Bits(1, 0, 0, 1, 1, 0, 0, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 0, 0, 1, 1, 0, 0, 0)
+    d2 = Bits(1, 0, 0, 1, 1, 0, 0, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 

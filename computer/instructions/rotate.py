@@ -19,7 +19,9 @@ class Rotation(ALUInstruction):
 
     @abstractmethod
     def _build_barrel_shifter(self):
-        pass
+        """
+        Build the barrel shifter (right or left) to be used for the specific rotation
+        """
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
         data1 = self._registers.read(reg1)

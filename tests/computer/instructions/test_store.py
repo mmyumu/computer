@@ -1,7 +1,7 @@
 """
 Test for Store instructions
 """
-from computer.data_types import Bits, Data16
+from computer.data_types import Bits
 from computer.instructions.store import StoreMem, StoreReg
 from computer.memory import SRAM
 from computer.program_counter import ProgramCounter
@@ -14,7 +14,7 @@ def test_store_mem(registers: Registers, sram: SRAM, program_counter: ProgramCou
     sram.reset()
     registers.reset()
 
-    d = Data16([1] * 4 + [0] * 4)
+    d = Bits([1] * 4 + [0] * 4)
     register_address = Bits(0, 0, 1)
     registers.write(register_address, d)
     registers.clock_tick(True)
@@ -33,7 +33,7 @@ def test_store_reg(registers: Registers, sram: SRAM, program_counter: ProgramCou
     sram.reset()
     registers.reset()
 
-    d = Data16([1] * 4 + [0] * 4)
+    d = Bits([1] * 4 + [0] * 4)
     register_address1 = Bits(0, 0, 1)
     register_address2 = Bits(1, 0, 0)
     memory_address = Bits(0, 0, 1, 1, 0, 0, 1, 1)

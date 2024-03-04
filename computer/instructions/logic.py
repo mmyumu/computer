@@ -29,7 +29,9 @@ class BitwiseALUInstruction(ALUInstruction):
 
     @abstractmethod
     def _build_gates(self):
-        pass
+        """
+        Build the gates for the bitwise computation
+        """
 
 
 class ANDReg(BitwiseALUInstruction):

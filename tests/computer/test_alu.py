@@ -36,3 +36,22 @@ def test_add(alu: ALU, registers: Registers):
     registers.clock_tick(True)
 
     assert registers.read(reg1) == [0, 0, 0, 1, 0, 1, 0, 0]
+
+
+def test_sub(alu: ALU, registers: Registers):
+    opcode = Bits(0, 0, 1)
+
+    reg1 = Bits(0, 1, 0)
+    reg2 = Bits(1, 0, 0)
+
+    registers.write(reg1, Bits(0, 0, 0, 1, 0, 0, 1, 0))
+    registers.write(reg2, Bits(0, 0, 0, 0, 0, 0, 0, 1))
+
+    registers.clock_tick(True)
+
+    operand = Bits(reg1 + reg2 + [0] * 8)
+    alu.execute_instruction(opcode, operand)
+
+    registers.clock_tick(True)
+
+    assert registers.read(reg1) == [0, 0, 0, 1, 0, 0, 0, 1]

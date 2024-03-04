@@ -2,7 +2,7 @@
 Test for Load instructions
 """
 import pytest
-from computer.data_types import Bits, Data16
+from computer.data_types import Bits
 from computer.instructions.load import LoadImd, LoadMem, LoadReg
 from computer.memory import SRAM
 from computer.program_counter import ProgramCounter
@@ -15,7 +15,7 @@ def test_load_mem(registers: Registers, sram: SRAM, program_counter: ProgramCoun
     sram.reset()
     registers.reset()
 
-    d = Data16([1] * 4 + [0] * 4)
+    d = Bits([1] * 4 + [0] * 4)
     register_address = Bits(0, 0, 1)
     memory_address = Bits(0, 0, 0, 0, 1, 1, 1, 1)
     sram.write(memory_address, d)

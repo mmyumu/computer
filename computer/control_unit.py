@@ -2,8 +2,8 @@
 Control unit module
 """
 from computer.alu import ALU
-from computer.data_types import Bits, Opcode8
-from computer.electronic.circuits.decoder import Decoder2To4, Decoder8To256
+from computer.data_types import Bits
+from computer.electronic.circuits.decoder import Decoder
 from computer.electronic.circuits.demux import DEMUX1To2
 from computer.instructions.flags import CLC, STC
 from computer.instructions.jump import JEQ, JGE, JLT, Jump
@@ -27,7 +27,7 @@ class ControlUnit:
 
         self._alu = ALU(self._registers, memory.size)
         self._demux = DEMUX1To2()
-        self._decoder = Decoder8To256()
+        self._decoder = Decoder(8)
         
         self._operations = [
             Nop(),

@@ -1,7 +1,7 @@
 """
 Test for Logic instructions
 """
-from computer.data_types import Bits, Data16
+from computer.data_types import Bits
 from computer.instructions.logic import ANDReg, NOTReg, ORReg, XORReg
 from computer.memory import SRAM
 from computer.registers import Registers
@@ -13,11 +13,11 @@ def test_and(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 1, 0, 1, 0, 1, 0)
+    d1 = Bits(1, 0, 1, 0, 1, 0, 1, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 1, 1, 1, 0, 0, 0, 0)
+    d2 = Bits(1, 1, 1, 1, 0, 0, 0, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -34,11 +34,11 @@ def test_or(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 1, 0, 1, 0, 1, 0)
+    d1 = Bits(1, 0, 1, 0, 1, 0, 1, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 1, 1, 1, 0, 0, 0, 0)
+    d2 = Bits(1, 1, 1, 1, 0, 0, 0, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -55,11 +55,11 @@ def test_xor(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 1, 0, 1, 0, 1, 0)
+    d1 = Bits(1, 0, 1, 0, 1, 0, 1, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
 
-    d2 = Data16(1, 1, 1, 1, 0, 0, 0, 0)
+    d2 = Bits(1, 1, 1, 1, 0, 0, 0, 0)
     register_address2 = Bits(0, 1, 0)
     registers.write(register_address2, d2)
 
@@ -76,7 +76,7 @@ def test_not(registers: Registers, sram: SRAM):
     sram.reset()
     registers.reset()
 
-    d1 = Data16(1, 0, 1, 0, 1, 0, 1, 0)
+    d1 = Bits(1, 0, 1, 0, 1, 0, 1, 0)
     register_address1 = Bits(0, 0, 1)
     registers.write(register_address1, d1)
     registers.clock_tick(True)

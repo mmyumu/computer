@@ -2,7 +2,7 @@
 Memory module
 """
 from abc import ABC, abstractmethod
-from computer.data_types import Bits, Data16
+from computer.data_types import Bits
 from computer.electronic.circuits.decoder import Decoder
 from computer.registers import Registers
 from utils.logger import logger
@@ -19,7 +19,7 @@ class Memory(ABC):
         self._level = level
 
     @abstractmethod
-    def write(self, address: Bits, d: Data16):
+    def write(self, address: Bits, d: Bits):
         """
         Write the given value at the given address of the memory
         """
@@ -69,7 +69,7 @@ class SRAM(Memory):
         if level == 0:
             logger.info(f"RAM (size: {2**size}) initialized")
 
-    def write(self, address: Bits, d: Data16):
+    def write(self, address: Bits, d: Bits):
         upper_address = address[:2]
         lower_address = address[2:]
         if self.size > 4:

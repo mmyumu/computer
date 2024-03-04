@@ -28,6 +28,14 @@ def fixture_bitwise_mux():
     return BitwiseMux(4)
 
 
+def test_bitwise_input_size_error(bitwise_add: BitwiseAdd):
+    data1 = Bits(0, 0, 0, 0, 0)
+    data2 = Bits(1, 1, 1, 1)
+
+    with pytest.raises(ValueError):
+        bitwise_add(data1, data2, carry=0)
+
+
 def test_bitwise_add(bitwise_add: BitwiseAdd):
     for d1 in range(2 ** 2):
         for d2 in range(2 ** 2):
@@ -76,6 +84,13 @@ def test_bitwise_div(bitwise_div: BitwiseDiv):
 
                 assert quotient.to_int() == (d1 // d2)
                 assert remainder.to_int() == d1 % d2
+
+
+def test_bitwise_row_size(bitwise_div: BitwiseDiv):
+    a = Bits(100)
+    d = Bits(10)
+    with pytest.raises(ValueError):
+        bitwise_div._row(0, a, d, True)
 
 
 def test_bitwise_mux(bitwise_mux: BitwiseMux):

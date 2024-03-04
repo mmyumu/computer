@@ -42,7 +42,6 @@ def test_increment_overflow(program_counter: ProgramCounter):
 
     with pytest.raises(ValueError):
         program_counter.increment()
-        program_counter.clock_tick(True)
 
 
 def test_increment_tick_tack(program_counter: ProgramCounter):

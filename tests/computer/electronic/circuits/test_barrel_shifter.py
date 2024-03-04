@@ -30,3 +30,17 @@ def test_barrel_shifter(barrel_shifter_right: BarrelShifter, barrel_shifter_left
 
             result_left, _ = barrel_shifter_left(i, s)
             assert ((i.to_int() << s.to_int())|(i.to_int() >> (8 - s.to_int())) & 0xFF) % (2 ** 8) == result_left.to_int(), f"Inputs: i={i}, s={s}"
+
+
+def test_barrel_shifter_wrong_s_size(barrel_shifter_right: BarrelShifter):
+    i = Bits(10, size=8)
+    s = Bits(2, size=4)
+    with pytest.raises(ValueError):
+        barrel_shifter_right(i, s)
+
+
+def test_barrel_shifter_wrong_i_size(barrel_shifter_right: BarrelShifter):
+    i = Bits(10, size=9)
+    s = Bits(2, size=3)
+    with pytest.raises(ValueError):
+        barrel_shifter_right(i, s)

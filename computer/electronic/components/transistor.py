@@ -30,7 +30,6 @@ class Transistor(ABC):
         """
         Tells whether the transistor is conducting current or not (output).
         """
-        return self.control_gate and self.source
 
     @property
     def drain(self):

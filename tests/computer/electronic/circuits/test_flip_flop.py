@@ -4,7 +4,7 @@ Test for Flip Flops
 import pytest
 from computer.electronic.circuits.flip_flop import DFlipFlop, SRFlipFlop
 
-# pylint: disable=C0116,W0212
+# pylint: disable=C0116,W0212,C2801
 
 @pytest.fixture(name="srflipflop")
 def fixture_srflipflop():
@@ -58,6 +58,9 @@ def test_srflipflop_memory_sequence(srflipflop: SRFlipFlop):
     srflipflop.set_sr(False, True)
     assert srflipflop.output == (True, False)
     assert srflipflop.clock_tick(True) == (False, True)
+
+def test_srflipflop_str(srflipflop: SRFlipFlop):
+    srflipflop.__str__()
 
 def test_dflipflop_set0_clock0(dflipflop: DFlipFlop):
     dflipflop.reset_states()
@@ -145,3 +148,7 @@ def test_dflipflop_unstable_initial_state_false(dflipflop: DFlipFlop):
     dflipflop.set_d(False)
     assert dflipflop.clock_tick(False) == (False, True)
     assert dflipflop.clock_tick(False) == (False, True)
+
+
+def test_dflipflop_str(dflipflop: DFlipFlop):
+    dflipflop.__str__()

@@ -2,7 +2,7 @@
 Arithmetic logic unit (ALU) module
 """
 from computer.data_types import Bits
-from computer.electronic.circuits.decoder import Decoder, Decoder8To256
+from computer.electronic.circuits.decoder import Decoder
 from computer.instructions.algebra import Add, Cmp, Dec, Div, Inc, Mult, Sub
 from computer.instructions.logic import ANDReg, NOTReg, ORReg, XORReg
 from computer.instructions.rotate import ROL, ROR
