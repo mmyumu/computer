@@ -23,9 +23,9 @@ jobs:
         PYTHONPATH=. coverage run -m pytest tests/
     - name: Generate HTML report for code coverage
       run: |
-        PYTHONPATH=. coverage html
-    - name: Archive code coverage results
+        PYTHONPATH=. coverage html -d output/htmlcov
+    - name: Archive output
       uses: actions/upload-artifact@v4
       with:
-        name: code-coverage-report
-        path: htmlcov
+        name: output
+        path: output
