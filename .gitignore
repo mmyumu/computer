@@ -2,3 +2,5 @@
 .vscode
 *.pyc
 profile*
+.coverage
+coverage*
