@@ -3,12 +3,13 @@ CPU module
 """
 from computer.clock import Clock
 from computer.control_unit import ControlUnit
-from computer.data_types import Bits
 from computer.memory import Memory
 from computer.program_counter import ProgramCounter
 from computer.registers import Registers
 from computer.rom import ROM
 
+
+# pylint: disable=R0913
 
 class CPU:
     """
@@ -34,12 +35,3 @@ class CPU:
 
             instruction = self._rom.read(self._program_counter.value)
             self._control_unit.execute(instruction[:8], instruction[8:])
-
-
-    def execute(self, opcode: Bits, operand: Bits):
-        """
-        Execute the operation defined with the opcode and with operand as parameter
-        """
-        operand_check_size = self._memory.size + (self._registers.size * 2)
-        if len(operand) != operand_check_size:
-            raise ValueError(f"Length of operand should be {operand_check_size} but is {len(operand)}")

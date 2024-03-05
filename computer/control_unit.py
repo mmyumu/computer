@@ -3,8 +3,8 @@ Control unit module
 """
 from computer.alu import ALU
 from computer.data_types import Bits
-from computer.electronic.circuits.decoder import Decoder
 from computer.electronic.circuits.demux import DEMUX1To2
+from computer.instruction_executor import InstructionExecutor
 from computer.instructions.flags import CLC, STC
 from computer.instructions.jump import JEQ, JGE, JLT, Jump
 from computer.instructions.load import LoadImd, LoadMem, LoadReg
@@ -16,7 +16,7 @@ from computer.program_counter import ProgramCounter
 from computer.registers import Registers
 
 
-class ControlUnit:
+class ControlUnit(InstructionExecutor):
     """
     Control unit class
     """
@@ -27,9 +27,8 @@ class ControlUnit:
 
         self._alu = ALU(self._registers, memory.size)
         self._demux = DEMUX1To2()
-        self._decoder = Decoder(7)
 
-        self._operations = [
+        instructions = [
             Nop(),
             Jump(registers=self._registers, memory=self._memory, program_counter=program_counter),
             JEQ(registers=self._registers, memory=self._memory, program_counter=program_counter),
@@ -44,6 +43,7 @@ class ControlUnit:
             CLC(registers=self._registers, memory=self._memory, program_counter=program_counter),
             STC(registers=self._registers, memory=self._memory, program_counter=program_counter),
         ]
+        super().__init__(instructions)
 
     def execute(self, opcode: Bits, operand: Bits):
         """
@@ -67,18 +67,3 @@ class ControlUnit:
             self.execute_instruction(opcode[1:], operand)
         else:
             self._alu.execute_instruction(opcode[1:], operand)
-
-    def execute_instruction(self, opcode: Bits, operand: Bits):
-        """
-        Execute the instruction matching the opcode with the operand as parameter
-
-        Args:
-            opcode (Bits): the opcode of the instruction to execute. 
-                            7 bits since first one is used to know if it is alu or cu
-            operand (Bits): the operand to pass to the instruction
-        """
-        bits = self._decoder(*opcode, enable=True)
-        for i, bit in enumerate(bits[::-1]):
-            if bit:
-                self._operations[i](operand)
-                break

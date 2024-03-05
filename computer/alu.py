@@ -1,21 +1,19 @@
 """
 Arithmetic logic unit (ALU) module
 """
-from computer.data_types import Bits
-from computer.electronic.circuits.decoder import Decoder
+from computer.instruction_executor import InstructionExecutor
 from computer.instructions.algebra import Add, Cmp, Dec, Div, Inc, Mult, Sub
 from computer.instructions.logic import ANDReg, NOTReg, ORReg, XORReg
 from computer.instructions.rotate import ROL, ROR
 from computer.registers import Registers
 
 
-class ALU:
+class ALU(InstructionExecutor):
     """
     Arithmetic logic unit class
     """
     def __init__(self, registers: Registers, memory_size: int):
-        self._decoder = Decoder(7)
-        self._operations = [
+        instructions = [
             Add(registers, memory_size),
             Sub(registers, memory_size),
             Mult(registers, memory_size),
@@ -30,13 +28,4 @@ class ALU:
             ROR(registers, memory_size),
             Cmp(registers, memory_size)
         ]
-
-    def execute_instruction(self, opcode: Bits, operand: Bits):
-        """
-        Execute the operation defined with the opcode and with operand as parameter
-        """
-        bits = self._decoder(*opcode, enable=True)
-        for i, bit in enumerate(bits[::-1]):
-            if bit:
-                self._operations[i](operand)
-                break
+        super().__init__(instructions)

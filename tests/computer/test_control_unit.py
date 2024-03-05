@@ -14,7 +14,7 @@ from computer.program_counter import ProgramCounter
 from computer.registers import Registers
 
 
-# pylint: disable=C0116,W0212
+# pylint: disable=C0116,W0212,R0801
 
 @pytest.fixture(name="control_unit")
 def fixture_control_unit(registers: Registers, memory: Memory, program_counter: ProgramCounter):

@@ -12,7 +12,7 @@ from computer.data_types import Bits
 from computer.registers import Registers
 
 
-# pylint: disable=C0116,W0212
+# pylint: disable=C0116,W0212,R0801
 
 @pytest.fixture(name="alu")
 def fixture_alu(registers: Registers):
