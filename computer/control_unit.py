@@ -27,7 +27,7 @@ class ControlUnit:
 
         self._alu = ALU(self._registers, memory.size)
         self._demux = DEMUX1To2()
-        self._decoder = Decoder(8)
+        self._decoder = Decoder(7)
 
         self._operations = [
             Nop(),

@@ -14,7 +14,7 @@ class ALU:
     Arithmetic logic unit class
     """
     def __init__(self, registers: Registers, memory_size: int):
-        self._decoder = Decoder(3)
+        self._decoder = Decoder(7)
         self._operations = [
             Add(registers, memory_size),
             Sub(registers, memory_size),
