@@ -48,6 +48,11 @@ class ControlUnit:
     def execute(self, opcode: Bits, operand: Bits):
         """
         Execute the operation defined with the opcode and with operand as parameter
+
+        Args:
+            opcode (Bits): the opcode of the instruction to execute. 
+                            8 bits.
+            operand (Bits): the operand to pass to the instruction
         """
         if len(opcode) != 8:
             raise ValueError(f"Length of operand should be {8} but is {len(opcode)}")
@@ -68,10 +73,11 @@ class ControlUnit:
         Execute the instruction matching the opcode with the operand as parameter
 
         Args:
-            opcode (Bits): the opcode of the instruction to execute
+            opcode (Bits): the opcode of the instruction to execute. 
+                            7 bits since first one is used to know if it is alu or cu
             operand (Bits): the operand to pass to the instruction
         """
-        bits = self._decoder(*opcode, True)
+        bits = self._decoder(*opcode, enable=True)
         for i, bit in enumerate(bits[::-1]):
             if bit:
                 self._operations[i](operand)
