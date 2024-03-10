@@ -20,4 +20,4 @@ def fixture_registers():
 
 @pytest.fixture(name="memory")
 def fixture_memory():
-    return SRAM(size=8)
+    return SRAM(size=8, register_size=3)
