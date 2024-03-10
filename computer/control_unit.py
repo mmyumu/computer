@@ -43,7 +43,10 @@ class ControlUnit(InstructionExecutor):
             CLC(registers=self._registers, memory=self._memory, program_counter=program_counter),
             STC(registers=self._registers, memory=self._memory, program_counter=program_counter),
         ]
+
         super().__init__(instructions)
+
+        self._units = [self, self._alu]
 
     def execute(self, opcode: Bits, operand: Bits):
         """
@@ -61,9 +64,8 @@ class ControlUnit(InstructionExecutor):
         if len(operand) != operand_check_size:
             raise ValueError(f"Length of operand should be {operand_check_size} but is {len(operand)}")
 
-        demux_result = self._demux(opcode[0], True)
-
-        if demux_result == 0:
-            self.execute_instruction(opcode[1:], operand)
-        else:
-            self._alu.execute_instruction(opcode[1:], operand)
+        bits = self._demux(True, opcode[0])
+        for i, bit in enumerate(bits[::-1]):
+            if bit:
+                self._units[i].execute_instruction(opcode[1:], operand)
+                break
