@@ -302,3 +302,19 @@ def test_stc(control_unit: ControlUnit, registers: Registers):
     registers.clock_tick(True)
 
     assert registers.cf is True
+
+def test_wrong_opcode_size(control_unit: ControlUnit):
+    opcode = Bits([0] * 6)
+
+    operand = Bits([0] * 14)
+
+    with pytest.raises(ValueError):
+        control_unit.execute(opcode, operand)
+
+def test_wrong_operand_size(control_unit: ControlUnit):
+    opcode = Bits([0] * 8)
+
+    operand = Bits([0] * 13)
+
+    with pytest.raises(ValueError):
+        control_unit.execute(opcode, operand)
