@@ -22,7 +22,6 @@ class CPU:
         self._registers = Registers(size=registers_size, register_size=register_size)
         self._program_counter = ProgramCounter(size=memory.register_size)
         self._control_unit = ControlUnit(self._registers, memory, self._program_counter)
-        # self._alu = ALU(self._registers, memory.size)
 
     def run(self):
         """

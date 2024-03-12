@@ -13,10 +13,9 @@ class Memory(ABC):
     """
     Base class for memory
     """
-    def __init__(self, size=16, register_size=4, level=0):
+    def __init__(self, size=16, register_size=4):
         self.size = size
         self.register_size = register_size
-        self._level = level
 
     @abstractmethod
     def write(self, address: Bits, d: Bits):
@@ -46,8 +45,9 @@ class SRAM(Memory):
     Python cheating optimizations on clock tick can be enabled/disabled.
     """
     def __init__(self, size=16, register_size=4, level=0, cheating_optim=True):
-        super().__init__(size=size, register_size=register_size, level=level)
+        super().__init__(size=size, register_size=register_size)
         self._cheating_optim = cheating_optim
+        self._level = level
 
         if level == 0:
             logger.info(f"Initializing RAM (size: {2**size})...")
