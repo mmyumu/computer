@@ -13,11 +13,6 @@ from computer.memory import SRAM
 def fixture_memory8():
     return SRAM(size=8)
 
-# @pytest.fixture(name="sram16", scope="module")
-# def fixture_memory16():
-#     return SRAM(size=16, cheating_optim=True)
-
-
 def test_wrong_size():
     with pytest.raises(ValueError):
         SRAM(size=3)
