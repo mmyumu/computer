@@ -60,7 +60,7 @@ class ControlUnit(InstructionExecutor):
         if len(opcode) != 8:
             raise ValueError(f"Length of operand should be {8} but is {len(opcode)}")
 
-        operand_check_size = self._memory.size + (self._registers.size * 2)
+        operand_check_size = (2 ** self._memory.register_size) + (self._registers.size * 2)
         if len(operand) != operand_check_size:
             raise ValueError(f"Length of operand should be {operand_check_size} but is {len(operand)}")
 

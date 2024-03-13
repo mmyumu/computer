@@ -23,7 +23,7 @@ def test_add(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    add = Add(registers, sram.size)
+    add = Add(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     add(operand)
     registers.clock_tick(True)
@@ -49,7 +49,7 @@ def test_add_carry_in(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    add = Add(registers, sram.size)
+    add = Add(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     add(operand)
     registers.clock_tick(True)
@@ -73,7 +73,7 @@ def test_add_overflow(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    add = Add(registers, sram.size)
+    add = Add(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     add(operand)
     registers.clock_tick(True)
@@ -99,7 +99,7 @@ def test_add_zf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    add = Add(registers, sram.size)
+    add = Add(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     add(operand)
     registers.clock_tick(True)
@@ -126,7 +126,7 @@ def test_sub_easy(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    sub = Sub(registers, sram.size)
+    sub = Sub(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     sub(operand)
     registers.clock_tick(True)
@@ -150,7 +150,7 @@ def test_sub(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    sub = Sub(registers, sram.size)
+    sub = Sub(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     sub(operand)
     registers.clock_tick(True)
@@ -176,7 +176,7 @@ def test_sub_cf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    sub = Sub(registers, sram.size)
+    sub = Sub(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     sub(operand)
     registers.clock_tick(True)
@@ -200,7 +200,7 @@ def test_sub_borrow_out(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    sub = Sub(registers, sram.size)
+    sub = Sub(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     sub(operand)
     registers.clock_tick(True)
@@ -224,7 +224,7 @@ def test_sub_zf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    sub = Sub(registers, sram.size)
+    sub = Sub(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     sub(operand)
     registers.clock_tick(True)
@@ -248,7 +248,7 @@ def test_mult_easy(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    mult = Mult(registers, sram.size)
+    mult = Mult(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     mult(operand)
     registers.clock_tick(True)
@@ -273,7 +273,7 @@ def test_mult(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    mult = Mult(registers, sram.size)
+    mult = Mult(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     mult(operand)
     registers.clock_tick(True)
@@ -298,7 +298,7 @@ def test_mult_zf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    mult = Mult(registers, sram.size)
+    mult = Mult(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     mult(operand)
     registers.clock_tick(True)
@@ -323,7 +323,7 @@ def test_div(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    div = Div(registers, sram.size)
+    div = Div(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     div(operand)
     registers.clock_tick(True)
@@ -348,7 +348,7 @@ def test_div_zf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    div = Div(registers, sram.size)
+    div = Div(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     div(operand)
     registers.clock_tick(True)
@@ -369,7 +369,7 @@ def test_inc(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    inc = Inc(registers, sram.size)
+    inc = Inc(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + [0] * 8)
     inc(operand)
     registers.clock_tick(True)
@@ -389,7 +389,7 @@ def test_inc_zf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    inc = Inc(registers, sram.size)
+    inc = Inc(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + [0] * 8)
     inc(operand)
     registers.clock_tick(True)
@@ -409,7 +409,7 @@ def test_dec(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    dec = Dec(registers, sram.size)
+    dec = Dec(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + [0] * 8)
     dec(operand)
     registers.clock_tick(True)
@@ -429,7 +429,7 @@ def test_dec_zf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    dec = Dec(registers, sram.size)
+    dec = Dec(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + [0] * 8)
     dec(operand)
     registers.clock_tick(True)
@@ -453,7 +453,7 @@ def test_cmp_false(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    cmp = Cmp(registers, sram.size)
+    cmp = Cmp(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     cmp(operand)
     registers.clock_tick(True)
@@ -477,7 +477,7 @@ def test_cmp_true(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    cmp = Cmp(registers, sram.size)
+    cmp = Cmp(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     cmp(operand)
     registers.clock_tick(True)

@@ -23,7 +23,7 @@ def test_and(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    and_reg = ANDReg(registers, sram.size)
+    and_reg = ANDReg(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     and_reg(operand)
     registers.clock_tick(True)
@@ -44,7 +44,7 @@ def test_or(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    and_reg = ORReg(registers, sram.size)
+    and_reg = ORReg(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     and_reg(operand)
     registers.clock_tick(True)
@@ -65,7 +65,7 @@ def test_xor(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    and_reg = XORReg(registers, sram.size)
+    and_reg = XORReg(registers, sram.register_size)
     operand = Bits(register_address1 + register_address2 + [0] * 8)
     and_reg(operand)
     registers.clock_tick(True)
@@ -81,7 +81,7 @@ def test_not(registers: Registers, sram: SRAM):
     registers.write(register_address1, d1)
     registers.clock_tick(True)
 
-    and_reg = NOTReg(registers, sram.size)
+    and_reg = NOTReg(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + [0] * 8)
     and_reg(operand)
     registers.clock_tick(True)

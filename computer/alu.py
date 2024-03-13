@@ -12,20 +12,20 @@ class ALU(InstructionExecutor):
     """
     Arithmetic logic unit class
     """
-    def __init__(self, registers: Registers, memory_size: int):
+    def __init__(self, registers: Registers, memory_register_size: int):
         instructions = [
-            Add(registers, memory_size),
-            Sub(registers, memory_size),
-            Mult(registers, memory_size),
-            Div(registers, memory_size),
-            Inc(registers, memory_size),
-            Dec(registers, memory_size),
-            ANDReg(registers, memory_size),
-            ORReg(registers, memory_size),
-            XORReg(registers, memory_size),
-            NOTReg(registers, memory_size),
-            ROL(registers, memory_size),
-            ROR(registers, memory_size),
-            Cmp(registers, memory_size)
+            Add(registers, memory_register_size),
+            Sub(registers, memory_register_size),
+            Mult(registers, memory_register_size),
+            Div(registers, memory_register_size),
+            Inc(registers, memory_register_size),
+            Dec(registers, memory_register_size),
+            ANDReg(registers, memory_register_size),
+            ORReg(registers, memory_register_size),
+            XORReg(registers, memory_register_size),
+            NOTReg(registers, memory_register_size),
+            ROL(registers, memory_register_size),
+            ROR(registers, memory_register_size),
+            Cmp(registers, memory_register_size)
         ]
         super().__init__(instructions)

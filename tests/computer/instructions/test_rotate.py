@@ -21,7 +21,7 @@ def test_ror(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    ror = ROR(registers, sram.size)
+    ror = ROR(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + imd)
     ror(operand)
     registers.clock_tick(True)
@@ -42,7 +42,7 @@ def test_ror_cf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    ror = ROR(registers, sram.size)
+    ror = ROR(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + imd)
     ror(operand)
     registers.clock_tick(True)
@@ -63,7 +63,7 @@ def test_rol(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    rol = ROL(registers, sram.size)
+    rol = ROL(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + imd)
     rol(operand)
     registers.clock_tick(True)
@@ -84,7 +84,7 @@ def test_rol_cf(registers: Registers, sram: SRAM):
 
     registers.clock_tick(True)
 
-    rol = ROL(registers, sram.size)
+    rol = ROL(registers, sram.register_size)
     operand = Bits(register_address1 + [0] * 3 + imd)
     rol(operand)
     registers.clock_tick(True)

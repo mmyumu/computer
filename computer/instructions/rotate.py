@@ -13,8 +13,8 @@ class Rotation(ALUInstruction):
     """
     Base class for rotation instructions
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._barrel_shifter = self._build_barrel_shifter()
 
     @abstractmethod

@@ -14,8 +14,8 @@ class Add(ALUInstruction):
     Add between 2 registers
     ADD REG REG	; REGA + REGB + CF, result stored in REGA
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._adder = BitwiseAdd(2 ** self._registers.register_size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
@@ -35,8 +35,8 @@ class Sub(ALUInstruction):
     Sub between 2 registers
     SUB REG REG	; (REGA - REGB) - CF, result stored in REGA
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._sub1 = BitwiseSub(2 ** self._registers.size)
         self._sub2 = BitwiseSub(2 ** self._registers.size)
 
@@ -60,8 +60,8 @@ class Mult(ALUInstruction):
     Multiply 2 registers
     MULT REG REG	; REGA * REGB, low 16-bit result stored in REGA, high 16-bit result stored in REGB
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._mult = BitwiseMult(2 ** self._registers.size)
         self._zf_or_gates = [ORGate() for _ in range(2 ** (self._registers.size + 1))]
 
@@ -82,8 +82,8 @@ class Div(ALUInstruction):
     Divide 2 registers
     DIV REG REG	; REGA / REGB result stored in REGA, REGA MOD REGB stored in REGB
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._div = BitwiseDiv(2 ** self._registers.size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
@@ -103,8 +103,8 @@ class Inc(ALUInstruction):
     Increment register
     INC REG	; REGA++, CF not affected
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._adder = BitwiseAdd(2 ** self._registers.size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
@@ -122,8 +122,8 @@ class Dec(ALUInstruction):
     Decrement register
     DEC REG	; REGA--, CF not affected
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._subtractor = BitwiseSub(2 ** self._registers.size)
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
@@ -141,8 +141,8 @@ class Cmp(ALUInstruction):
     Comparison between 2 registers
     CMP REG REG	; (REGA - REGB), only flags are changed
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._sub1 = BitwiseSub(2 ** self._registers.size)
         self._sub2 = BitwiseSub(2 ** self._registers.size)
 

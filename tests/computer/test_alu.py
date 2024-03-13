@@ -16,7 +16,7 @@ from computer.registers import Registers
 
 @pytest.fixture(name="alu")
 def fixture_alu(registers: Registers):
-    return ALU(registers, memory_size=8)
+    return ALU(registers, memory_register_size=8)
 
 
 def test_add(alu: ALU, registers: Registers):

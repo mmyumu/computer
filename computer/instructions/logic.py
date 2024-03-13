@@ -13,8 +13,8 @@ class BitwiseALUInstruction(ALUInstruction):
     """
     Perform bitwise logic operation
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._gates = self._build_gates()
 
     def compute(self, reg1: Bits, reg2: Bits, value: Bits):
@@ -74,8 +74,8 @@ class NOTReg(ALUInstruction):
     NOT on register and store it
     NOT REG 		; NOT REGA, result stored in REGA
     """
-    def __init__(self, registers: Registers, memory_size: int) -> None:
-        super().__init__(registers, memory_size)
+    def __init__(self, registers: Registers, memory_register_size: int) -> None:
+        super().__init__(registers, memory_register_size)
         self._gates = []
         for _ in range(2 ** self._registers.register_size):
             self._gates.append(NOTGate())
