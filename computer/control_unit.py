@@ -25,7 +25,7 @@ class ControlUnit(InstructionExecutor):
         self._memory = memory
         self._program_counter = program_counter
 
-        self._alu = ALU(self._registers, memory.size)
+        self._alu = ALU(self._registers, memory.register_size)
         self._demux = DEMUX1To2()
 
         instructions = [
