@@ -14,7 +14,7 @@ class ProgramCounter:
     Use HalfAdder and Full adder to increment the register value.
     """
     def __init__(self, size=4):
-        self._register = PIPORegister(size=size)
+        self._register = PIPORegister(size=2 ** size)
 
         self._half_adders = []
         for _ in range(2 ** size):

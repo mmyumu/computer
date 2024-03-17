@@ -24,6 +24,12 @@ class Bits(list):
                     raise ValueError(f"Input should be bool/int or list of bool/int but is: {bits}")
         super().__init__(bool_list)
 
+    def __getitem__(self, key):
+        result = list.__getitem__(self, key)
+        if isinstance(result, list):
+            return Bits(result)
+        return result
+
     @classmethod
     def from_bin(cls, binary: int, size: int=None):
         """
@@ -34,8 +40,6 @@ class Bits(list):
 
     @classmethod
     def _int_to_bool(cls, binary: int, size: int=None):
-        # if size is None:
-        #     size = cls.BITS_NUMBER
         if size is None:
             size = len(bin(binary)) - 2
 
@@ -53,6 +57,8 @@ class Bits(list):
         return sum(val * (2 ** idx) for idx, val in enumerate(reversed(self)))
 
     def __str__(self) -> str:
-        list_str = super().__str__()
+        list_str = "["
+        list_str += "".join([str(int(elt)) for elt in self])
+        list_str += "]"
         as_int = self.to_int()
         return f"{list_str}: (int: {as_int}), (bin: {bin(as_int)})"

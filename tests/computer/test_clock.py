@@ -1,7 +1,6 @@
 """
 Test for Clock
 """
-import pytest
 from computer.clock import Clock, RealTimeClock
 
 

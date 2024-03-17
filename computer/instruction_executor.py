@@ -5,6 +5,7 @@ from typing import List
 from computer.data_types import Bits
 from computer.electronic.circuits.decoder import Decoder
 from computer.instructions.instruction import Instruction
+from utils.logger import logger
 
 
 class InstructionExecutor:
@@ -25,6 +26,7 @@ class InstructionExecutor:
                             7 bits since first one is used to know if it is alu or cu
             operand (Bits): the operand to pass to the instruction
         """
+        logger.debug(f"{self.__class__.__name__} decoding {opcode.to_int()}...")
         bits = self._decoder(*opcode, enable=True)
         for i, bit in enumerate(bits[::-1]):
             if bit:

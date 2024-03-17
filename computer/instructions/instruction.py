@@ -8,6 +8,7 @@ from computer.electronic.circuits.cmos import NOTGate, ORGate
 from computer.memory import SRAM
 from computer.program_counter import ProgramCounter
 from computer.registers import Registers
+from utils.logger import logger
 
 
 class Instruction(ABC):
@@ -26,6 +27,8 @@ class Instruction(ABC):
         reg1 = operand[:self._registers_size]
         reg2 = operand[self._registers_size:2*self._registers_size]
         value = operand[2*self._registers_size:2*self._registers_size + (2 ** self._memory_register_size)]
+
+        logger.debug(f"Executing {self.__class__.__name__}: reg1={reg1.to_int()}, reg2={reg2.to_int()}, value={value.to_int()}")
         self.compute(reg1, reg2, value)
 
     @abstractmethod
@@ -40,7 +43,7 @@ class ALUInstruction(Instruction):
     Logic instruction base class
     """
     def __init__(self, registers: Registers, memory_register_size: int) -> None:
-        super().__init__(registers_size=registers.size, memory_register_size=memory_register_size)
+        super().__init__(registers_size=registers.register_size, memory_register_size=memory_register_size)
         self._registers = registers
 
         self._zf_or_gates = [ORGate() for _ in range(2 ** self._registers.size)]
@@ -65,7 +68,7 @@ class ControlInstruction(Instruction):
     Control instruction base class
     """
     def __init__(self, registers: Registers, memory: SRAM, program_counter: ProgramCounter) -> None:
-        super().__init__(registers_size=registers.size, memory_register_size=memory.register_size)
+        super().__init__(registers_size=registers.register_size, memory_register_size=memory.register_size)
         self._registers = registers
         self._memory = memory
         self._program_counter = program_counter

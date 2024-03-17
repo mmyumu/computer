@@ -10,7 +10,7 @@ class Registers(list):
     """
     CPU registers class.
     """
-    def __init__(self, size=4, register_size=4):
+    def __init__(self, size: int=4, register_size: int=4):
         """
         Constructor of Registers
 
@@ -26,7 +26,7 @@ class Registers(list):
 
         self._decoder = Decoder(size)
         for _ in range(2 ** size):
-            self.append(PIPORegister(size=register_size))
+            self.append(PIPORegister(size=2 ** register_size))
 
     def write(self, a: Bits, d: Bits):
         """
@@ -52,7 +52,6 @@ class Registers(list):
         """
         Set memory block to 0
         """
-        # TODO: Is it useful? Probably not, but for unit test it helps
         for register in self:
             register.reset_states()
 

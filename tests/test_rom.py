@@ -11,7 +11,7 @@ from program.program import BinaryProgram
 
 @pytest.fixture(name="rom")
 def fixture_rom():
-    return ROM(size=8, register_size=3)
+    return ROM(size=8, register_size=8)
 
 def test_set(rom: ROM):
     program = BinaryProgram()
@@ -39,7 +39,3 @@ def test_read(rom: ROM):
     rom.clock_tick(True)
 
     assert rom.read(Bits(3, size=3)) == [0, 0, 0, 0, 0, 1, 0, 0]
-
-def test_write(rom: ROM):
-    with pytest.raises(NotImplementedError):
-        rom.write(Bits(0), Bits(1))

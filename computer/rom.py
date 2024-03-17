@@ -6,25 +6,34 @@ ROM module
 from typing import List
 from computer.data_types import Bits
 from computer.electronic.circuits.register import PIPORegister
-from computer.memory import Memory
 from program.program import BinaryProgram
+from utils.logger import logger
 
-
-class ROM(Memory):
+class ROM:
     """
     ROM class
     """
-    def __init__(self, size=12, register_size=4):
-        super().__init__(size, register_size)
+    def __init__(self, size=12, register_size=16):
+        self._size = size
+        self._register_size = register_size
+
         self._registers: List[PIPORegister] = []
-        for _ in range(2 ** self.size):
+        for _ in range(2 ** self._size):
             self._registers.append(PIPORegister(size=register_size))
 
-    def write(self, address: Bits, d: Bits):
-        raise NotImplementedError("Cannot write ROM")
+    def read(self, address: Bits) -> Bits:
+        """
+        Read data from ROM at the given address
 
-    def read(self, address: Bits):
-        return self._registers[address.to_int()].output
+        Args:
+            address (Bits): _description_
+
+        Returns:
+            Bits: the bits readen from the ROM
+        """
+        value = self._registers[address.to_int()].output
+        logger.debug(f"Reading value {value} from ROM address {address.to_int()}")
+        return value
 
     def set(self, program: BinaryProgram):
         """
@@ -37,5 +46,11 @@ class ROM(Memory):
             self._registers[i].set_d(*operation)
 
     def clock_tick(self, enable: bool):
+        """
+        Clock tick input
+
+        Args:
+            enable (bool): the state of the clock
+        """
         for register in self._registers:
             register.clock_tick(enable)

@@ -29,4 +29,4 @@ def fixture_clock():
 
 @pytest.fixture(name="real_time_clock")
 def fixture_real_time_clock():
-    return RealTimeClock(1000)
+    return RealTimeClock(15)

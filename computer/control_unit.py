@@ -30,18 +30,18 @@ class ControlUnit(InstructionExecutor):
 
         instructions = [
             Nop(),
-            Jump(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            JEQ(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            JLT(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            JGE(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            LoadMem(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            LoadImd(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            LoadReg(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            StoreMem(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            StoreReg(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            Tran(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            CLC(registers=self._registers, memory=self._memory, program_counter=program_counter),
-            STC(registers=self._registers, memory=self._memory, program_counter=program_counter),
+            Jump(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            JEQ(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            JLT(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            JGE(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            LoadMem(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            LoadImd(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            LoadReg(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            StoreMem(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            StoreReg(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            Tran(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            CLC(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+            STC(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
         ]
 
         super().__init__(instructions)
@@ -60,7 +60,7 @@ class ControlUnit(InstructionExecutor):
         if len(opcode) != 8:
             raise ValueError(f"Length of operand should be {8} but is {len(opcode)}")
 
-        operand_check_size = (2 ** self._memory.register_size) + (self._registers.size * 2)
+        operand_check_size = (2 ** self._memory.register_size) + (self._registers.register_size * 2)
         if len(operand) != operand_check_size:
             raise ValueError(f"Length of operand should be {operand_check_size} but is {len(operand)}")
 
