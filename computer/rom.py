@@ -1,12 +1,10 @@
 """
 ROM module
 """
-
-
 from typing import List
 from computer.data_types import Bits
 from computer.electronic.circuits.register import PIPORegister
-from program.program import BinaryProgram
+from computer.program import BinaryProgram
 from utils.logger import logger
 
 class ROM:

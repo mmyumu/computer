@@ -24,7 +24,7 @@ class Memory(ABC):
         """
 
     @abstractmethod
-    def read(self, address: Bits):
+    def read(self, address: Bits) -> Bits:
         """
         Read data from memory at the given address
         """
@@ -89,7 +89,7 @@ class SRAM(Memory):
                 return self._sram_blocks[i].write(lower_address, d)
         raise ValueError(f"RAM block not found at address {address}")
 
-    def read(self, address: Bits):
+    def read(self, address: Bits) -> Bits:
         upper_address = address[:2]
         lower_address = address[2:]
         if self.size > 4:

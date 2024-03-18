@@ -4,7 +4,7 @@ Test for ROM
 import pytest
 from computer.data_types import Bits
 from computer.rom import ROM
-from program.program import BinaryProgram
+from computer.program import BinaryProgram
 
 
 # pylint: disable=C0116,W0212,C2801

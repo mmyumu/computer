@@ -8,7 +8,7 @@ from computer.cpu import CPU
 from computer.data_types import Bits
 from computer.memory import SRAM
 from computer.rom import ROM
-from program.program import BinaryProgram
+from computer.program import BinaryProgram
 
 
 # pylint: disable=C0116,W0212
@@ -105,33 +105,3 @@ def test_program_loop_if(cpu: CPU, rom: ROM):
     assert cpu._registers.read(Bits(3, size=3)).to_int() == 100
 
     assert cpu._memory.read(Bits(100, size=8)).to_int() == 15
-#
-#  ; Initialisation
-# MOV REGA, 10    ; Commencez avec la valeur 10
-# MOV REGB, 20    ; Valeur finale de la boucle
-# MOV REGC, 15    ; Valeur à vérifier
-# MOV REGD, 100   ; Adresse en mémoire où stocker 15
-
-# ; Début de la boucle
-# START_LOOP:
-
-# CMP REGA, REGB  ; Comparez la valeur actuelle avec la valeur finale de la boucle
-# JGE END_LOOP    ; Si REGA >= REGB, sortez de la boucle
-
-# ; Vérifiez si REGA est égal à 15
-# CMP REGA, REGC  ; Comparez la valeur actuelle avec 15
-# JEQ STORE_VALUE ; Si égal, sautez à l'étiquette STORE_VALUE
-
-# ; Incrémentation pour la prochaine itération de la boucle
-# INC REGA        ; Incrémentez la valeur
-# JMP START_LOOP  ; Sautez au début de la boucle
-
-# ; Stockage de la valeur 15
-# STORE_VALUE:
-# STORE REGD, REGA ; Stockez la valeur 15 à l'adresse en mémoire spécifiée dans REGD
-# INC REGA         ; Continuez la boucle
-# JMP START_LOOP   ; Sautez au début de la boucle
-
-# ; Fin de la boucle
-# END_LOOP:
-# NOP             ; Fin du programme, opération non nécessaire
