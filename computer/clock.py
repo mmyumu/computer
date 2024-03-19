@@ -48,6 +48,7 @@ class RealTimeClock(Clock):
         """
         self._start_tick_time = time.time()
 
+        self._sleep_time = 0
         if self._end_tick_time:
             self._computation_time = self._start_tick_time - self._end_tick_time
 
