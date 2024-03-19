@@ -2,7 +2,7 @@
 Test for Control Unit module.
 """
 import pytest
-from computer.clock import RealTimeClock
+from computer.clock import Clock
 
 from computer.cpu import CPU
 from computer.data_types import Bits
@@ -18,10 +18,10 @@ def fixture_rom():
     return ROM(size=8, register_size=22)
 
 @pytest.fixture(name="cpu")
-def fixture_cpu(real_time_clock: RealTimeClock, rom: ROM):
+def fixture_cpu(clock: Clock, rom: ROM):
     memory = SRAM(size=8, register_size=3)
     memory.reset()
-    cpu = CPU(real_time_clock, memory, rom, registers_size=3, register_size=3)
+    cpu = CPU(clock, memory, rom, registers_size=3, register_size=3)
     cpu.reset()
     return cpu
 
