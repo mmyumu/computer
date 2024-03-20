@@ -1,6 +1,7 @@
 """
 Test for Control Unit module.
 """
+import time
 import pytest
 
 from computer.data_types import Bits
@@ -45,8 +46,15 @@ def test_thread(screen: Screen):
     screen._memory.clock_tick(True)
 
     screen.start()
+    time.sleep(2 / screen._refresh_rate)
     screen.stop()
     screen.join()
     screen_data = screen._screen_data
     assert any(screen_data[:98]) is False
     assert screen_data[99] is True
+
+
+def test_print_data(screen: Screen):
+    screen._screen_data = [0] * 100
+    screen._screen_data[99] = 1
+    screen._print_data()
