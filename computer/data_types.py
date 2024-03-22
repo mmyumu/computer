@@ -45,7 +45,7 @@ class Bits(list):
 
         if binary >= 2 ** size:
             raise ValueError(f"Binary value {binary} cannot be represented with {size} bits.")
-        return [(binary >> i) & 1 == 1 for i in range(size - 1, -1, -1)]
+        return [int((binary >> i) & 1 == 1) for i in range(size - 1, -1, -1)]
 
     def to_int(self) -> int:
         """

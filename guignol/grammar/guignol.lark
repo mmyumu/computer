@@ -1,0 +1,39 @@
+// Generalized Universal Instruction Generator for Numeric Operational Language
+
+start: instruction+
+instruction: "NOP" -> nop
+            | "JMP" ADDRESS -> jmp
+            | "JEQ" ADDRESS -> jeq
+            | "JLT" ADDRESS -> jlt
+            | "JGE" ADDRESS -> jge
+            | "LOAD" register "," ADDRESS   -> load_mem
+            | "LOAD" register "," VALUE     -> load_imd
+            | "LOAD" register "," register  -> load_reg
+            | "STORE" register "," ADDRESS  -> store_mem
+            | "STORE" register "," register -> store_reg
+            | "TRAN" register "," register  -> tran_reg
+            | "CLC" -> clc
+            | "STC" -> stc
+            | "ADD" register "," register   -> add
+            | "SUB" register "," register   -> sub
+            | "MULT" register "," register  -> mult
+            | "DIV" register "," register   -> div
+            | "INC" register                -> inc
+            | "DEC" register                -> dec
+            | "AND" register "," register   -> and_reg
+            | "OR" register "," register    -> or_reg
+            | "XOR" register "," register   -> xor
+            | "NOT" register                -> not_reg
+            | "ROL" register "," VALUE      -> rol
+            | "ROR" register "," VALUE      -> ror
+            | "CMP" register "," register   -> cmp
+
+
+register: "REG" VALUE
+ADDRESS: /@[0-9]+/
+VALUE: /[0-9]+/
+COMMENT: "#" /.*/
+
+%import common.WS
+%ignore COMMENT
+%ignore WS
