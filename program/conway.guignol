@@ -1,0 +1,17 @@
+> memory size 12
+> register size 4
+> screen resolution 32
+NOP
+
+LOAD REG 1, 0
+LOAD REG 2, 1024
+
+CMP REG 2, REG 1
+JGE @7
+
+INC REG 1
+
+JMP @3
+
+NOP
+HALT

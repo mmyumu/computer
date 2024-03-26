@@ -1,44 +1,17 @@
-from typing import Any
+"""
+Interpreter module
+"""
+from abc import abstractmethod
+from typing import Generic, TypeVar
 from lark import Lark, Transformer
 
 from computer.data_types import Bits
-from computer.program import BinaryProgram
+from computer.program import BinaryProgram, Program, Requirements
 
-# Nop(),
-# Jump(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# JEQ(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# JLT(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# JGE(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# LoadMem(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# LoadImd(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# LoadReg(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# StoreMem(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# StoreReg(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# Tran(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# CLC(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
-# STC(registers=self._registers, memory=self._memory, program_counter=self._program_counter),
+GRAMMAR_PATH = "grammar/guignol.lark"
+T = TypeVar("T")
 
-
-# Add(registers, memory_register_size),
-# Sub(registers, memory_register_size),
-# Mult(registers, memory_register_size),
-# Div(registers, memory_register_size),
-# Inc(registers, memory_register_size),
-# Dec(registers, memory_register_size),
-# ANDReg(registers, memory_register_size),
-# ORReg(registers, memory_register_size),
-# XORReg(registers, memory_register_size),
-# NOTReg(registers, memory_register_size),
-# ROL(registers, memory_register_size),
-# ROR(registers, memory_register_size),
-# Cmp(registers, memory_register_size)
-
-# Définir la grammaire de votre langage en EBNF
-# grammar = """
-
-# """
-
-#pylint: disable=C0116
+#pylint: disable=C0116,R0904
 class InstructionToBinary(Transformer):
     """
     Transform GUIGNOL instructions to Binary instructions
@@ -46,12 +19,13 @@ class InstructionToBinary(Transformer):
     def __init__(self, register_size: int, visit_tokens: bool = True) -> None:
         super().__init__(visit_tokens)
         self._register_size = register_size
+        self._value_size = 2 ** self._register_size
 
     def _forge_instruction(self, opcode: int, reg1: int, reg2: int, value: int):
         opcode = Bits(opcode, size=8)
         reg1 = Bits(reg1, size=self._register_size)
         reg2 = Bits(reg2, size=self._register_size)
-        value = Bits(value, size=2 ** self._register_size)
+        value = Bits(value, size=self._value_size)
         return Bits(opcode + reg1 + reg2 + value)
 
     def nop(self, _):
@@ -171,44 +145,106 @@ class InstructionToBinary(Transformer):
         reg2 = args[1]
         return self._forge_instruction(140, reg1, reg2, 0)
 
+    def halt(self, _):
+        max_register = 2 ** self._register_size -1
+        max_value = 2 ** self._value_size -1
+        return self._forge_instruction(255, max_register, max_register, max_value)
+
     def register(self, args):
         return int(args[0].value)
 
 
-class Interpreter:
+class Requirement(Transformer):
     """
-    Interpreter class to parse GUIGNOL program
+    Transform requirements to tuple values
     """
-    def __init__(self, grammar: str, register_size: int = 4) -> None:
-        self._parser = Lark.open(grammar, rel_to=__file__, parser="lalr", transformer=InstructionToBinary(register_size))
+    def memory_size(self, args):
+        memory_size = int(args[0].value)
+        return "memory size", memory_size
 
-    def __call__(self, program: str) -> BinaryProgram:
-        parsed_instructions = self._parser.parse(program)
+    def register_size(self, args):
+        register_size = int(args[0].value)
+        return "register size", register_size
+
+    def screen_resolution(self, args):
+        screen_resolution = int(args[0].value)
+        return "screen resolution", screen_resolution
+
+
+class BaseInterpreter(Generic[T]):
+    """
+    Base class for interpreter    
+    """
+    def __call__(self, program: str, from_file=False) -> T:
+        if from_file:
+            with open(program, 'r', encoding='utf8') as f:
+                program = f.read()
+        return self._interpret(program)
+
+    @abstractmethod
+    def _interpret(self, program: str) -> T:
+        pass
+
+class BinaryProgramInterpreter(BaseInterpreter[BinaryProgram]):
+    """
+    Interpreter class to parse the binary part of GUIGNOL program
+    """
+    def __init__(self, register_size: int = 4) -> None:
+        super().__init__()
+        self._parser = Lark.open(GRAMMAR_PATH, rel_to=__file__, parser="lalr", transformer=InstructionToBinary(register_size))
+
+    def _interpret(self, program: str) -> BinaryProgram:
+        parsed_program = self._parser.parse(program)
         program = BinaryProgram()
 
-        for parsed_instruction in parsed_instructions.children:
+        parsed_instructions = parsed_program.children[1].children
+        for parsed_instruction in parsed_instructions:
             program.append(parsed_instruction)
         return program
 
 
+class RequirementsInterpreter(BaseInterpreter[Requirements]):
+    """
+    Interpreter class to parse the requirements part of GUIGNOL program
+    """
+    def __init__(self) -> None:
+        super().__init__()
+        self._parser = Lark.open(GRAMMAR_PATH, rel_to=__file__, parser="lalr", transformer=Requirement())
+
+    def _interpret(self, program: str) -> Requirements:
+        parsed_program = self._parser.parse(program)
+
+        parsed_requirements = parsed_program.children[0].children
+
+        requirements = Requirements()
+        for parsed_requirement in parsed_requirements:
+            req_name, req_value = parsed_requirement
+            if req_name == "memory size":
+                requirements.memory_size = req_value
+            elif req_name == "register size":
+                requirements.register_size = req_value
+            elif req_name == "screen resolution":
+                requirements.screen_resolution = req_value
+
+        return requirements
 
 
+class Interpreter(BaseInterpreter[Program]):
+    """
+    GUIGNOL program interpreter
+    """
+    def __init__(self) -> None:
+        self._requirements_interpreter = RequirementsInterpreter()
 
+    def _interpret(self, program: str) -> Program:
+        requirements_interpreter = RequirementsInterpreter()
+        requirements = requirements_interpreter(program, from_file=False)
 
+        kwargs = {}
+        if requirements.register_size:
+            kwargs['register_size'] = requirements.register_size
 
+        binary_program_interpreter = BinaryProgramInterpreter(**kwargs)
+        binary_program = binary_program_interpreter(program, from_file=False)
 
-    # Ajouter les méthodes pour les autres instructions...
-
-# Créer le parseur avec la grammaire
-# parser = Lark(grammar, parser='lalr', transformer=InstructionToBinary())
-
-# # Le programme à parser
-# program = """
-
-# """
-
-# Parser le programme
-# parsed_program = parser.parse(program)
-
-# Imprimer les instructions en binaires
-# print("\n".join(parsed_program))
+        return Program(requirements, binary_program)

@@ -1,6 +1,7 @@
 """
 ROM module
 """
+import time
 from typing import List
 from computer.data_types import Bits
 from computer.electronic.circuits.register import PIPORegister
@@ -12,12 +13,16 @@ class ROM:
     ROM class
     """
     def __init__(self, size=12, register_size=16):
+        start_time = time.time()
+        logger.info(f"Initializing ROM (size: {2**size})...")
         self._size = size
         self._register_size = register_size
 
         self._registers: List[PIPORegister] = []
         for _ in range(2 ** self._size):
             self._registers.append(PIPORegister(size=register_size))
+        self.initialized = False
+        logger.info(f"ROM (size: {2**size}) initialized in {time.time() - start_time:.2f}s")
 
     def read(self, address: Bits) -> Bits:
         """
@@ -42,6 +47,7 @@ class ROM:
         """
         for i, operation in enumerate(program):
             self._registers[i].set_d(*operation)
+        self.initialized = True
 
     def clock_tick(self, enable: bool):
         """

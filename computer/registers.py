@@ -10,7 +10,7 @@ class Registers(list):
     """
     CPU registers class.
     """
-    def __init__(self, size: int=4, register_size: int=4):
+    def __init__(self, size: int=4, register_size: int=4, cheating_optim: bool=True):
         """
         Constructor of Registers
 
@@ -28,6 +28,9 @@ class Registers(list):
         for _ in range(2 ** size):
             self.append(PIPORegister(size=2 ** register_size))
 
+        self._cheating_optim = cheating_optim
+        self._written_register = []
+
     def write(self, a: Bits, d: Bits):
         """
         Write the given value at the given address of the memory block
@@ -36,6 +39,8 @@ class Registers(list):
         for i, select in enumerate(select_lines[::-1]):
             if select:
                 self[i].set_d(*d)
+                if self._cheating_optim:
+                    self._written_register.append(i)
                 break
 
     def read(self, a: Bits):
@@ -59,8 +64,13 @@ class Registers(list):
         """
         Update memory block status on clock tick
         """
-        for register in self:
-            register.clock_tick(enable)
+        if self._cheating_optim:
+            for idx in self._written_register:
+                self[idx].clock_tick(enable)
+            self._written_register = []
+        else:
+            for register in self:
+                register.clock_tick(enable)
 
     def __str__(self):
         out_str = ""

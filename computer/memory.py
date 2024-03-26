@@ -1,6 +1,7 @@
 """
 Memory module
 """
+import time
 from abc import ABC, abstractmethod
 from computer.data_types import Bits
 from computer.electronic.circuits.decoder import Decoder
@@ -44,12 +45,13 @@ class SRAM(Memory):
     SRAM is a list of blocks of RAM for optimization.
     Python cheating optimizations on clock tick can be enabled/disabled.
     """
-    def __init__(self, size=16, register_size=4, level=0, cheating_optim=True):
+    def __init__(self, size: int=16, register_size: int=4, level: int=0, cheating_optim: bool=True):
         super().__init__(size=size, register_size=register_size)
         self._cheating_optim = cheating_optim
         self._level = level
 
         if level == 0:
+            start_time = time.time()
             logger.info(f"Initializing RAM (size: {2**size})...")
 
         self._written_subrams = []
@@ -67,9 +69,17 @@ class SRAM(Memory):
         self._decoder = Decoder(2)
 
         if level == 0:
-            logger.info(f"RAM (size: {2**size}) initialized")
+            logger.info(f"RAM (size: {2**size}) initialized in {time.time() - start_time:.2f}s")
 
     def write(self, address: Bits, d: Bits):
+        # Cut address if the memory size is lower than the maximum size that can be used with the register size.
+        # Exemple : if register size is 4 -> 2^4 = 16bits which means the memory can be maximum 16.
+        # If memory size is only 10, it means it does not use all the 2^16 (=65536) potential addresses
+        if len(address) > self.size:
+            if any(address[:-self.size]):
+                logger.error(f"It seems we are trying to access an address out of the memory limit: address={address}, memory size={self.size}")
+            address = address[-self.size:]
+
         upper_address = address[:2]
         lower_address = address[2:]
         if self.size > 4:
@@ -90,6 +100,14 @@ class SRAM(Memory):
         raise ValueError(f"RAM block not found at address {address}")
 
     def read(self, address: Bits) -> Bits:
+        # Cut address if the memory size is lower than the maximum size that can be used with the register size.
+        # Exemple : if register size is 4 -> 2^4 = 16bits which means the memory can be maximum 16.
+        # If memory size is only 10, it means it does not use all the 2^16 (=65536) potential addresses
+        if len(address) > self.size:
+            if any(address[self.size:]):
+                logger.error(f"It seems we are trying to access an address out of the memory limit: address={address}, memory size={self.size}")
+            address = address[:self.size]
+
         upper_address = address[:2]
         lower_address = address[2:]
         if self.size > 4:

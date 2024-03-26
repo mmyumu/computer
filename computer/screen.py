@@ -4,7 +4,7 @@ Screen module
 import math
 import threading
 import time
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 from rich.console import Console
 from rich.table import Table
@@ -18,7 +18,7 @@ class Screen(threading.Thread):
     """
     Screen class
     """
-    def __init__(self, memory: Memory, resolution: int = 128, refresh_rate: int = 30):
+    def __init__(self, memory: Memory, resolution: int = 128, refresh_rate: int = 2):
         super().__init__()
         minimum_size = (resolution * resolution) / (2 ** memory.register_size)
         if minimum_size > 2 ** memory.size:
@@ -27,7 +27,7 @@ class Screen(threading.Thread):
         self._memory = memory
         self._resolution = resolution
         self._refresh_rate = refresh_rate
-        self._screen_data: Optional[List[bool]] = None
+        self._screen_data: Optional[List[Bits]] = None
         self._stop_event = threading.Event()
         self.console = Console()
         self.live = Live(console=self.console, refresh_per_second=self._refresh_rate)
@@ -39,6 +39,37 @@ class Screen(threading.Thread):
                 time.sleep(1 / self._refresh_rate)
 
     def _get_data(self) -> List[bool]:
+        resolution_size = self._resolution * self._resolution
+        address_offset = (2 ** self._memory.size) - resolution_size
+
+        screen_data = []
+        for i in range(resolution_size):
+            address = address_offset + i
+            datum = self._memory.read(Bits(address, size=self._memory.size))
+            screen_data.append(datum)
+        return screen_data
+
+        # memory_register_bit_size = 2** self._memory.register_size
+        # resolution_size = self._resolution * self._resolution
+        # number_of_register = math.ceil(resolution_size / memory_register_bit_size)
+
+        # address_offset = (2 ** self._memory.size) - number_of_register
+
+        # data = []
+        # for i in range(number_of_register):
+        #     address = address_offset + i
+        #     bits = self._memory.read(Bits(address, size=self._memory.size))
+
+        #     number_of_bits_to_get = memory_register_bit_size
+        #     if i == 0:
+        #         if (number_of_register * memory_register_bit_size) % resolution_size > 0:
+        #             number_of_bits_to_get = (number_of_register * memory_register_bit_size) % resolution_size
+
+
+        #     data.extend(bits[:number_of_bits_to_get])
+        # return data
+
+    def _get_data_old(self) -> List[Bits]:
         memory_register_bit_size = 2** self._memory.register_size
         resolution_size = self._resolution * self._resolution
         number_of_register = math.ceil(resolution_size / memory_register_bit_size)
@@ -74,16 +105,90 @@ class Screen(threading.Thread):
             cells = []
             for col in range(self._resolution):
                 pixel_data = self._screen_data[row * self._resolution + col]
-                if pixel_data:
-                    cells.append("[black on white]  [/black on white]")
+
+                r8, g8, b8 = Screen.rgbxxx_to_rgb888(pixel_data)
+                color_as_str = f"#{r8:02x}{g8:02x}{b8:02x}"
+                if pixel_data.to_int() > 0:
+                    cells.append(f"[black on {color_as_str}]  [/]")
                 else:
-                    cells.append("[white on black]  [/white on black]")
+                    cells.append("[#FF0000 on black]  [/]")
+                # if pixel_data:
+                #     cells.append("[#FF0000 on #00FF00]  [/#FF0000 on #00FF00]")
+                # else:
+                #     cells.append("[rgb(255,255,255) on rgb(0,0,0)]  [/rgb(255,255,255) on rgb(0,0,0)]")
             table.add_row(*cells)
         return table
 
     def _print_data(self):
         new_table = self._create_table()
         self.live.update(new_table)
+
+    @staticmethod
+    def rgbxxx_to_rgb888(pixel_data: Bits) -> Tuple[int, int, int]:
+        """
+        Convert pixel data to RGB888
+
+        Args:
+            pixel_data (Bits): pixel data (either 8 or 16 bits)
+
+        Raises:
+            NotImplementedError: raised if data are not 8 or 16 bits
+
+        Returns:
+            Tuple[int, int, int]: RGB (8 bits, 8 bits, 8 bits)
+        """
+        if len(pixel_data) == 8:
+            red = pixel_data[:3]
+            green = pixel_data[3:6]
+            blue = pixel_data[6:]
+            return Screen.rgb332_to_rgb888(red.to_int(), green.to_int(), blue.to_int())
+
+        if len(pixel_data) == 16:
+            red = pixel_data[:5]
+            green = pixel_data[5:11]
+            blue = pixel_data[11:]
+            return Screen.rgb565_to_rgb888(red.to_int(), green.to_int(), blue.to_int())
+
+        raise NotImplementedError(f"Screen cannot convert pixel data of size {len(pixel_data)} to RGB888")
+
+
+    @staticmethod
+    def rgb565_to_rgb888(red: int, green: int, blue: int) -> Tuple[float, float, float]:
+        """
+        Convert RGB565 to RGB888
+
+        Args:
+            red (int): red value as integer (5 bits)
+            green (int): green value as integer (6 bits)
+            blue (int): blue value as integer (5 bits)
+
+        Returns:
+            Tuple[int, int, int]: RGB (8 bits, 8 bits, 8 bits)
+        """
+        r = math.floor((red * 255 + 15) / 31)
+        g = math.floor((green * 255 + 31) / 63)
+        b = math.floor((blue * 255 + 15) / 31)
+
+        return r, g, b
+
+    @staticmethod
+    def rgb332_to_rgb888(red: int, green: int, blue: int) -> Tuple[float, float, float]:
+        """
+        Convert RGB332 to RGB888
+
+        Args:
+            red (int): red value as integer (3 bits)
+            green (int): green value as integer (3 bits)
+            blue (int): blue value as integer (2 bits)
+
+        Returns:
+            Tuple[int, int, int]: RGB (8 bits, 8 bits, 8 bits)
+        """
+        r = math.floor((red * 255 + 3) / 7)
+        g = math.floor((green * 255 + 3) / 7)
+        b = math.floor((blue * 255 + 1) / 3)
+
+        return r, g, b
 
     def stop(self):
         """

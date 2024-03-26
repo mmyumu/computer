@@ -25,24 +25,26 @@ def test_memory_too_small():
         Screen(memory, resolution=128)
 
 def test_get_data(screen: Screen):
-    screen._memory.write(Bits(255, size=8), Bits(1, size=8))
+    screen._memory.write(Bits(255, size=8), Bits(255, size=8))
     screen._memory.clock_tick(True)
 
     screen_data = screen._get_data()
-    assert any(screen_data[:98]) is False
-    assert screen_data[99] is True
+    for data_bits in screen_data[:98]:
+        assert data_bits == [0] * 8
+    assert screen_data[99] == [1] * 8
 
 def test_refresh(screen: Screen):
-    screen._memory.write(Bits(255, size=8), Bits(1, size=8))
+    screen._memory.write(Bits(255, size=8), Bits(255, size=8))
     screen._memory.clock_tick(True)
 
     screen.refresh()
     screen_data = screen._screen_data
-    assert any(screen_data[:98]) is False
-    assert screen_data[99] is True
+    for data_bits in screen_data[:98]:
+        assert data_bits == [0] * 8
+    assert screen_data[99] == [1] * 8
 
 def test_thread(screen: Screen):
-    screen._memory.write(Bits(255, size=8), Bits(1, size=8))
+    screen._memory.write(Bits(255, size=8), Bits(255, size=8))
     screen._memory.clock_tick(True)
 
     screen.start()
@@ -50,11 +52,20 @@ def test_thread(screen: Screen):
     screen.stop()
     screen.join()
     screen_data = screen._screen_data
-    assert any(screen_data[:98]) is False
-    assert screen_data[99] is True
+    for data_bits in screen_data[:98]:
+        assert data_bits == [0] * 8
+    assert screen_data[99] == [1] * 8
 
+
+# def test_print_data(screen: Screen):
+#     screen._screen_data = [0] * 100
+#     screen._screen_data[99] = 1
+#     screen._print_data()
 
 def test_print_data(screen: Screen):
-    screen._screen_data = [0] * 100
-    screen._screen_data[99] = 1
+    screen._screen_data = []
+    for _ in range(100):
+        screen._screen_data.append(Bits([0] * 8, size=8))
+    # screen._screen_data = Bits([0] * 8, size=8) * 100
+    screen._screen_data[99] = Bits([1] * 8, size=8)
     screen._print_data()

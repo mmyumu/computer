@@ -1,0 +1,22 @@
+> memory size 10
+> register size 4
+> screen resolution 8
+NOP
+
+LOAD REG 1, 0
+LOAD REG 2, 1024
+LOAD REG 3, 65535       # Blank colour
+# LOAD REG 3, 2016      # Green colour
+LOAD REG 4, 960         # Start of screen address
+STORE REG 3, REG 4
+
+NOP                     # Beginning of loop
+CMP REG 2, REG 1           
+JGE @11                 # Jump to the end of loop
+
+INC REG 1
+
+JMP @6                  # Jump to the beginning of loop
+
+NOP                     # End of loop
+HALT

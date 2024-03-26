@@ -16,13 +16,15 @@ class CPU:
     """
     CPU class
     """
-    def __init__(self, clock: Clock, memory: Memory, rom: ROM, registers_size: int=4, register_size: int=4):
+    def __init__(self, clock: Clock, memory: Memory, rom: ROM, registers_size: int=4, register_size: int=4, cheating_optim: bool = True):
         self._clock = clock
         self._memory = memory
         self._rom = rom
         self._registers = Registers(size=registers_size, register_size=register_size)
         self._program_counter = ProgramCounter(size=memory.register_size)
         self._control_unit = ControlUnit(self._registers, memory, self._program_counter)
+
+        self._cheating_optim = cheating_optim
 
     def reset(self):
         """
@@ -38,6 +40,9 @@ class CPU:
         logger.info("CPU is now running...")
         while True:
             self._clock.tick()
+            if self._cheating_optim is True and self._clock.clock_state is False:
+                continue
+
             instruction = self._rom.read(self._program_counter.value)
 
             self._program_counter.increment()
