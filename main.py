@@ -15,6 +15,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("program", type=str, help="the path of the program to run")
     parser.add_argument("--embedded-screen", action='store_true', help="starts the embedded screen with the system")
+    parser.add_argument("--screen-refresh-rate", type=int, help="refresh rate of the embedded screen")
 
     args = parser.parse_args()
 
@@ -24,7 +25,7 @@ def main():
     interpreter = Interpreter()
     program = interpreter(args.program, from_file=True)
 
-    system = System(embedded_screen=args.embedded_screen, **program.requirements.get_kwargs_dict())
+    system = System(embedded_screen=args.embedded_screen, screen_refresh_rate=args.screen_refresh_rate, **program.requirements.get_kwargs_dict())
     system.load_rom(program.binary_program)
     system.turn_on()
 

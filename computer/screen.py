@@ -10,6 +10,7 @@ from rich.console import Console
 from rich.table import Table
 from rich.live import Live
 from rich import box
+from rich.layout import Layout
 
 from computer.data_types import Bits
 from computer.memory import Memory
@@ -18,7 +19,7 @@ class Screen(threading.Thread):
     """
     Screen class
     """
-    def __init__(self, memory: Memory, resolution: int = 128, refresh_rate: int = 2):
+    def __init__(self, memory: Memory, resolution: int = 128, refresh_rate: int = 1):
         super().__init__()
         minimum_size = (resolution * resolution) / (2 ** memory.register_size)
         if minimum_size > 2 ** memory.size:
@@ -31,12 +32,24 @@ class Screen(threading.Thread):
         self._stop_event = threading.Event()
         self.console = Console()
         self.live = Live(console=self.console, refresh_per_second=self._refresh_rate)
+        self._number_of_frames = 0
+        self._start_time = None
+        self._last_time = None
 
     def run(self):
+        self._start_time = time.time()
         with self.live:
             while not self._stop_event.is_set():
                 self.refresh()
-                time.sleep(1 / self._refresh_rate)
+                self._number_of_frames += 1
+
+                time_to_wait = 1 / self._refresh_rate
+                if self._last_time:
+                    elapsed_time = time.time() - self._last_time
+                    time_to_wait -= elapsed_time
+                    time_to_wait = max(time_to_wait, 0)
+                time.sleep(time_to_wait)
+                self._last_time = time.time()
 
     def _get_data(self) -> List[bool]:
         resolution_size = self._resolution * self._resolution
@@ -49,53 +62,29 @@ class Screen(threading.Thread):
             screen_data.append(datum)
         return screen_data
 
-        # memory_register_bit_size = 2** self._memory.register_size
-        # resolution_size = self._resolution * self._resolution
-        # number_of_register = math.ceil(resolution_size / memory_register_bit_size)
-
-        # address_offset = (2 ** self._memory.size) - number_of_register
-
-        # data = []
-        # for i in range(number_of_register):
-        #     address = address_offset + i
-        #     bits = self._memory.read(Bits(address, size=self._memory.size))
-
-        #     number_of_bits_to_get = memory_register_bit_size
-        #     if i == 0:
-        #         if (number_of_register * memory_register_bit_size) % resolution_size > 0:
-        #             number_of_bits_to_get = (number_of_register * memory_register_bit_size) % resolution_size
-
-
-        #     data.extend(bits[:number_of_bits_to_get])
-        # return data
-
-    def _get_data_old(self) -> List[Bits]:
-        memory_register_bit_size = 2** self._memory.register_size
-        resolution_size = self._resolution * self._resolution
-        number_of_register = math.ceil(resolution_size / memory_register_bit_size)
-
-        address_offset = (2 ** self._memory.size) - number_of_register
-
-        data = []
-        for i in range(number_of_register):
-            address = address_offset + i
-            bits = self._memory.read(Bits(address, size=self._memory.size))
-
-            number_of_bits_to_get = memory_register_bit_size
-            if i == 0:
-                if (number_of_register * memory_register_bit_size) % resolution_size > 0:
-                    number_of_bits_to_get = (number_of_register * memory_register_bit_size) % resolution_size
-
-
-            data.extend(bits[:number_of_bits_to_get])
-        return data
-
     def refresh(self):
         """
         Screen is refreshed.
         """
         self._screen_data = self._get_data()
         self._print_data()
+
+    def _create_screen(self) -> Layout:
+        layout = Layout()
+
+        infos = self._create_infos()
+        table = self._create_table()
+
+        layout.split_column(
+            Layout(infos, name="infos", size=1),
+            Layout(table, name="screen", size=self._resolution + 2),
+        )
+
+        return layout
+
+    def _create_infos(self) -> str:
+        elapsed_time = time.time() - self._start_time
+        return f"Screen freq.: [#0087d7]{self._number_of_frames / elapsed_time:.2f}Hz[/] ({self._refresh_rate}Hz)"
 
     def _create_table(self) -> Table:
         table = Table(box=box.SQUARE, show_header=False, show_edge=True, padding=0)
@@ -111,17 +100,13 @@ class Screen(threading.Thread):
                 if pixel_data.to_int() > 0:
                     cells.append(f"[black on {color_as_str}]  [/]")
                 else:
-                    cells.append("[#FF0000 on black]  [/]")
-                # if pixel_data:
-                #     cells.append("[#FF0000 on #00FF00]  [/#FF0000 on #00FF00]")
-                # else:
-                #     cells.append("[rgb(255,255,255) on rgb(0,0,0)]  [/rgb(255,255,255) on rgb(0,0,0)]")
+                    cells.append("[black on black]  [/]")
             table.add_row(*cells)
         return table
 
     def _print_data(self):
-        new_table = self._create_table()
-        self.live.update(new_table)
+        new_screen = self._create_screen()
+        self.live.update(new_screen)
 
     @staticmethod
     def rgbxxx_to_rgb888(pixel_data: Bits) -> Tuple[int, int, int]:
