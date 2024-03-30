@@ -7,12 +7,17 @@ requirement: ">" "memory size" SIGNED_INT NEWLINE               -> memory_size
              | ">" "register size" SIGNED_INT NEWLINE           -> register_size
              | ">" "screen resolution" SIGNED_INT NEWLINE       -> screen_resolution
 
-instructions: instruction+
+instructions: (instruction | label)+
+label: ":"LABEL    -> label
 instruction: "NOP" -> nop
             | "JMP" ADDRESS -> jmp
+            | "JMP" label -> jmp_label
             | "JEQ" ADDRESS -> jeq
+            | "JEQ" label -> jeq_label
             | "JLT" ADDRESS -> jlt
+            | "JLT" label -> jlt_label
             | "JGE" ADDRESS -> jge
+            | "JGE" label -> jge_label
             | "LOAD" register "," ADDRESS   -> load_mem
             | "LOAD" register "," VALUE     -> load_imd
             | "LOAD" register "," register  -> load_reg
@@ -39,6 +44,7 @@ instruction: "NOP" -> nop
 
 
 register: "REG" VALUE
+LABEL: /[a-zA-Z_][a-zA-Z0-9_]*/
 ADDRESS: /@[0-9]+/
 VALUE: /[0-9]+/
 MEM_SIZE: /[0-9]+/

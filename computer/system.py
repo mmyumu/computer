@@ -55,5 +55,8 @@ class System:
         self._cpu.reset()
         self._cpu.run()
 
+        time.sleep(1)
+
         if self._screen:
             self._screen.stop()
+            self._screen.join()

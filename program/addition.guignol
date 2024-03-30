@@ -1,0 +1,25 @@
+> memory size 10
+> register size 4
+> screen resolution 16
+
+LOAD REG 0, 8
+LOAD REG 1, 16
+
+LOAD REG 10, 0
+LOAD REG 11, 768      # Screen memory offset
+LOAD REG 12, 35000    # Pixel colour
+
+ADD REG 0, REG 1
+
+:start_loop
+    CMP REG 0, REG 10
+    JGE :end_loop
+
+    STORE REG 12, REG 11    # Set pixel colour in screen memory
+    INC REG 11
+
+    INC REG 10
+    JMP :start_loop
+:end_loop
+
+HALT

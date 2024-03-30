@@ -46,7 +46,8 @@ class Sub(ALUInstruction):
 
         sub1, borrow_out = self._sub1(data1, data2, False)
 
-        cf = [0] * 7 + [self._registers.cf]
+        number_of_bits_to_fill = ((2 ** self._registers_size) - 1)
+        cf = [0] * number_of_bits_to_fill + [self._registers.cf]
         sub2, _ = self._sub2(sub1, cf, False)
 
         self._registers.cf = borrow_out

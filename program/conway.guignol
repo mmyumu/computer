@@ -1,17 +1,57 @@
-> memory size 12
+> memory size 10
 > register size 4
-> screen resolution 32
-NOP
+> screen resolution 16
+LOAD REG 0, 0           # Main loop index
+LOAD REG 9, 2          # Main loop end
+LOAD REG 1, 0           # Loop index
+LOAD REG 2, 256         # Screen resolution * Screen resolution
+LOAD REG 3, 768         # Screen memory start
+LOAD REG 4, 16          # Up/down step (screen resolution)
+LOAD REG 5, 1           # Left/right step
+LOAD REG 6, 1           # Data presence threshold
+LOAD REG 7, 65535       # White colour
+LOAD REG 8, 1           # Number of cells threshold (default: 3)
 
-LOAD REG 1, 0
-LOAD REG 2, 1024
+:start_main_loop
+    CMP REG 9, REG 0
+    JGE :end_main_loop
 
-CMP REG 2, REG 1
-JGE @7
+    :start_cell_loop
+        CMP REG 2, REG 1        # Loop
+        JGE :end_cell_loop
 
-INC REG 1
+        # COUNT CELLS AROUND
+        TRAN REG 1, REG 10          # Copy current index for UP
+        TRAN REG 1, REG 11          # Copy current index for LEFT
+        TRAN REG 1, REG 12          # Copy current index for RIGHT
+        TRAN REG 1, REG 13          # Copy current index for DOWN
 
-JMP @3
+        SUB REG 10, REG 4           # Get index cell UP
+        JLT :end_if_up                # If index >= screen resolution, jump to UP OK because we can get UP cell
+        :if_up_ok
+            ADD REG 10, REG 3       # Set the index in screen memory
+            LOAD REG 14, 0          # Counter cells around filled
 
-NOP
+            CMP REG 10, REG 6         # Check if cell up is filled
+            JLT :if_up_not_filled
+            :if_up_filled
+            INC REG 14
+
+            :if_up_not_filled
+
+        :end_if_up
+
+        
+        #CMP REG 14, REG 8               # Check if number of filled cell around > threshold
+        #JGE :if_filled_gte_threshold
+        #TRAN REG 7, REG 10
+        #JMP :if_filled_lt_threshold
+        :if_filled_gte_threshold
+        # LOAD REG
+
+        INC REG 1                   # Cell loop index + 1
+        JMP :start_cell_loop
+    :end_cell_loop
+    # JMP :start_main_loop
+:end_main_loop
 HALT
