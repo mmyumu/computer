@@ -24,17 +24,3 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         PYTHONPATH=. pylint --fail-under 7 --max-line-length=150 --disable=W1203,R0903 $(git ls-files '*.py')
-
-    - name: Install pylint-sarif-unofficial
-      run: pip install pylint-sarif-unofficial
-
-    - name: Run Pylint
-      run: PYTHONPATH=. pylint --fail-under 7 --max-line-length=150 --disable=W1203,R0903 $(git ls-files '*.py') --output-format=json > pylint_report.json
-
-    - name: Convert Pylint output to SARIF
-      run: pylint2sarif pylint_report.json
-
-    - name: Upload SARIF file
-      uses: github/codeql-action/upload-sarif@v3
-      with:
-        sarif_file: pylint.sarif
