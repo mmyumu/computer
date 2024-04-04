@@ -14,13 +14,13 @@ def fixture_system():
     return System(memory_size=8, register_size=4)
 
 def test_system_load_rom(system: System):
-    interpreter = BinaryProgramInterpreter(register_size=4)
+    interpreter = BinaryProgramInterpreter([], register_size=4)
     program = interpreter("program/test_perf.guignol", from_file=True)
 
     system.load_rom(program)
 
 def test_system_run(system: System):
-    interpreter = BinaryProgramInterpreter(register_size=4)
+    interpreter = BinaryProgramInterpreter([], register_size=4)
     program = interpreter("program/test_perf.guignol", from_file=True)
 
     system.load_rom(program)
