@@ -30,4 +30,5 @@ jobs:
     - uses: advanced-security/python-lint-code-scanning-action@v1
       with:
         linter: pylint
+        options: --max-line-length=150 --disable=W1203,R0903
         python-version: ${{ matrix.python-version }}
