@@ -24,3 +24,7 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         PYTHONPATH=. pylint --fail-under 7 --max-line-length=150 --disable=W1203,R0903 $(git ls-files '*.py')
+    - uses: advanced-security/python-lint-code-scanning-action@v1
+      with:
+        linter: pylint
+        python-version: ${{ matrix.python-version }}
