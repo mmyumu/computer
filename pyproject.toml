@@ -8,7 +8,7 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
 [tool.pylint.format]
 max-line-length = 150
-disable=W1203,R0903
+disable="W1203,R0903"
 
 [tool.pylint.main]
 ignore-paths = ["\\.git", "__pycache__", "build"]
