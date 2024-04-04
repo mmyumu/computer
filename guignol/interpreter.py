@@ -13,7 +13,6 @@ T = TypeVar("T")
 
 #pylint: disable=C0116,R0904
 
-
 class Label:
     """
     Class representing a label in the interpreter
@@ -303,14 +302,11 @@ class Interpreter(BaseInterpreter[Program]):
     GUIGNOL program interpreter
     """
     def __init__(self) -> None:
-        # self._parser = Lark.open(GRAMMAR_PATH, rel_to=__file__, parser="lalr", transformer=Labels())
         self._labels_interpreter = LabelsInterpreter()
         self._requirements_interpreter = RequirementsInterpreter()
 
     def _interpret(self, program: str) -> Program:
-        # tree = self._parser.parse(program)
         labels = self._labels_interpreter(program, from_file=False)
-        # self.collect_labels(tree)
 
         requirements_interpreter = RequirementsInterpreter()
         requirements = requirements_interpreter(program, from_file=False)
@@ -323,14 +319,3 @@ class Interpreter(BaseInterpreter[Program]):
         binary_program = binary_program_interpreter(program, from_file=False)
 
         return Program(requirements, binary_program)
-
-    # def collect_labels(self, tree: ParseTree):
-    #     label_addresses = {}
-    #     pc = 0
-    #     for child in tree.children:
-    #         # if isinstance(child, Label):
-    #         if isinstance(child, str):
-    #             label_addresses[child.name] = pc
-    #         else:
-    #             pc += 1
-    #     return label_addresses

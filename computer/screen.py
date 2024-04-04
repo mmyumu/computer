@@ -15,6 +15,7 @@ from rich.layout import Layout
 from computer.data_types import Bits
 from computer.memory import Memory
 
+#pylint: disable=R0902
 class Screen(threading.Thread):
     """
     Screen class

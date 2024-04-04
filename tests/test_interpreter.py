@@ -10,7 +10,7 @@ from guignol.interpreter import BinaryProgramInterpreter, Interpreter, Requireme
 
 @pytest.fixture(name="binary_interpreter_8bits")
 def fixture_binary_interpreter_8bits():
-    return BinaryProgramInterpreter(register_size=3)
+    return BinaryProgramInterpreter([], register_size=3)
 
 @pytest.fixture(name="requirement_interpreter")
 def fixture_requirement_interpreter():

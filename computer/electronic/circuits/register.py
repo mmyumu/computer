@@ -19,8 +19,6 @@ class Register:
         """
         Reset state of the register
         """
-        # TODO: Is it a good implementation of the reset?
-        # It does not use the clock...
         for d_flip_flop in self._d_flip_flops:
             d_flip_flop.reset_states()
 
@@ -28,10 +26,6 @@ class Register:
         out_str = ""
         for i, d_flip_flop in enumerate(self._d_flip_flops[::-1]):
             out_str += f"{i}: {d_flip_flop} \n"
-
-            # if i != 0:
-            #     out_str += " \n"
-
         return out_str
 
 
@@ -59,7 +53,6 @@ class SISORegister(Register):
 
     def reset_states(self):
         super().reset_states()
-        # TODO: Is it magical to force input value on reset?
         self._d = False
 
     def clock_tick(self, enable: bool):
@@ -113,8 +106,6 @@ class PIPORegister(Register):
 
     def reset_states(self):
         super().reset_states()
-
-        # TODO: Is it magical to force input values on reset?
         self._ds = [False] * self._size
 
     def set_d(self, *args):
