@@ -39,8 +39,7 @@ jobs:
       # NOTE: Use pip here because uv.lock targets 3.14 only and uv sync would fail on 3.13.
       run: |
         python -m pip install --upgrade pip
-        python -m pip install .
-        python -m pip install pytest
+        python -m pip install lark==1.1.9 rich==13.7.1 pytest==8.0.0
     - name: Set pythonpath
       run: |
         echo "PYTHONPATH=." >> $GITHUB_ENV
