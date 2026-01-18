@@ -1,5 +1,20 @@
 [project]
-requires-python = ">= 3.12"
+name = "computer"
+version = "1.0.0" 
+requires-python = ">=3.14.0rc1,<3.15"
+dependencies = [
+  "lark==1.1.9",
+  "rich==13.7.1",
+]
+
+[dependency-groups]
+dev = [
+  "pytest==8.0.0",
+  "pytest-cov==4.1.0",
+  "pylint==4.0.4",
+  "snakeviz==2.2.0",
+]
+
 [tool.pytest.ini_options]
 log_cli = true
 log_cli_level = "INFO"
@@ -8,7 +23,7 @@ log_cli_date_format = "%Y-%m-%d %H:%M:%S"
 
 [tool.pylint.format]
 max-line-length = 150
-disable="W1203,R0903"
+disable = "W1203,R0903"
 
 [tool.pylint.main]
 ignore-paths = ["\\.git", "__pycache__", "build"]

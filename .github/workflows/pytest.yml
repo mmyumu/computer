@@ -7,26 +7,27 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.14.0-rc.1"]
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+    - name: Set up uv
+      uses: astral-sh/setup-uv@v3
       with:
         python-version: ${{ matrix.python-version }}
+        allow-prereleases: true
+        enable-cache: true
     - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements_dev.txt
+        uv sync --frozen --dev
     - name: Running tests
       run: |
-        PYTHONPATH=. coverage run -m pytest tests/
+        PYTHONPATH=. uv run coverage run -m pytest tests/
     - name: Code coverage report
       run: |
-        PYTHONPATH=. coverage report
+        PYTHONPATH=. uv run coverage report
     - name: Generate HTML report for code coverage
       run: |
-        PYTHONPATH=. coverage html -d output/htmlcov
+        PYTHONPATH=. uv run coverage html -d output/htmlcov
     - name: Archive output
       uses: actions/upload-artifact@v4
       with:
