@@ -84,6 +84,8 @@ class Screen(threading.Thread):
         return layout
 
     def _create_infos(self) -> str:
+        if self._start_time is None:
+            return "Screen freq.: [#0087d7]0.00Hz[/]"
         elapsed_time = time.time() - self._start_time
         return f"Screen freq.: [#0087d7]{self._number_of_frames / elapsed_time:.2f}Hz[/] ({self._refresh_rate}Hz)"
 
