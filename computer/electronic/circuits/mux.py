@@ -6,7 +6,7 @@ https://fr.wikipedia.org/wiki/Multiplexeur
 from computer.electronic.circuits.cmos import ANDGate, NOTGate, ORGate
 
 
-# pylint: disable=R0913
+# pylint: disable=R0913,R0917
 
 class MUX2To1():
     """

@@ -16,12 +16,16 @@ class Bits(list):
                     bool_list = bits[0]
                 else:
                     raise ValueError(f"Input should be bool/int or list of bool/int but is: {bits}")
+            elif len(bits) == 0:
+                raise ValueError("Input should be bool/int or list of bool/int but is empty.")
             else:
                 are_bits = [isinstance(bit, int) for bit in bits]
                 if all(are_bits):
                     bool_list = bits
                 else:
                     raise ValueError(f"Input should be bool/int or list of bool/int but is: {bits}")
+        else:
+            raise ValueError(f"Input should be bool/int or list of bool/int but is: {bits}")
         super().__init__(bool_list)
 
     def __getitem__(self, key):
